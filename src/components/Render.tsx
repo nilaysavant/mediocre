@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import 'github-markdown-css/github-markdown.css'
 
 export interface Props {

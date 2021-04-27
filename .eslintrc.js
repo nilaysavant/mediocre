@@ -1,6 +1,10 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  extends: ['plugin:@typescript-eslint/recommended', 'prettier'],
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier',
+  ],
   plugins: ['jest', '@typescript-eslint'],
   parserOptions: {
     ecmaVersion: 2018,
@@ -54,7 +58,7 @@ module.exports = {
 
     'arrow-body-style': 0,
     'no-nested-ternary': 0,
-    "@typescript-eslint/explicit-module-boundary-types": "off",
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
   overrides: [
     {

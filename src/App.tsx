@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { tauri } from '@tauri-apps/api'
 import './App.css'
 import Editor from './components/Editor'
@@ -7,6 +7,16 @@ import Render from './components/Render'
 function App() {
   const [sendText, setSendText] = useState<string>('')
   const [receivedText, setReceivedText] = useState<string>('')
+
+  useEffect(() => {
+    const handleTextChange = async () => {
+      const res: { markup: string } = await tauri.invoke('parse_md_to_mu', {
+        mdString: sendText,
+      })
+      setReceivedText(res.markup)
+    }
+    handleTextChange()
+  }, [sendText])
 
   return (
     <div
