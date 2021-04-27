@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { tauri } from '@tauri-apps/api'
 import './App.css'
+import Editor from './components/Editor'
+import Render from './components/Render'
 
 function App() {
   const [sendText, setSendText] = useState<string>('')
@@ -16,7 +18,7 @@ function App() {
         color: '#ededed',
       }}
     >
-      <div className="flex flex-col items-center p-4">
+      <div className="flex flex-col items-center p-4 h-full">
         <button
           className="bg-gray-700 px-6 py-1 rounded-md"
           onClick={async () => {
@@ -33,32 +35,13 @@ function App() {
           Send
         </button>
         <div
-          className="flex w-full m-4 rounded-sm"
+          className="flex w-full m-4 rounded-sm h-full"
           style={{
             border: '4px solid #404040',
           }}
         >
-          <textarea
-            className="mr-0 resize-none flex-1 p-2 h-28"
-            placeholder="Enter text to send"
-            onChange={(e) => setSendText(e.target.value)}
-            style={{
-              background: '#1f1f1f',
-              borderRight: '4px solid #4a4a4a',
-              overflow: 'auto',
-              outline: 'none',
-            }}
-          />
-          <div
-            className="ml-0 flex-1 p-2 h-28 text-left"
-            style={{
-              whiteSpace: 'pre',
-              background: '#1f1f1f',
-              borderLeft: '4px solid #303030',
-            }}
-          >
-            {receivedText || 'N/A'}
-          </div>
+          <Editor text={sendText} setText={setSendText} />
+          <Render markup={receivedText} />
         </div>
       </div>
     </div>
