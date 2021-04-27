@@ -29,26 +29,26 @@ function App() {
           <button
             className="bg-gray-700 px-6 py-1 rounded-md"
             onClick={async () => {
-              const res: { message: string } = await tauri.invoke(
-                'my_custom_command',
+              const res: { markup: string } = await tauri.invoke(
+                'parse_md_to_mu',
                 {
-                  invokeMessage: sendText,
+                  mdString: sendText,
                 }
               )
               console.log('🚀 ~ file: App.tsx ~ line 32 ~ onClick={ ~ res', res)
-              setReceivedText(res.message)
+              setReceivedText(res.markup)
             }}
           >
             Send
           </button>
-          <div className="flex items-stretch justify-items-center">
+          <div className="flex justify-items-center">
             <textarea
               className="m-4 bg-gray-900 resize-none w-72 p-2 h-28 border border-gray-600 rounded-md"
               placeholder="Enter text to send"
               onChange={(e) => setSendText(e.target.value)}
             />
             <div
-              className="m-4 bg-gray-900 resize-none w-72 p-2 h-28 border border-gray-600 rounded-md"
+              className="m-4 bg-gray-900 w-72 p-2 h-28 border border-gray-600 rounded-md text-left"
               style={{
                 whiteSpace: 'pre-line',
               }}

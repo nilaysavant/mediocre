@@ -12,3 +12,17 @@ pub fn my_custom_command(invoke_message: String) -> Response {
     message: invoke_message,
   }
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct MdResponse {
+  markup: String,
+}
+
+/// Parse/Convert Markdown string into HTML Markup string
+#[tauri::command]
+pub fn parse_md_to_mu(md_string: String) -> MdResponse {
+  println!("md_string: {:?}", md_string);
+  MdResponse {
+    markup: md_string
+  }
+}
