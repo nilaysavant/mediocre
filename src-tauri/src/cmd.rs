@@ -23,6 +23,11 @@ pub struct MdResponse {
 #[tauri::command]
 pub fn parse_md_to_mu(md_string: String) -> MdResponse {
   println!("md_string: {:?}", md_string);
-  let mu_string = markdown_to_html(&md_string, &ComrakOptions::default());
+  let mut comrak_options = ComrakOptions::default();
+  comrak_options.extension.autolink = true; // Auto detect links
+  comrak_options.extension.table = true; // Detect tables
+  comrak_options.extension.tasklist = true; // Detect Checklist
+  comrak_options.extension.front_matter_delimiter = Some("---".to_owned()); // Ignore front-mater starting with '---'
+  let mu_string = markdown_to_html(&md_string, &comrak_options);
   MdResponse { markup: mu_string }
 }

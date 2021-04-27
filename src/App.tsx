@@ -26,6 +26,7 @@ function App() {
         height: '100vh',
         background: '#2b2b2b',
         color: '#ededed',
+        fontSize: 18,
       }}
     >
       <div className="flex flex-col items-center p-4 h-full">
