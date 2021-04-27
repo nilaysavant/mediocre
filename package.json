@@ -1,0 +1,69 @@
+{
+  "name": "cra-tauri-ts-boilerplate",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@craco/craco": "^6.1.1",
+    "@tauri-apps/api": "^1.0.0-beta-rc.3",
+    "@tauri-apps/cli": "^1.0.0-beta-rc.4",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "typescript": "^4.1.2",
+    "web-vitals": "^1.0.1"
+  },
+  "scripts": {
+    "prebuild": "rimraf ./build",
+    "dev:fe": "cross-env BROWSER=none craco start",
+    "build:fe": "craco build",
+    "test:fe": "craco test",
+    "eject:cra-fe": "react-scripts eject",
+    "build:tauri": "tauri build",
+    "build:tauri-debug": "tauri build --debug",
+    "build": "npm run build:fe && npm run build:tauri",
+    "build:debug": "npm run build:fe && npm run build:tauri-debug",
+    "start": "concurrently -p \"[{name}]\" -n \"front-end,tauri\" -c \"bgGreen.bold,bgCyan.bold\" \"npm run dev:fe\" \"npm run dev:tauri\"",
+    "dev:tauri": "cross-env RUST_DEBUG=1 tauri dev",
+    "prettify": "prettier --write ."
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "autoprefixer": "^9",
+    "concurrently": "^6.0.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-prettier": "^3.4.0",
+    "postcss": "^7",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+  }
+}

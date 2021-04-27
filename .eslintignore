@@ -1,0 +1,5 @@
+node_modules
+/dist
+/rollup.config.editor.js
+/utils
+*.html
