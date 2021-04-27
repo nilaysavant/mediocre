@@ -9,7 +9,12 @@ function App() {
   return (
     <div
       className="dark"
-      style={{ width: '100vw', height: '100vh', background: '#1f1f1f', color: '#ededed' }}
+      style={{
+        width: '100vw',
+        height: '100vh',
+        background: '#2b2b2b',
+        color: '#ededed',
+      }}
     >
       <div className="flex flex-col items-center p-4">
         <button
@@ -27,16 +32,29 @@ function App() {
         >
           Send
         </button>
-        <div className="flex justify-items-center">
+        <div
+          className="flex w-full m-4 rounded-sm"
+          style={{
+            border: '4px solid #404040',
+          }}
+        >
           <textarea
-            className="m-4 bg-gray-900 resize-none w-72 p-2 h-28 border border-gray-600 rounded-md"
+            className="mr-0 resize-none flex-1 p-2 h-28"
             placeholder="Enter text to send"
             onChange={(e) => setSendText(e.target.value)}
+            style={{
+              background: '#1f1f1f',
+              borderRight: '4px solid #4a4a4a',
+              overflow: 'auto',
+              outline: 'none',
+            }}
           />
           <div
-            className="m-4 bg-gray-900 w-72 p-2 h-28 border border-gray-600 rounded-md text-left"
+            className="ml-0 flex-1 p-2 h-28 text-left"
             style={{
               whiteSpace: 'pre',
+              background: '#1f1f1f',
+              borderLeft: '4px solid #303030',
             }}
           >
             {receivedText || 'N/A'}
