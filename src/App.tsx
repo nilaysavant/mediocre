@@ -3,6 +3,7 @@ import { tauri } from '@tauri-apps/api'
 import './App.css'
 import Editor from './components/Editor'
 import Render from './components/Render'
+import Topbar from './components/Topbar'
 
 function App() {
   const [sendText, setSendText] = useState<string>('')
@@ -29,24 +30,10 @@ function App() {
         fontSize: 18,
       }}
     >
-      <div className="flex flex-col items-center p-4 h-full">
-        <button
-          className="bg-gray-700 px-6 py-1 rounded-md"
-          onClick={async () => {
-            const res: { markup: string } = await tauri.invoke(
-              'parse_md_to_mu',
-              {
-                mdString: sendText,
-              }
-            )
-            console.log('🚀 ~ file: App.tsx ~ line 32 ~ onClick={ ~ res', res)
-            setReceivedText(res.markup)
-          }}
-        >
-          Send
-        </button>
+      <div className="flex flex-col items-center p-2 h-full">
+        <Topbar />
         <div
-          className="flex w-full m-4 rounded-sm h-full"
+          className="flex w-full m-1 rounded-sm h-full"
           style={{
             border: '4px solid #404040',
           }}
