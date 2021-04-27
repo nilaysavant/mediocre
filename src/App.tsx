@@ -50,7 +50,7 @@ function App() {
             <div
               className="m-4 bg-gray-900 w-72 p-2 h-28 border border-gray-600 rounded-md text-left"
               style={{
-                whiteSpace: 'pre-line',
+                whiteSpace: 'pre',
               }}
             >
               {receivedText || 'N/A'}
