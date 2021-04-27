@@ -1,3 +1,4 @@
+use comrak::{markdown_to_html, ComrakOptions};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -22,7 +23,6 @@ pub struct MdResponse {
 #[tauri::command]
 pub fn parse_md_to_mu(md_string: String) -> MdResponse {
   println!("md_string: {:?}", md_string);
-  MdResponse {
-    markup: md_string
-  }
+  let mu_string = markdown_to_html(&md_string, &ComrakOptions::default());
+  MdResponse { markup: mu_string }
 }
