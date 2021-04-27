@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
+import styles from './Editor.module.css'
+import clsx from 'clsx'
 
 export interface Props {
   text: string
@@ -8,8 +10,8 @@ export interface Props {
 function Editor({ text, setText }: Props) {
   return (
     <textarea
-      className="mr-0 resize-none flex-1 p-4 h-full"
-      placeholder="Enter text to send"
+      className={clsx('mr-0 resize-none flex-1 p-4 h-full', styles.editor)}
+      placeholder="Type something..."
       value={text}
       onChange={(e) => setText(e.target.value)}
       style={{
