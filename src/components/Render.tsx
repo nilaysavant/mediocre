@@ -12,7 +12,7 @@ function Render({ markup }: Props) {
       style={{
         background: '#1f1f1f',
         borderLeft: '4px solid #303030',
-        color: 'white',
+        color: '#ededed',
       }}
       dangerouslySetInnerHTML={{
         __html: markup || '<i>Type something...</i>',
