@@ -8,7 +8,7 @@ export interface Props {
 function Editor({ text, setText }: Props) {
   return (
     <textarea
-      className="mr-0 resize-none flex-1 p-2 h-full"
+      className="mr-0 resize-none flex-1 p-4 h-full"
       placeholder="Enter text to send"
       value={text}
       onChange={(e) => setText(e.target.value)}

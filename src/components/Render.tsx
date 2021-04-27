@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import 'github-markdown-css/github-markdown.css'
 
 export interface Props {
   markup: string
@@ -7,14 +8,14 @@ export interface Props {
 function Render({ markup }: Props) {
   return (
     <div
-      className="ml-0 flex-1 p-2 h-28 text-left h-full"
+      className="ml-0 flex-1 p-4 h-28 text-left h-full markdown-body"
       style={{
-        whiteSpace: 'pre-line',
         background: '#1f1f1f',
         borderLeft: '4px solid #303030',
+        color: 'white',
       }}
       dangerouslySetInnerHTML={{
-        __html: markup,
+        __html: markup || '<i>Type something...</i>',
       }}
     ></div>
   )
