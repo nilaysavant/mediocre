@@ -28,7 +28,7 @@ function App() {
       style={{
         width: '100vw',
         height: '100vh',
-        background: '#2b2b2b',
+        background: colorMode === 'dark' ? '#2b2b2b' : '#ffffff',
         fontSize: 18,
       }}
     >
