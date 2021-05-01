@@ -32,10 +32,15 @@ function App() {
         fontSize: 18,
       }}
     >
-      <div className="flex flex-col items-center p-2 h-full">
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        padding={2}
+        height="full"
+      >
         <Topbar />
         <Box
-          // className="flex w-full m-1 rounded-sm h-full"
           display="flex"
           width="full"
           margin={1}
@@ -48,7 +53,7 @@ function App() {
           <Editor text={sendText} setText={setSendText} />
           <Render markup={receivedText} />
         </Box>
-      </div>
+      </Box>
     </div>
   )
 }

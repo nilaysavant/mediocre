@@ -11,7 +11,6 @@ function Render({ markup }: Props) {
   const { colorMode } = useColorMode()
   return (
     <Box
-      // className="ml-0 flex-1 p-4 text-left h-full markdown-body"
       className="markdown-body"
       marginLeft={0}
       flex={1}

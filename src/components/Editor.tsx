@@ -14,7 +14,6 @@ function Editor({ text, setText }: Props) {
   return (
     <Textarea
       className={clsx(
-        // 'mr-0 resize-none flex-1 p-4 h-full',
         styles.editor
       )}
       marginRight={0}
