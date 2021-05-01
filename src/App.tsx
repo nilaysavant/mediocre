@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { tauri } from '@tauri-apps/api'
-import { ChakraProvider } from '@chakra-ui/react'
+import { useColorMode } from '@chakra-ui/react'
 import './App.css'
 import Editor from './components/Editor'
 import Render from './components/Render'
 import Topbar from './components/Topbar'
 import theme from './theme'
+import clsx from 'clsx'
 
 function App() {
+  const { colorMode } = useColorMode()
   const [sendText, setSendText] = useState<string>('')
   const [receivedText, setReceivedText] = useState<string>('')
 
@@ -22,31 +24,31 @@ function App() {
   }, [sendText])
 
   return (
-    <ChakraProvider theme={theme}>
-      <div
-        className="dark"
-        style={{
-          width: '100vw',
-          height: '100vh',
-          background: '#2b2b2b',
-          color: '#ededed',
-          fontSize: 18,
-        }}
-      >
-        <div className="flex flex-col items-center p-2 h-full">
-          <Topbar />
-          <div
-            className="flex w-full m-1 rounded-sm h-full"
-            style={{
-              border: '4px solid #404040',
-            }}
-          >
-            <Editor text={sendText} setText={setSendText} />
-            <Render markup={receivedText} />
-          </div>
+    <div
+      className={clsx({
+        dark: colorMode === 'dark',
+      })}
+      style={{
+        width: '100vw',
+        height: '100vh',
+        background: '#2b2b2b',
+        color: '#ededed',
+        fontSize: 18,
+      }}
+    >
+      <div className="flex flex-col items-center p-2 h-full">
+        <Topbar />
+        <div
+          className="flex w-full m-1 rounded-sm h-full"
+          style={{
+            border: '4px solid #404040',
+          }}
+        >
+          <Editor text={sendText} setText={setSendText} />
+          <Render markup={receivedText} />
         </div>
       </div>
-    </ChakraProvider>
+    </div>
   )
 }
 

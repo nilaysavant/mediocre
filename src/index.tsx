@@ -5,11 +5,14 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { ColorModeScript } from '@chakra-ui/color-mode'
 import theme from './theme'
+import { ChakraProvider } from '@chakra-ui/react'
 
 ReactDOM.render(
   <React.StrictMode>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-    <App />
+    <ChakraProvider theme={theme}>
+      <App />
+    </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('root')
 )
