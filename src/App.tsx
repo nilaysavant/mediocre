@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { tauri } from '@tauri-apps/api'
-import { useColorMode } from '@chakra-ui/react'
+import { Box, useColorMode } from '@chakra-ui/react'
 import './App.css'
 import Editor from './components/Editor'
 import Render from './components/Render'
@@ -34,15 +34,20 @@ function App() {
     >
       <div className="flex flex-col items-center p-2 h-full">
         <Topbar />
-        <div
-          className="flex w-full m-1 rounded-sm h-full"
+        <Box
+          // className="flex w-full m-1 rounded-sm h-full"
+          display="flex"
+          width="full"
+          margin={1}
+          rounded="sm"
+          height="full"
           style={{
             border: '4px solid #404040',
           }}
         >
           <Editor text={sendText} setText={setSendText} />
           <Render markup={receivedText} />
-        </div>
+        </Box>
       </div>
     </div>
   )

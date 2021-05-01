@@ -25,6 +25,9 @@ function Editor({ text, setText }: Props) {
       fontSize="lg"
       overflowX="auto"
       resize="none"
+      _focus={{
+        outline: 'none',
+      }}
       placeholder="Type something..."
       value={text}
       onChange={(e) => setText(e.target.value)}
