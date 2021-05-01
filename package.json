@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/react": "^1.6.0",
     "@craco/craco": "^6.1.1",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
     "@tauri-apps/api": "^1.0.0-beta-rc.3",
     "@tauri-apps/cli": "^1.0.0-beta-rc.4",
     "@testing-library/jest-dom": "^5.11.4",
@@ -14,6 +17,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "clsx": "^1.1.1",
+    "framer-motion": "^4",
     "github-markdown-css": "^4.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
