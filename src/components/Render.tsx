@@ -1,6 +1,7 @@
 import React from 'react'
 import 'github-markdown-css/github-markdown.css'
 import { useColorMode } from '@chakra-ui/color-mode'
+import { Box } from '@chakra-ui/layout'
 
 export interface Props {
   markup: string
@@ -9,8 +10,15 @@ export interface Props {
 function Render({ markup }: Props) {
   const { colorMode } = useColorMode()
   return (
-    <div
-      className="ml-0 flex-1 p-4 h-28 text-left h-full markdown-body"
+    <Box
+      // className="ml-0 flex-1 p-4 text-left h-full markdown-body"
+      className="markdown-body"
+      marginLeft={0}
+      flex={1}
+      padding={4}
+      textAlign="left"
+      height="full"
+      overflowY="auto"
       style={{
         background: colorMode === 'dark' ? '#1f1f1f' : 'white',
         borderLeft: '4px solid #303030',
@@ -19,7 +27,7 @@ function Render({ markup }: Props) {
       dangerouslySetInnerHTML={{
         __html: markup || '<i>Type something...</i>',
       }}
-    ></div>
+    ></Box>
   )
 }
 

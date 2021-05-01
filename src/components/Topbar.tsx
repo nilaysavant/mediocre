@@ -11,7 +11,7 @@ function Topbar() {
   return (
     <Box display="flex" justifyContent="space-between" width="100%">
       <div className="flex w-full">
-        <Menu>
+        <Menu gutter={1}>
           <MenuButton
             as={Button}
             rightIcon={<ChevronDownIcon />}
