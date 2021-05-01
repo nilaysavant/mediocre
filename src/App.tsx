@@ -25,14 +25,10 @@ function App() {
 
   return (
     <div
-      className={clsx({
-        dark: colorMode === 'dark',
-      })}
       style={{
         width: '100vw',
         height: '100vh',
         background: '#2b2b2b',
-        color: '#ededed',
         fontSize: 18,
       }}
     >

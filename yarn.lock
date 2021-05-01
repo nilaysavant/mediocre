@@ -1302,6 +1302,14 @@
   dependencies:
     "@chakra-ui/utils" "1.7.0"
 
+"@chakra-ui/icons@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/icons/-/icons-1.0.12.tgz#c9c25a21399638956696e026eeff1390654ee4d6"
+  integrity sha512-ubMXJkohCVLjCe+5JTy4jYuSqBGXRCAqOSRV6IE/phEd8+qfWLFOVa9Q6X0FvdM7HGco8mCFwtlZPwJvHNtyLg==
+  dependencies:
+    "@chakra-ui/icon" "1.1.8"
+    "@types/react" "^17.0.0"
+
 "@chakra-ui/image@1.0.14":
   version "1.0.14"
   resolved "https://registry.yarnpkg.com/@chakra-ui/image/-/image-1.0.14.tgz#c907dfbfb30da9892b59a1e323d9d09aef50e4e6"
