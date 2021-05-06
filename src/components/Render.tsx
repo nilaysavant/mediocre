@@ -1,9 +1,9 @@
-import React from 'react'
-// import 'github-markdown-css/github-markdown.css'
-import '../styles/markdown/markdown.css'
-import '../styles/markdown/solarized-dark/solarized-dark.css'
+import React, { useContext } from 'react'
+import 'github-markdown-css/github-markdown.css'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Box } from '@chakra-ui/layout'
+import clsx from 'clsx'
+import { MdThemeContext } from '../styles/markdown'
 
 export interface Props {
   markup: string
@@ -11,9 +11,12 @@ export interface Props {
 
 function Render({ markup }: Props) {
   const { colorMode } = useColorMode()
+  const { theme: mdTheme } = useContext(MdThemeContext)
   return (
     <Box
-      className="markdown solarized-dark"
+      className={clsx(
+        mdTheme === 'github2' ? 'markdown-body' : `markdown ${mdTheme}`
+      )}
       marginLeft={0}
       flex={1}
       padding={4}

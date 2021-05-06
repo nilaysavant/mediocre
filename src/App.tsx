@@ -7,11 +7,17 @@ import Render from './components/Render'
 import Topbar from './components/Topbar'
 import theme from './theme'
 import testMarkdown from './test/testMarkdown'
+import { MdThemeContext, MdThemeTypes } from './styles/markdown'
 
 function App() {
   const { colorMode } = useColorMode()
   const [sendText, setSendText] = useState<string>(testMarkdown)
   const [receivedText, setReceivedText] = useState<string>('')
+  const [mdTheme, setMdTheme] = useState<MdThemeTypes>('solarized-dark')
+
+  useEffect(() => {
+    console.log('🚀 ~ file: index.tsx ~ line 60 ~ useMdTheme ~ theme', mdTheme)
+  }, [mdTheme])
 
   useEffect(() => {
     const handleTextChange = async () => {
@@ -24,37 +30,46 @@ function App() {
   }, [sendText])
 
   return (
-    <div
-      style={{
-        width: '100vw',
-        height: '100vh',
-        background: colorMode === 'dark' ? '#2b2b2b' : '#ffffff',
-        fontSize: 18,
+    <MdThemeContext.Provider
+      value={{
+        theme: mdTheme,
+        setMdTheme,
       }}
     >
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        padding={2}
-        height="full"
+      <div
+        style={{
+          width: '100vw',
+          height: '100vh',
+          background: colorMode === 'dark' ? '#2b2b2b' : '#ffffff',
+          fontSize: 18,
+        }}
       >
-        <Topbar />
         <Box
           display="flex"
-          width="full"
-          margin={1}
-          rounded="sm"
+          flexDirection="column"
+          alignItems="center"
+          padding={2}
           height="full"
-          style={{
-            border: `4px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
-          }}
         >
-          <Editor text={sendText} setText={setSendText} />
-          <Render markup={receivedText} />
+          <Topbar />
+          <Box
+            display="flex"
+            width="full"
+            margin={1}
+            rounded="sm"
+            height="full"
+            style={{
+              border: `4px solid ${
+                colorMode === 'dark' ? '#404040' : '#d4d4d4'
+              }`,
+            }}
+          >
+            <Editor text={sendText} setText={setSendText} />
+            <Render markup={receivedText} />
+          </Box>
         </Box>
-      </Box>
-    </div>
+      </div>
+    </MdThemeContext.Provider>
   )
 }
 
