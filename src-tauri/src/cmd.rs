@@ -22,7 +22,6 @@ pub struct MdResponse {
 /// Parse/Convert Markdown string into HTML Markup string
 #[tauri::command]
 pub fn parse_md_to_mu(md_string: String) -> MdResponse {
-  println!("md_string: {:?}", md_string);
   let mut comrak_options = ComrakOptions::default();
   comrak_options.extension.autolink = true; // Auto detect links
   comrak_options.extension.table = true; // Detect tables
