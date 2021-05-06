@@ -6,7 +6,7 @@ import Editor from './components/Editor'
 import Render from './components/Render'
 import Topbar from './components/Topbar'
 import theme from './theme'
-import testMarkdown from './components/testMarkdown'
+import testMarkdown from './test/testMarkdown'
 
 function App() {
   const { colorMode } = useColorMode()
