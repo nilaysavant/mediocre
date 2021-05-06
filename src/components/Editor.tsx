@@ -1,6 +1,4 @@
 import React from 'react'
-import styles from './Editor.module.css'
-import clsx from 'clsx'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Textarea } from '@chakra-ui/textarea'
 
@@ -13,9 +11,6 @@ function Editor({ text, setText }: Props) {
   const { colorMode } = useColorMode()
   return (
     <Textarea
-      className={clsx(
-        styles.editor
-      )}
       marginRight={0}
       flex={1}
       padding={4}
@@ -24,6 +19,9 @@ function Editor({ text, setText }: Props) {
       fontSize="lg"
       overflowX="auto"
       resize="none"
+      _placeholder={{
+        fontStyle: 'italic',
+      }}
       _focus={{
         outline: 'none',
       }}
