@@ -11,7 +11,7 @@ import { MdThemeContext, MdThemeTypes } from './styles/markdown'
 
 function App() {
   const { colorMode } = useColorMode()
-  const [sendText, setSendText] = useState<string>(testMarkdown)
+  const [sendText, setSendText] = useState<string>(process.env.NODE_ENV === 'development' ? testMarkdown : '')
   const [receivedText, setReceivedText] = useState<string>('')
   const [mdTheme, setMdTheme] = useState<MdThemeTypes>('solarized-dark')
 
