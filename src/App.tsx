@@ -16,10 +16,6 @@ function App() {
   const [mdTheme, setMdTheme] = useState<MdThemeTypes>('solarized-dark')
 
   useEffect(() => {
-    console.log('🚀 ~ file: index.tsx ~ line 60 ~ useMdTheme ~ theme', mdTheme)
-  }, [mdTheme])
-
-  useEffect(() => {
     const handleTextChange = async () => {
       const res: { markup: string } = await tauri.invoke('parse_md_to_mu', {
         mdString: sendText,

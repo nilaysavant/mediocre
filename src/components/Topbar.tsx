@@ -76,6 +76,7 @@ function Topbar() {
           <MenuList borderRadius="sm" fontSize="md">
             {mdThemes.map((theme) => (
               <MenuItem
+                key={`mdThemeMenuItem-${theme}`}
                 display="flex"
                 justifyContent="space-between"
                 value={theme}
