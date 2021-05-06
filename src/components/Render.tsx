@@ -20,7 +20,7 @@ function Render({ markup }: Props) {
       overflowY="auto"
       style={{
         background: colorMode === 'dark' ? '#1f1f1f' : 'white',
-        borderLeft: '4px solid #303030',
+        borderLeft: `4px solid ${colorMode === 'dark' ? '#303030' : '#d6d6d6'}`,
         color: colorMode === 'dark' ? '#ededed' : '#1f1f1f',
       }}
       dangerouslySetInnerHTML={{

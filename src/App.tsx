@@ -47,7 +47,7 @@ function App() {
           rounded="sm"
           height="full"
           style={{
-            border: '4px solid #404040',
+            border: `4px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
           }}
         >
           <Editor text={sendText} setText={setSendText} />

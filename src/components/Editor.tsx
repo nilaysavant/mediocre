@@ -30,7 +30,7 @@ function Editor({ text, setText }: Props) {
       onChange={(e) => setText(e.target.value)}
       style={{
         background: colorMode === 'dark' ? '#1f1f1f' : 'white',
-        borderRight: '4px solid #4a4a4a',
+        borderRight: `4px solid ${colorMode === 'dark' ? '#4a4a4a' : '#e0e0e0'}`,
         overflow: 'auto',
         outline: 'none',
       }}
