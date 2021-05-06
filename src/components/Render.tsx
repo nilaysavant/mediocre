@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import 'github-markdown-css/github-markdown.css'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Box } from '@chakra-ui/layout'
@@ -12,6 +12,17 @@ export interface Props {
 function Render({ markup }: Props) {
   const { colorMode } = useColorMode()
   const { theme: mdTheme } = useContext(MdThemeContext)
+
+  useEffect(() => {
+    /**
+     * This is to trigger codeblock highlight function
+     * every time the markup is updated, this is what makes
+     * PrismJs do its magic after each md render
+     */
+    // @ts-expect-error PrismJS
+    window.Prism.highlightAll()
+  }, [markup])
+
   return (
     <Box
       className={clsx(
