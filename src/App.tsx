@@ -6,11 +6,11 @@ import Editor from './components/Editor'
 import Render from './components/Render'
 import Topbar from './components/Topbar'
 import theme from './theme'
-import clsx from 'clsx'
+import testMarkdown from './components/testMarkdown'
 
 function App() {
   const { colorMode } = useColorMode()
-  const [sendText, setSendText] = useState<string>('')
+  const [sendText, setSendText] = useState<string>(testMarkdown)
   const [receivedText, setReceivedText] = useState<string>('')
 
   useEffect(() => {
