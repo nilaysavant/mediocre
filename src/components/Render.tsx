@@ -1,5 +1,7 @@
 import React from 'react'
-import 'github-markdown-css/github-markdown.css'
+// import 'github-markdown-css/github-markdown.css'
+import '../styles/markdown/markdown.css'
+import '../styles/markdown/solarized-dark/solarized-dark.css'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Box } from '@chakra-ui/layout'
 
@@ -11,7 +13,7 @@ function Render({ markup }: Props) {
   const { colorMode } = useColorMode()
   return (
     <Box
-      className="markdown-body"
+      className="markdown solarized-dark"
       marginLeft={0}
       flex={1}
       padding={4}
