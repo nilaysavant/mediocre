@@ -79,7 +79,7 @@ function App() {
           flexDirection="column"
           alignItems="center"
           padding={2}
-          height="full"
+          height="95vh"
         >
           <Topbar />
           <Box
