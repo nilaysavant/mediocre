@@ -5,12 +5,15 @@ import { Textarea } from '@chakra-ui/textarea'
 export interface Props {
   text: string
   setText: (value: string) => void
+  editorRef?: React.RefObject<HTMLTextAreaElement>
+  onScroll?: React.UIEventHandler<HTMLTextAreaElement>
 }
 
-function Editor({ text, setText }: Props) {
+function Editor({ text, setText, editorRef, onScroll }: Props) {
   const { colorMode } = useColorMode()
   return (
     <Textarea
+      ref={editorRef}
       marginRight={0}
       flex={1}
       padding={4}
@@ -28,9 +31,12 @@ function Editor({ text, setText }: Props) {
       placeholder="Type something..."
       value={text}
       onChange={(e) => setText(e.target.value)}
+      onScroll={onScroll}
       style={{
         background: colorMode === 'dark' ? '#1f1f1f' : 'white',
-        borderRight: `4px solid ${colorMode === 'dark' ? '#4a4a4a' : '#e0e0e0'}`,
+        borderRight: `4px solid ${
+          colorMode === 'dark' ? '#4a4a4a' : '#e0e0e0'
+        }`,
         overflow: 'auto',
         outline: 'none',
       }}

@@ -7,9 +7,11 @@ import { MdThemeContext } from '../styles/markdown'
 
 export interface Props {
   markup: string
+  renderBoxRef?: React.RefObject<HTMLDivElement>
+  onScroll?: React.UIEventHandler<HTMLDivElement>
 }
 
-function Render({ markup }: Props) {
+function Render({ markup, renderBoxRef, onScroll }: Props) {
   const { colorMode } = useColorMode()
   const { theme: mdTheme } = useContext(MdThemeContext)
 
@@ -28,6 +30,7 @@ function Render({ markup }: Props) {
       className={clsx(
         mdTheme === 'github2' ? 'markdown-body' : `markdown ${mdTheme}`
       )}
+      ref={renderBoxRef}
       marginLeft={0}
       flex={1}
       padding={4}
@@ -39,6 +42,7 @@ function Render({ markup }: Props) {
         borderLeft: `4px solid ${colorMode === 'dark' ? '#303030' : '#d6d6d6'}`,
         color: colorMode === 'dark' ? '#ededed' : '#1f1f1f',
       }}
+      onScroll={onScroll}
       dangerouslySetInnerHTML={{
         __html: markup || '<i>Type something...</i>',
       }}

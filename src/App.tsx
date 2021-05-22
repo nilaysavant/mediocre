@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { tauri } from '@tauri-apps/api'
 import { Box, useColorMode } from '@chakra-ui/react'
 import './App.css'
@@ -11,9 +11,34 @@ import { MdThemeContext, MdThemeTypes } from './styles/markdown'
 
 function App() {
   const { colorMode } = useColorMode()
-  const [sendText, setSendText] = useState<string>(process.env.NODE_ENV === 'development' ? testMarkdown : '')
+  const [sendText, setSendText] = useState<string>(
+    process.env.NODE_ENV === 'development' ? testMarkdown : ''
+  )
   const [receivedText, setReceivedText] = useState<string>('')
   const [mdTheme, setMdTheme] = useState<MdThemeTypes>('solarized-dark')
+
+  const renderBoxRef = useRef<HTMLDivElement>(null)
+  const editorTextAreaRef = useRef<HTMLTextAreaElement>(null)
+
+  const handleViewScroll = (
+    event:
+      | React.UIEvent<HTMLDivElement, UIEvent>
+      | React.UIEvent<HTMLTextAreaElement, UIEvent>
+  ) => {
+    switch (event.currentTarget.nodeName.toLocaleLowerCase()) {
+      case 'div': {
+        if (editorTextAreaRef.current) {
+          const percentScroll =
+            event.currentTarget.scrollTop / event.currentTarget.scrollHeight
+          editorTextAreaRef.current.scrollTop =
+            percentScroll * editorTextAreaRef.current.scrollHeight
+        }
+        break
+      }
+      default:
+        break
+    }
+  }
 
   useEffect(() => {
     const handleTextChange = async () => {
@@ -60,8 +85,17 @@ function App() {
               }`,
             }}
           >
-            <Editor text={sendText} setText={setSendText} />
-            <Render markup={receivedText} />
+            <Editor
+              text={sendText}
+              setText={setSendText}
+              editorRef={editorTextAreaRef}
+              onScroll={handleViewScroll}
+            />
+            <Render
+              markup={receivedText}
+              renderBoxRef={renderBoxRef}
+              onScroll={handleViewScroll}
+            />
           </Box>
         </Box>
       </div>
