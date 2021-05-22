@@ -31,7 +31,7 @@
   "scripts": {
     "prebuild": "rimraf ./build",
     "dev:fe": "cross-env BROWSER=none craco start",
-    "build:fe": "craco build",
+    "build:fe": "cross-env CI='' craco build",
     "test:fe": "craco test",
     "eject:cra-fe": "react-scripts eject",
     "build:tauri": "tauri build",
