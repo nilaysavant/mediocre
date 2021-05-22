@@ -1,6 +1,6 @@
 {
   "package": {
-    "productName": "cra-tauri-ts-boilerplate",
+    "productName": "Mediocre Editor",
     "version": "0.1.0"
   },
   "build": {
@@ -53,7 +53,7 @@
     },
     "windows": [
       {
-        "title": "cra-tauri-ts-boilerplate",
+        "title": "Mediocre Editor",
         "width": 1200,
         "height": 800,
         "resizable": true,

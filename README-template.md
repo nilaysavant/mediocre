@@ -1,4 +1,4 @@
-# cra-tauri-ts-boilerplate
+# Mediocre Editor
 
 Desktop App boilerplate/template using [Create-React-App](https://create-react-app.dev/) and [Tauri](https://tauri.studio/). Uses [Typescript](https://www.typescriptlang.org/) for frontend.
 
