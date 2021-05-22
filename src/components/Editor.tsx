@@ -1,6 +1,8 @@
 import React from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Textarea } from '@chakra-ui/textarea'
+import prettier from 'prettier'
+import parserMarkdown from 'prettier/parser-markdown'
 
 export interface Props {
   text: string
@@ -11,6 +13,18 @@ export interface Props {
 
 function Editor({ text, setText, editorRef, onScroll }: Props) {
   const { colorMode } = useColorMode()
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.ctrlKey && event.key === 's') {
+      // onSave : ctrl + s
+      const prettifiedText = prettier.format(text, {
+        parser: 'markdown',
+        plugins: [parserMarkdown],
+      })
+      setText(prettifiedText)
+    }
+  }
+
   return (
     <Textarea
       ref={editorRef}
@@ -32,6 +46,7 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
       value={text}
       onChange={(e) => setText(e.target.value)}
       onScroll={onScroll}
+      onKeyDown={handleKeyDown}
       style={{
         background: colorMode === 'dark' ? '#1f1f1f' : 'white',
         borderRight: `4px solid ${
