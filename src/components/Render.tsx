@@ -37,6 +37,7 @@ function Render({ markup, renderBoxRef, onScroll }: Props) {
       textAlign="left"
       height="full"
       overflowY="auto"
+      fontSize="md"
       style={{
         background: colorMode === 'dark' ? '#1f1f1f' : 'white',
         borderLeft: `4px solid ${colorMode === 'dark' ? '#303030' : '#d6d6d6'}`,

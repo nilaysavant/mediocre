@@ -33,7 +33,7 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
       padding={4}
       height="full"
       borderRadius={0}
-      fontSize="lg"
+      fontSize="md"
       overflowX="auto"
       resize="none"
       _placeholder={{
