@@ -31,7 +31,16 @@ function App() {
           const percentScroll =
             event.currentTarget.scrollTop / event.currentTarget.scrollHeight
           editorTextAreaRef.current.scrollTop =
-            percentScroll * editorTextAreaRef.current.scrollHeight
+            Math.round(percentScroll * editorTextAreaRef.current.scrollHeight)
+        }
+        break
+      }
+      case 'textarea': {
+        if (renderBoxRef.current) {
+          const percentScroll =
+            event.currentTarget.scrollTop / event.currentTarget.scrollHeight
+          renderBoxRef.current.scrollTop =
+            Math.round(percentScroll * renderBoxRef.current.scrollHeight)
         }
         break
       }
