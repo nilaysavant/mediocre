@@ -2,16 +2,24 @@ import React, { useContext } from 'react'
 import { Button, IconButton } from '@chakra-ui/button'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { ChevronDownIcon, Icon, MoonIcon, SunIcon } from '@chakra-ui/icons'
-import { Box } from '@chakra-ui/layout'
+import { Box, BoxProps } from '@chakra-ui/layout'
 import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu'
 import mdThemes, { MdThemeContext, MdThemeTypes } from '../styles/markdown'
 
-function Topbar() {
+export type TopbarProps = BoxProps
+
+function Topbar({ ...rest }: TopbarProps) {
   const { colorMode, toggleColorMode } = useColorMode()
   const { theme: mdTheme, setMdTheme } = useContext(MdThemeContext)
 
   return (
-    <Box display="flex" justifyContent="space-between" width="100%">
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      width="100%"
+      alignItems="center"
+      {...rest}
+    >
       <Box>
         <Menu gutter={1}>
           <MenuButton
