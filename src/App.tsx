@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { tauri } from '@tauri-apps/api'
-import { Box, useColorMode } from '@chakra-ui/react'
+import { Box, useColorMode, useDisclosure } from '@chakra-ui/react'
 import './App.css'
 import Editor from './components/Editor'
 import Render from './components/Render'
@@ -9,6 +9,7 @@ import theme from './theme'
 import testMarkdown from './test/testMarkdown'
 import { MdThemeContext, MdThemeTypes } from './styles/markdown'
 import Bottombar from './components/Bottombar'
+import CommandModal from './components/CommandModal'
 
 function App() {
   const { colorMode } = useColorMode()
@@ -20,6 +21,16 @@ function App() {
 
   const renderBoxRef = useRef<HTMLDivElement>(null)
   const editorTextAreaRef = useRef<HTMLTextAreaElement>(null)
+
+  // Command Modal
+  const { isOpen, onOpen: handleCommandModalOpen, onClose } = useDisclosure()
+
+  const handleGlobalKeyDown = (event: KeyboardEvent) => {
+    if (event.ctrlKey && event.key === 'P') {
+      event.preventDefault()
+      handleCommandModalOpen()
+    }
+  }
 
   const handleViewScroll = (
     event:
@@ -51,6 +62,13 @@ function App() {
         break
     }
   }
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleGlobalKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleGlobalKeyDown)
+    }
+  }, [])
 
   useEffect(() => {
     const handleTextChange = async () => {
@@ -102,6 +120,7 @@ function App() {
           />
         </Box>
         <Bottombar height="2vh" />
+        <CommandModal isOpen={isOpen} onClose={onClose} />
       </Box>
     </MdThemeContext.Provider>
   )
