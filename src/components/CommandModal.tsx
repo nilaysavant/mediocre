@@ -20,6 +20,44 @@ import {
 } from '@chakra-ui/icons'
 import { Button } from '@chakra-ui/button'
 import { AiOutlineEnter } from 'react-icons/ai'
+import { IconType } from 'react-icons/lib'
+
+export type CommandItemProps = {
+  id: string
+  title: string
+  subtitle: string
+  icon: IconType
+}
+
+function CommandItem({ id, title, subtitle, icon }: CommandItemProps) {
+  return (
+    <ListItem
+      id={id}
+      display="flex"
+      alignItems="center"
+      _focus={{
+        background: '#0072a3',
+      }}
+      paddingX="2"
+      paddingY="2"
+      borderRadius="md"
+      userSelect="none"
+      cursor="pointer"
+      background="gray.800"
+    >
+      <ListIcon as={AddIcon} color="green.500" fontSize="lg" />
+      <Box flex="1" paddingX="0.5">
+        <Box fontSize="smaller" color="gray.400">
+          {title}
+        </Box>
+        <Box fontSize="medium" color="gray.100" lineHeight="shorter">
+          {subtitle}
+        </Box>
+      </Box>
+      <ListIcon as={icon} color="blue.400" />
+    </ListItem>
+  )
+}
 
 export type CommandModalProps = {
   isOpen: ModalProps['isOpen']
@@ -48,38 +86,21 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
               border="none"
               _focus={{ border: 'none' }}
               width="full"
-              tabIndex={0}
-              autoFocus={true}
+              // autoFocus={true}
             />
           </InputGroup>
         </ModalHeader>
         <ModalBody pb={6} paddingX="4">
           <List spacing={3}>
-            <ListItem
-              display="flex"
-              alignItems="center"
-              _focus={{
-                background: '#0072a3',
-              }}
-              paddingX="2"
-              paddingY="2"
-              tabIndex={1}
-              borderRadius="md"
-              userSelect="none"
-              cursor="pointer"
-              background="gray.800"
-            >
-              <ListIcon as={AddIcon} color="green.500" />
-              <Box flex="1" paddingX="0.5">
-                <Box fontSize="smaller" color="gray.400">
-                  Note Properties
-                </Box>
-                <Box fontSize="medium" color="gray.100" lineHeight="shorter">
-                  Create a new Mediocre Note. Write something awesome!
-                </Box>
-              </Box>
-              <ListIcon as={AiOutlineEnter} color="blue.400" />
-            </ListItem>
+            {[0, 1, 2, 3, 4].map((v, i) => (
+              <CommandItem
+                key={`a${i}`}
+                id="add"
+                title="Note Manager"
+                subtitle="Add new Mediocre Note. Make something awesome!"
+                icon={AiOutlineEnter}
+              />
+            ))}
           </List>
         </ModalBody>
         {/* <ModalFooter display="flex" justifyContent="start">
