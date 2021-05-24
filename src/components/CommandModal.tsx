@@ -29,7 +29,17 @@ import { Button } from '@chakra-ui/button'
 import { AiOutlineEnter } from 'react-icons/ai'
 import { IconType } from 'react-icons/lib'
 
-const commandItems: any = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+const commandItems: any = [
+  AddIcon,
+  ExternalLinkIcon,
+  QuestionIcon,
+  SearchIcon,
+  SettingsIcon,
+  ExternalLinkIcon,
+  QuestionIcon,
+  SearchIcon,
+  SettingsIcon,
+]
 
 export type CommandItemProps = {
   id: string
@@ -66,7 +76,7 @@ function CommandItem({
       background={focused ? '#0072a3' : selected ? '#1A202C' : '#242933'}
       onClick={onClick}
     >
-      <ListIcon as={AddIcon} color="green.500" fontSize="md" />
+      <ListIcon as={icon} color="green.500" fontSize="md" />
       <Box flex="1" paddingX="0.5">
         <Box fontSize="xs" color="gray.400" letterSpacing="wider">
           {title}
@@ -75,7 +85,7 @@ function CommandItem({
           {subtitle}
         </Box>
       </Box>
-      <ListIcon as={icon} color="blue.400" />
+      <ListIcon as={AiOutlineEnter} color="blue.400" fontSize="md" />
     </ListItem>
   )
 }
@@ -150,7 +160,7 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
                   id="add"
                   title="Note Manager"
                   subtitle="Add new Mediocre Note. Make something awesome!"
-                  icon={AiOutlineEnter}
+                  icon={v}
                   focused={focusedItem === i}
                   selected={selectedItem === i}
                   onClick={() => {
