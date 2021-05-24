@@ -23,7 +23,7 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
     <Modal closeOnOverlayClick={true} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>
+        <ModalHeader padding={4}>
           <InputGroup>
             <InputLeftElement
               pointerEvents="none"
