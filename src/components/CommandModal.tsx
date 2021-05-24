@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
-import { Box, List, ListIcon, ListItem, UnorderedList } from '@chakra-ui/layout'
+import {
+  Box,
+  List,
+  ListIcon,
+  ListItem,
+  ListItemProps,
+  UnorderedList,
+} from '@chakra-ui/layout'
 import {
   Modal,
   ModalBody,
@@ -31,6 +38,7 @@ export type CommandItemProps = {
   icon: IconType
   focused?: boolean
   selected?: boolean
+  onClick?: ListItemProps['onClick']
 }
 
 function CommandItem({
@@ -40,6 +48,7 @@ function CommandItem({
   icon,
   focused = false,
   selected = false,
+  onClick,
 }: CommandItemProps) {
   return (
     <ListItem
@@ -55,13 +64,14 @@ function CommandItem({
       userSelect="none"
       cursor="pointer"
       background={focused ? '#0072a3' : selected ? '#1A202C' : '#242933'}
+      onClick={onClick}
     >
       <ListIcon as={AddIcon} color="green.500" fontSize="md" />
       <Box flex="1" paddingX="0.5">
         <Box fontSize="xs" color="gray.400" letterSpacing="wider">
           {title}
         </Box>
-        <Box fontSize="smaller" color="gray.100" >
+        <Box fontSize="smaller" color="gray.100">
           {subtitle}
         </Box>
       </Box>
@@ -82,18 +92,21 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
   const handleInputKeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     switch (event.key) {
       case 'ArrowUp': {
+        event.preventDefault()
         setFocusedItem((old) =>
           old - 1 < 0 ? commandItems.length - 1 : old - 1
         )
         break
       }
       case 'ArrowDown': {
+        event.preventDefault()
         setFocusedItem((old) =>
           old + 1 > commandItems.length - 1 ? 0 : old + 1
         )
         break
       }
       case 'Enter': {
+        event.preventDefault()
         setSelectedItem(focusedItem)
         break
       }
@@ -139,6 +152,10 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
                 icon={AiOutlineEnter}
                 focused={focusedItem === i}
                 selected={selectedItem === i}
+                onClick={() => {
+                  setFocusedItem(i)
+                  setSelectedItem(i)
+                }}
               />
             ))}
           </List>
