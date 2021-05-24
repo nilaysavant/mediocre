@@ -20,7 +20,12 @@ export type CommandModalProps = {
 
 function CommandModal({ isOpen, onClose }: CommandModalProps) {
   return (
-    <Modal closeOnOverlayClick={true} isOpen={isOpen} onClose={onClose}>
+    <Modal
+      closeOnOverlayClick={true}
+      isOpen={isOpen}
+      onClose={onClose}
+      motionPreset="scale"
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader padding={4}>
