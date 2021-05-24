@@ -8,6 +8,7 @@ import Topbar from './components/Topbar'
 import theme from './theme'
 import testMarkdown from './test/testMarkdown'
 import { MdThemeContext, MdThemeTypes } from './styles/markdown'
+import Bottombar from './components/Bottombar'
 
 function App() {
   const { colorMode } = useColorMode()
@@ -77,12 +78,13 @@ function App() {
         background={colorMode === 'dark' ? '#2b2b2b' : '#ffffff'}
         fontSize={18}
       >
-        <Topbar height="6vh" />
+        <Topbar height="5vh" />
         <Box
           display="flex"
           width="full"
           rounded="sm"
-          height="90vh"
+          height="89.5vh"
+          marginY="1"
           style={{
             border: `4px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
           }}
@@ -99,6 +101,7 @@ function App() {
             onScroll={handleViewScroll}
           />
         </Box>
+        <Bottombar height="2vh" />
       </Box>
     </MdThemeContext.Provider>
   )
