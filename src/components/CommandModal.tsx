@@ -48,6 +48,8 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
               border="none"
               _focus={{ border: 'none' }}
               width="full"
+              tabIndex={0}
+              autoFocus={true}
             />
           </InputGroup>
         </ModalHeader>
