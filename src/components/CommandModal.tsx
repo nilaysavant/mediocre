@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from '@chakra-ui/layout'
+import { Box, List, ListIcon, ListItem, UnorderedList } from '@chakra-ui/layout'
 import {
   Modal,
   ModalBody,
@@ -11,8 +11,15 @@ import {
   ModalProps,
 } from '@chakra-ui/modal'
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input'
-import { SearchIcon } from '@chakra-ui/icons'
+import {
+  AddIcon,
+  ExternalLinkIcon,
+  QuestionIcon,
+  SearchIcon,
+  SettingsIcon,
+} from '@chakra-ui/icons'
 import { Button } from '@chakra-ui/button'
+import { AiOutlineEnter } from 'react-icons/ai'
 
 export type CommandModalProps = {
   isOpen: ModalProps['isOpen']
@@ -26,24 +33,40 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
       isOpen={isOpen}
       onClose={onClose}
       motionPreset="scale"
+      size="lg"
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader padding={2}>
+        <ModalHeader padding={1}>
           <InputGroup>
             <InputLeftElement
               pointerEvents="none"
               children={<SearchIcon color="gray.300" />}
             />
             <Input
-              type="tel"
               placeholder="Enter Command"
               border="none"
               _focus={{ border: 'none' }}
+              width="full"
             />
           </InputGroup>
         </ModalHeader>
-        {/* <ModalBody pb={6}>Command Modal Body</ModalBody> */}
+        <ModalBody pb={6} padding="5">
+          <List spacing={3}>
+            <ListItem display="flex" alignItems="center">
+              <ListIcon as={AddIcon} color="green.500" />
+              <Box flex="1" paddingX="0.5">
+                <Box fontSize="smaller" color="gray.400">
+                  Note Properties
+                </Box>
+                <Box fontSize="medium" color="gray.100" lineHeight="shorter">
+                  Create a new Mediocre Note. Write something awesome!
+                </Box>
+              </Box>
+              <ListIcon as={AiOutlineEnter} color="blue.400" />
+            </ListItem>
+          </List>
+        </ModalBody>
         {/* <ModalFooter display="flex" justifyContent="start">
           <Button colorScheme="blue" mr={1} size="xs">
             Save
