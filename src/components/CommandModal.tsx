@@ -37,7 +37,7 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader padding={1}>
+        <ModalHeader padding="2">
           <InputGroup>
             <InputLeftElement
               pointerEvents="none"
@@ -51,9 +51,19 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
             />
           </InputGroup>
         </ModalHeader>
-        <ModalBody pb={6} padding="5">
+        <ModalBody pb={6} paddingX="4">
           <List spacing={3}>
-            <ListItem display="flex" alignItems="center">
+            <ListItem
+              display="flex"
+              alignItems="center"
+              _focus={{
+                background: 'blue',
+              }}
+              paddingX="2"
+              paddingY="2"
+              tabIndex={0}
+              borderRadius="md"
+            >
               <ListIcon as={AddIcon} color="green.500" />
               <Box flex="1" paddingX="0.5">
                 <Box fontSize="smaller" color="gray.400">
