@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/modal'
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input'
 import { SearchIcon } from '@chakra-ui/icons'
+import { Button } from '@chakra-ui/button'
 
 export type CommandModalProps = {
   isOpen: ModalProps['isOpen']
@@ -28,22 +29,28 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader padding={4}>
+        <ModalHeader padding={2}>
           <InputGroup>
             <InputLeftElement
               pointerEvents="none"
               children={<SearchIcon color="gray.300" />}
             />
-            <Input type="tel" placeholder="Enter Command" />
+            <Input
+              type="tel"
+              placeholder="Enter Command"
+              border="none"
+              _focus={{ border: 'none' }}
+            />
           </InputGroup>
         </ModalHeader>
-        {/* <ModalCloseButton /> */}
-        <ModalBody pb={6}>Command Modal Body</ModalBody>
-        {/* <ModalFooter>
-          <Button colorScheme="blue" mr={3}>
+        {/* <ModalBody pb={6}>Command Modal Body</ModalBody> */}
+        {/* <ModalFooter display="flex" justifyContent="start">
+          <Button colorScheme="blue" mr={1} size="xs">
             Save
           </Button>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose} size="xs">
+            Cancel
+          </Button>
         </ModalFooter> */}
       </ModalContent>
     </Modal>
