@@ -56,12 +56,12 @@ function CommandItem({
       cursor="pointer"
       background={focused ? '#0072a3' : selected ? '#1A202C' : '#242933'}
     >
-      <ListIcon as={AddIcon} color="green.500" fontSize="lg" />
+      <ListIcon as={AddIcon} color="green.500" fontSize="md" />
       <Box flex="1" paddingX="0.5">
-        <Box fontSize="smaller" color="gray.400">
+        <Box fontSize="xs" color="gray.400" letterSpacing="wider">
           {title}
         </Box>
-        <Box fontSize="medium" color="gray.100" lineHeight="shorter">
+        <Box fontSize="smaller" color="gray.100" >
           {subtitle}
         </Box>
       </Box>
