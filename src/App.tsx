@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { tauri } from '@tauri-apps/api'
 import { Box, useColorMode, useDisclosure } from '@chakra-ui/react'
 import './App.css'
@@ -23,14 +23,22 @@ function App() {
   const editorTextAreaRef = useRef<HTMLTextAreaElement>(null)
 
   // Command Modal
-  const { isOpen, onOpen: handleCommandModalOpen, onClose } = useDisclosure()
+  const {
+    isOpen: commandModalIsOpen,
+    onOpen: handleCommandModalOpen,
+    onClose: handleCommandModalClose,
+  } = useDisclosure()
 
-  const handleGlobalKeyDown = (event: KeyboardEvent) => {
-    if (event.ctrlKey && event.key === 'P') {
-      event.preventDefault()
-      handleCommandModalOpen()
-    }
-  }
+  const handleGlobalKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === 'k') {
+        event.preventDefault()
+        if (commandModalIsOpen) handleCommandModalClose()
+        else handleCommandModalOpen()
+      }
+    },
+    [commandModalIsOpen, handleCommandModalClose, handleCommandModalOpen]
+  )
 
   const handleViewScroll = (
     event:
@@ -68,7 +76,7 @@ function App() {
     return () => {
       document.removeEventListener('keydown', handleGlobalKeyDown)
     }
-  }, [])
+  }, [handleGlobalKeyDown])
 
   useEffect(() => {
     const handleTextChange = async () => {
@@ -120,7 +128,10 @@ function App() {
           />
         </Box>
         <Bottombar height="2vh" />
-        <CommandModal isOpen={isOpen} onClose={onClose} />
+        <CommandModal
+          isOpen={commandModalIsOpen}
+          onClose={handleCommandModalClose}
+        />
       </Box>
     </MdThemeContext.Provider>
   )
