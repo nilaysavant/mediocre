@@ -29,7 +29,7 @@ import { Button } from '@chakra-ui/button'
 import { AiOutlineEnter } from 'react-icons/ai'
 import { IconType } from 'react-icons/lib'
 
-const commandItems = [0, 1, 2, 3, 4]
+const commandItems: any = [1, 2, 3, 4, 5]
 
 export type CommandItemProps = {
   id: string
@@ -141,25 +141,27 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
             />
           </InputGroup>
         </ModalHeader>
-        <ModalBody pb={4} paddingX="4">
-          <List spacing={3}>
-            {commandItems.map((v, i) => (
-              <CommandItem
-                key={`a${i}`}
-                id="add"
-                title="Note Manager"
-                subtitle="Add new Mediocre Note. Make something awesome!"
-                icon={AiOutlineEnter}
-                focused={focusedItem === i}
-                selected={selectedItem === i}
-                onClick={() => {
-                  setFocusedItem(i)
-                  setSelectedItem(i)
-                }}
-              />
-            ))}
-          </List>
-        </ModalBody>
+        {commandItems.length > 0 && (
+          <ModalBody pb={4} paddingX="4">
+            <List spacing={3}>
+              {commandItems.map((v: any, i: number) => (
+                <CommandItem
+                  key={`a${i}`}
+                  id="add"
+                  title="Note Manager"
+                  subtitle="Add new Mediocre Note. Make something awesome!"
+                  icon={AiOutlineEnter}
+                  focused={focusedItem === i}
+                  selected={selectedItem === i}
+                  onClick={() => {
+                    setFocusedItem(i)
+                    setSelectedItem(i)
+                  }}
+                />
+              ))}
+            </List>
+          </ModalBody>
+        )}
         {/* <ModalFooter display="flex" justifyContent="start">
           <Button colorScheme="blue" mr={1} size="xs">
             Save
