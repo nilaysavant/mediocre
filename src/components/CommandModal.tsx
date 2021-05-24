@@ -57,12 +57,15 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
               display="flex"
               alignItems="center"
               _focus={{
-                background: 'blue',
+                background: '#0072a3',
               }}
               paddingX="2"
               paddingY="2"
-              tabIndex={0}
+              tabIndex={1}
               borderRadius="md"
+              userSelect="none"
+              cursor="pointer"
+              background="gray.800"
             >
               <ListIcon as={AddIcon} color="green.500" />
               <Box flex="1" paddingX="0.5">
