@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   Box,
   List,
@@ -98,21 +98,25 @@ export type CommandModalProps = {
 function CommandModal({ isOpen, onClose }: CommandModalProps) {
   const [focusedItem, setFocusedItem] = useState(0)
   const [selectedItem, setSelectedItem] = useState(0)
+  const commandItemsDivRef = useRef<HTMLDivElement>(null)
 
   const handleInputKeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     switch (event.key) {
       case 'ArrowUp': {
         event.preventDefault()
-        setFocusedItem((old) =>
-          old - 1 < 0 ? commandItems.length - 1 : old - 1
-        )
+        setFocusedItem((old) => {
+          if (old < commandItems.length - 5) commandItemsDivRef.current?.scrollBy({ top: -60 })
+          return old - 1 < 0 ? 0 : old - 1
+        })
         break
       }
       case 'ArrowDown': {
         event.preventDefault()
-        setFocusedItem((old) =>
-          old + 1 > commandItems.length - 1 ? 0 : old + 1
-        )
+        setFocusedItem((old) => {
+          if (old > 4)
+            commandItemsDivRef.current?.scrollBy({ top: 60 })
+          return old + 1 > commandItems.length - 1 ? commandItems.length - 1 : old + 1
+        })
         break
       }
       case 'Enter': {
@@ -152,7 +156,13 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
           </InputGroup>
         </ModalHeader>
         {commandItems.length > 0 && (
-          <ModalBody pb={4} paddingX="4" maxHeight="sm" overflowY="auto">
+          <ModalBody
+            pb={4}
+            paddingX="4"
+            maxHeight="sm"
+            overflowY="auto"
+            ref={commandItemsDivRef}
+          >
             <List spacing={3}>
               {commandItems.map((v: any, i: number) => (
                 <CommandItem
