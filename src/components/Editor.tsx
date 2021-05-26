@@ -100,7 +100,7 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
     //   }}
     // />
     <Box
-      flex={1}
+      flex={1.1}
       height="full"
       borderRadius={0}
       fontSize="md"
