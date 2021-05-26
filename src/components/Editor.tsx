@@ -5,7 +5,11 @@ import prettier from 'prettier'
 import parserMarkdown from 'prettier/parser-markdown'
 import MonacoEditor, { loader, useMonaco } from '@monaco-editor/react'
 import { Box } from '@chakra-ui/layout'
-import { editor, IKeyboardEvent } from 'monaco-editor/esm/vs/editor/editor.api'
+import {
+  editor,
+  IKeyboardEvent,
+  IScrollEvent,
+} from 'monaco-editor/esm/vs/editor/editor.api'
 
 loader.config({
   paths: {
@@ -17,7 +21,7 @@ export interface Props {
   text: string
   setText: (value: string) => void
   editorRef?: React.RefObject<editor.IStandaloneCodeEditor>
-  onScroll?: React.UIEventHandler<HTMLTextAreaElement>
+  onScroll?: (e: IScrollEvent) => void
 }
 
 function Editor({ text, setText, editorRef, onScroll }: Props) {
@@ -67,6 +71,10 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
       )
     }
   }, [monaco, monaco?.KeyCode.KEY_S, monaco?.KeyMod.CtrlCmd, setText, text])
+
+  useEffect(() => {
+    if (onScroll) monacoRef.current?.onDidScrollChange(onScroll)
+  }, [onScroll])
 
   return (
     // <Textarea

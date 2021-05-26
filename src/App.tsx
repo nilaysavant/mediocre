@@ -10,7 +10,7 @@ import testMarkdown from './test/testMarkdown'
 import { MdThemeContext, MdThemeTypes } from './styles/markdown'
 import Bottombar from './components/Bottombar'
 import CommandModal from './components/CommandModal'
-import { editor } from 'monaco-editor'
+import { editor, IScrollEvent } from 'monaco-editor'
 
 function App() {
   const { colorMode } = useColorMode()
@@ -74,6 +74,15 @@ function App() {
     }
   }
 
+  const handleEditorScroll = (event: IScrollEvent) => {
+    if (renderBoxRef.current) {
+      const percentScroll = event.scrollTop / event.scrollHeight
+      renderBoxRef.current.scrollTop = Math.round(
+        percentScroll * renderBoxRef.current.scrollHeight
+      )
+    }
+  }
+
   useEffect(() => {
     document.addEventListener('keydown', handleGlobalKeyDown)
     return () => {
@@ -122,7 +131,7 @@ function App() {
             text={sendText}
             setText={setSendText}
             editorRef={editorTextAreaRef}
-            onScroll={handleViewScroll}
+            onScroll={handleEditorScroll}
           />
           <Render
             markup={receivedText}
