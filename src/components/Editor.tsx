@@ -122,7 +122,7 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
         // defaultValue={text}
         value={text}
         onChange={handleEditorChange}
-        theme="vs-dark"
+        theme={colorMode === 'dark' ? 'vs-dark' : 'light'}
         height="100%"
         width="100%"
         beforeMount={handleEditorWillMount}
