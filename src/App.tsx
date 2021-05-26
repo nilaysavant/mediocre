@@ -10,6 +10,7 @@ import testMarkdown from './test/testMarkdown'
 import { MdThemeContext, MdThemeTypes } from './styles/markdown'
 import Bottombar from './components/Bottombar'
 import CommandModal from './components/CommandModal'
+import { editor } from 'monaco-editor'
 
 function App() {
   const { colorMode } = useColorMode()
@@ -20,7 +21,7 @@ function App() {
   const [mdTheme, setMdTheme] = useState<MdThemeTypes>('solarized-dark')
 
   const renderBoxRef = useRef<HTMLDivElement>(null)
-  const editorTextAreaRef = useRef<HTMLTextAreaElement>(null)
+  const editorTextAreaRef = useRef<editor.IStandaloneCodeEditor>(null)
 
   // Command Modal
   const {
@@ -50,8 +51,10 @@ function App() {
         if (editorTextAreaRef.current) {
           const percentScroll =
             event.currentTarget.scrollTop / event.currentTarget.scrollHeight
-          editorTextAreaRef.current.scrollTop = Math.round(
-            percentScroll * editorTextAreaRef.current.scrollHeight
+          editorTextAreaRef.current.setScrollTop(
+            Math.round(
+              percentScroll * editorTextAreaRef.current.getScrollHeight()
+            )
           )
         }
         break

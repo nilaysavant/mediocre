@@ -16,7 +16,7 @@ loader.config({
 export interface Props {
   text: string
   setText: (value: string) => void
-  editorRef?: React.RefObject<HTMLTextAreaElement>
+  editorRef?: React.RefObject<editor.IStandaloneCodeEditor>
   onScroll?: React.UIEventHandler<HTMLTextAreaElement>
 }
 
@@ -41,6 +41,8 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
     // you can also store it in `useRef` for further usage
     // @ts-expect-error cannot assign readonly
     monacoRef.current = editor
+    // @ts-expect-error cannot assign readonly
+    editorRef.current = editor
   }
 
   const handleEditorChange = useCallback(
@@ -51,7 +53,7 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
   )
 
   useEffect(() => {
-    if (monaco)
+    if (monaco) {
       monacoRef.current?.addCommand(
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
         () => {
@@ -63,6 +65,7 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
           setText(prettifiedText)
         }
       )
+    }
   }, [monaco, monaco?.KeyCode.KEY_S, monaco?.KeyMod.CtrlCmd, setText, text])
 
   return (
