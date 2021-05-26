@@ -13,7 +13,7 @@ import {
 
 loader.config({
   paths: {
-    vs: '/vs/',
+    vs: '/vs',
   },
 })
 
