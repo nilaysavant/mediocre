@@ -69,6 +69,20 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
           setText(prettifiedText)
         }
       )
+      monacoRef.current?.addCommand(
+        monaco.KeyMod.Alt | monaco.KeyCode.KEY_Z,
+        () => {
+          // toggleWordWrap : alt + z
+          monacoRef.current?.updateOptions({
+            wordWrap:
+              monacoRef.current.getOption(
+                monaco.editor.EditorOption.wordWrap
+              ) === 'on'
+                ? 'off'
+                : 'on',
+          })
+        }
+      )
     }
   }, [monaco, monaco?.KeyCode.KEY_S, monaco?.KeyMod.CtrlCmd, setText, text])
 
