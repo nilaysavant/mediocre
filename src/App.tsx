@@ -11,6 +11,7 @@ import { MdThemeContext, MdThemeTypes } from './styles/markdown'
 import Bottombar from './components/Bottombar'
 import CommandModal from './components/CommandModal'
 import { editor, IScrollEvent } from 'monaco-editor'
+import { CommandModalContext } from './components/CommandModalContext'
 
 function App() {
   const { colorMode } = useColorMode()
@@ -101,51 +102,61 @@ function App() {
   }, [sendText])
 
   return (
-    <MdThemeContext.Provider
+    <CommandModalContext.Provider
       value={{
-        theme: mdTheme,
-        setMdTheme,
+        commandModalIsOpen,
+        handleCommandModalClose,
+        handleCommandModalOpen,
       }}
     >
-      <Box
-        paddingTop={2}
-        paddingLeft={2}
-        paddingRight={2}
-        width="100vw"
-        height="100vh"
-        background={colorMode === 'dark' ? '#2b2b2b' : '#ffffff'}
-        fontSize={18}
+      <MdThemeContext.Provider
+        value={{
+          theme: mdTheme,
+          setMdTheme,
+        }}
       >
-        <Topbar height="5vh" />
         <Box
-          display="flex"
-          width="full"
-          rounded="sm"
-          height="89.5vh"
-          marginY="1"
-          style={{
-            border: `4px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
-          }}
+          paddingTop={2}
+          paddingLeft={2}
+          paddingRight={2}
+          width="100vw"
+          height="100vh"
+          background={colorMode === 'dark' ? '#2b2b2b' : '#ffffff'}
+          fontSize={18}
         >
-          <Editor
-            text={sendText}
-            setText={setSendText}
-            editorRef={editorTextAreaRef}
-            onScroll={handleEditorScroll}
-          />
-          <Render
-            markup={receivedText}
-            renderBoxRef={renderBoxRef}
-            onScroll={handleViewScroll}
+          <Topbar height="5vh" />
+          <Box
+            display="flex"
+            width="full"
+            rounded="sm"
+            height="89.5vh"
+            marginY="1"
+            style={{
+              border: `4px solid ${
+                colorMode === 'dark' ? '#404040' : '#d4d4d4'
+              }`,
+            }}
+          >
+            <Editor
+              text={sendText}
+              setText={setSendText}
+              editorRef={editorTextAreaRef}
+              onScroll={handleEditorScroll}
+            />
+            <Render
+              markup={receivedText}
+              renderBoxRef={renderBoxRef}
+              onScroll={handleViewScroll}
+            />
+          </Box>
+          <Bottombar height="2vh" />
+          <CommandModal
+            isOpen={commandModalIsOpen}
+            onClose={handleCommandModalClose}
           />
         </Box>
-        <Bottombar height="2vh" />
-        <CommandModal
-          isOpen={commandModalIsOpen}
-          onClose={handleCommandModalClose}
-        />
-      </Box>
-    </MdThemeContext.Provider>
+      </MdThemeContext.Provider>
+    </CommandModalContext.Provider>
   )
 }
 

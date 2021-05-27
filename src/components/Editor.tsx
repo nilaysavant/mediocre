@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useContext, useEffect, useRef } from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Textarea } from '@chakra-ui/textarea'
 import prettier from 'prettier'
@@ -10,6 +10,7 @@ import {
   IKeyboardEvent,
   IScrollEvent,
 } from 'monaco-editor/esm/vs/editor/editor.api'
+import { CommandModalContext } from './CommandModalContext'
 
 loader.config({
   paths: {
@@ -25,6 +26,11 @@ export interface Props {
 }
 
 function Editor({ text, setText, editorRef, onScroll }: Props) {
+  const {
+    commandModalIsOpen,
+    handleCommandModalOpen,
+    handleCommandModalClose,
+  } = useContext(CommandModalContext)
   const { colorMode } = useColorMode()
   const monaco = useMonaco()
   const monacoRef = useRef<editor.IStandaloneCodeEditor>(null)
@@ -81,6 +87,14 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
                 ? 'off'
                 : 'on',
           })
+        }
+      )
+      monacoRef.current?.addCommand(
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_K,
+        () => {
+          // toggleCommandBar : ctrl + k
+          if (commandModalIsOpen) handleCommandModalClose()
+          else handleCommandModalOpen()
         }
       )
     }
