@@ -20,6 +20,9 @@ serde = { version = "1.0", features = [ "derive" ] }
 comrak = "0.10"
 tauri = { version = "1.0.0-beta.1", features = ["api-all"] }
 
+[patch.crates-io]
+tao = { git = "https://github.com/tauri-apps/tao", rev = "6ca00629c914890969e7c793b00bfc319de188b7" }
+
 [features]
 default = [ "custom-protocol" ]
 custom-protocol = [ "tauri/custom-protocol" ]
