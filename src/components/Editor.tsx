@@ -98,10 +98,20 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
         }
       )
     }
-  }, [monaco, monaco?.KeyCode.KEY_S, monaco?.KeyMod.CtrlCmd, setText, text])
+  }, [
+    commandModalIsOpen,
+    handleCommandModalClose,
+    handleCommandModalOpen,
+    monaco,
+    setText,
+    text,
+  ])
 
   useEffect(() => {
-    if (onScroll) monacoRef.current?.onDidScrollChange(onScroll)
+    if (onScroll)
+      monacoRef.current?.onDidScrollChange((e) => {
+        onScroll(e)
+      })
   }, [onScroll])
 
   return (
