@@ -4,16 +4,22 @@ import { useColorMode } from '@chakra-ui/color-mode'
 import { Box } from '@chakra-ui/layout'
 import clsx from 'clsx'
 import { MdThemeContext } from '../styles/markdown'
+import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
+import { tauri } from '@tauri-apps/api'
+import { updateMdText } from '../appSlice'
 
 export interface Props {
-  markup: string
   renderBoxRef?: React.RefObject<HTMLDivElement>
   onScroll?: React.UIEventHandler<HTMLDivElement>
 }
 
-function Render({ markup, renderBoxRef, onScroll }: Props) {
+function Render({ renderBoxRef, onScroll }: Props) {
   const { colorMode } = useColorMode()
   const { theme: mdTheme } = useContext(MdThemeContext)
+
+  const mdText = useReduxSelector((state) => state.app.mdText)
+  const rawText = useReduxSelector((state) => state.app.rawText)
+  const dispatch = useReduxDispatch()
 
   useEffect(() => {
     /**
@@ -23,7 +29,17 @@ function Render({ markup, renderBoxRef, onScroll }: Props) {
      */
     // @ts-expect-error PrismJS
     window.Prism.highlightAll()
-  }, [markup])
+  }, [mdText])
+
+  useEffect(() => {
+    const handleTextChange = async () => {
+      const res: { markup: string } = await tauri.invoke('parse_md_to_mu', {
+        mdString: rawText,
+      })
+      dispatch(updateMdText(res.markup))
+    }
+    handleTextChange()
+  }, [dispatch, rawText])
 
   return (
     <Box
@@ -45,7 +61,7 @@ function Render({ markup, renderBoxRef, onScroll }: Props) {
       }}
       onScroll={onScroll}
       dangerouslySetInnerHTML={{
-        __html: markup || '<i>Type something...</i>',
+        __html: mdText || '<i>Type something...</i>',
       }}
     ></Box>
   )

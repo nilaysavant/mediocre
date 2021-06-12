@@ -15,10 +15,6 @@ import { CommandModalContext } from './components/CommandModalContext'
 
 function App() {
   const { colorMode } = useColorMode()
-  const [sendText, setSendText] = useState<string>(
-    process.env.NODE_ENV === 'development' ? testMarkdown : ''
-  )
-  const [receivedText, setReceivedText] = useState<string>('')
   const [mdTheme, setMdTheme] = useState<MdThemeTypes>('solarized-dark')
 
   const renderBoxRef = useRef<HTMLDivElement>(null)
@@ -91,16 +87,6 @@ function App() {
     }
   }, [handleGlobalKeyDown])
 
-  useEffect(() => {
-    const handleTextChange = async () => {
-      const res: { markup: string } = await tauri.invoke('parse_md_to_mu', {
-        mdString: sendText,
-      })
-      setReceivedText(res.markup)
-    }
-    handleTextChange()
-  }, [sendText])
-
   return (
     <CommandModalContext.Provider
       value={{
@@ -138,16 +124,10 @@ function App() {
             }}
           >
             <Editor
-              text={sendText}
-              setText={setSendText}
               editorRef={editorTextAreaRef}
               onScroll={handleEditorScroll}
             />
-            <Render
-              markup={receivedText}
-              renderBoxRef={renderBoxRef}
-              onScroll={handleViewScroll}
-            />
+            <Render renderBoxRef={renderBoxRef} onScroll={handleViewScroll} />
           </Box>
           <Bottombar height="2vh" />
           <CommandModal

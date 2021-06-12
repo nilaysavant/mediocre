@@ -11,6 +11,8 @@ import {
   IScrollEvent,
 } from 'monaco-editor/esm/vs/editor/editor.api'
 import { CommandModalContext } from './CommandModalContext'
+import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
+import { updateRawText } from '../appSlice'
 
 loader.config({
   paths: {
@@ -19,13 +21,11 @@ loader.config({
 })
 
 export interface Props {
-  text: string
-  setText: (value: string) => void
   editorRef?: React.RefObject<editor.IStandaloneCodeEditor>
   onScroll?: (e: IScrollEvent) => void
 }
 
-function Editor({ text, setText, editorRef, onScroll }: Props) {
+function Editor({ editorRef, onScroll }: Props) {
   const {
     commandModalIsOpen,
     handleCommandModalOpen,
@@ -34,6 +34,9 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
   const { colorMode } = useColorMode()
   const monaco = useMonaco()
   const monacoRef = useRef<editor.IStandaloneCodeEditor>(null)
+
+  const rawText = useReduxSelector((state) => state.app.rawText)
+  const dispatch = useReduxDispatch()
 
   function handleEditorWillMount(
     monaco: typeof import('monaco-editor/esm/vs/editor/editor.api')
@@ -57,9 +60,9 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
 
   const handleEditorChange = useCallback(
     (value, event) => {
-      if (value !== undefined) setText(value)
+      if (value !== undefined) dispatch(updateRawText(value))
     },
-    [setText]
+    [dispatch]
   )
 
   useEffect(() => {
@@ -68,11 +71,11 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
         () => {
           // onSave : ctrl + s
-          const prettifiedText = prettier.format(text, {
+          const prettifiedText = prettier.format(rawText, {
             parser: 'markdown',
             plugins: [parserMarkdown],
           })
-          setText(prettifiedText)
+          dispatch(updateRawText(prettifiedText))
         }
       )
       monacoRef.current?.addCommand(
@@ -103,8 +106,8 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
     handleCommandModalClose,
     handleCommandModalOpen,
     monaco,
-    setText,
-    text,
+    rawText,
+    dispatch,
   ])
 
   useEffect(() => {
@@ -166,7 +169,7 @@ function Editor({ text, setText, editorRef, onScroll }: Props) {
       <MonacoEditor
         defaultLanguage="markdown"
         // defaultValue={text}
-        value={text}
+        value={rawText}
         onChange={handleEditorChange}
         theme={colorMode === 'dark' ? 'vs-dark' : 'light'}
         height="100%"
