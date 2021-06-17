@@ -7,6 +7,7 @@ import { MdThemeContext } from '../styles/markdown'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
 import { tauri } from '@tauri-apps/api'
 import { updateMdText } from '../appSlice'
+import isTauri from '../utils/isTauri'
 
 export interface Props {
   renderBoxRef?: React.RefObject<HTMLDivElement>
@@ -33,10 +34,12 @@ function Render({ renderBoxRef, onScroll }: Props) {
 
   useEffect(() => {
     const handleTextChange = async () => {
-      const res: { markup: string } = await tauri.invoke('parse_md_to_mu', {
-        mdString: rawText,
-      })
-      dispatch(updateMdText(res.markup))
+      if (isTauri()) {
+        const res: { markup: string } = await tauri.invoke('parse_md_to_mu', {
+          mdString: rawText,
+        })
+        dispatch(updateMdText(res.markup))
+      }
     }
     handleTextChange()
   }, [dispatch, rawText])

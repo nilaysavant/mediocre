@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Textarea } from '@chakra-ui/textarea'
 import prettier from 'prettier'
@@ -33,7 +33,7 @@ function Editor({ editorRef, onScroll }: Props) {
   } = useContext(CommandModalContext)
   const { colorMode } = useColorMode()
   const monaco = useMonaco()
-  const monacoRef = useRef<editor.IStandaloneCodeEditor>(null)
+  const [monacoEditorObject, setMonacoEditorObject] = useState<editor.IStandaloneCodeEditor>()
 
   const rawText = useReduxSelector((state) => state.app.rawText)
   const dispatch = useReduxDispatch()
@@ -52,8 +52,7 @@ function Editor({ editorRef, onScroll }: Props) {
   ) {
     // here is another way to get monaco instance
     // you can also store it in `useRef` for further usage
-    // @ts-expect-error cannot assign readonly
-    monacoRef.current = editor
+    setMonacoEditorObject(editor)
     // @ts-expect-error cannot assign readonly
     editorRef.current = editor
   }
@@ -67,39 +66,28 @@ function Editor({ editorRef, onScroll }: Props) {
 
   useEffect(() => {
     if (monaco) {
-      monacoRef.current?.addCommand(
-        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
-        () => {
-          // onSave : ctrl + s
-          const prettifiedText = prettier.format(rawText, {
-            parser: 'markdown',
-            plugins: [parserMarkdown],
-          })
-          dispatch(updateRawText(prettifiedText))
-        }
-      )
-      monacoRef.current?.addCommand(
-        monaco.KeyMod.Alt | monaco.KeyCode.KEY_Z,
-        () => {
-          // toggleWordWrap : alt + z
-          monacoRef.current?.updateOptions({
-            wordWrap:
-              monacoRef.current.getOption(
-                monaco.editor.EditorOption.wordWrap
-              ) === 'on'
-                ? 'off'
-                : 'on',
-          })
-        }
-      )
-      monacoRef.current?.addCommand(
-        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_K,
-        () => {
-          // toggleCommandBar : ctrl + k
-          if (commandModalIsOpen) handleCommandModalClose()
-          else handleCommandModalOpen()
-        }
-      )
+      monacoEditorObject?.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => {
+        // onSave : ctrl + s
+        const prettifiedText = prettier.format(rawText, {
+          parser: 'markdown',
+          plugins: [parserMarkdown],
+        })
+        dispatch(updateRawText(prettifiedText))
+      })
+      monacoEditorObject?.addCommand(monaco.KeyMod.Alt | monaco.KeyCode.KEY_Z, () => {
+        // toggleWordWrap : alt + z
+        monacoEditorObject?.updateOptions({
+          wordWrap:
+            monacoEditorObject.getOption(monaco.editor.EditorOption.wordWrap) === 'on'
+              ? 'off'
+              : 'on',
+        })
+      })
+      monacoEditorObject?.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_K, () => {
+        // toggleCommandBar : ctrl + k
+        if (commandModalIsOpen) handleCommandModalClose()
+        else handleCommandModalOpen()
+      })
     }
   }, [
     commandModalIsOpen,
@@ -108,46 +96,18 @@ function Editor({ editorRef, onScroll }: Props) {
     monaco,
     rawText,
     dispatch,
+    monacoEditorObject,
   ])
 
   useEffect(() => {
-    if (onScroll)
-      monacoRef.current?.onDidScrollChange((e) => {
+    if (onScroll) {
+      monacoEditorObject?.onDidScrollChange((e) => {
         onScroll(e)
       })
-  }, [onScroll])
+    }
+  }, [monacoEditorObject, onScroll])
 
   return (
-    // <Textarea
-    //   ref={editorRef}
-    //   marginRight={0}
-    //   flex={1}
-    //   padding={4}
-    //   height="full"
-    //   borderRadius={0}
-    //   fontSize="md"
-    //   overflowX="auto"
-    //   resize="none"
-    //   _placeholder={{
-    //     fontStyle: 'italic',
-    //   }}
-    //   _focus={{
-    //     outline: 'none',
-    //   }}
-    //   placeholder="Type something..."
-    //   value={text}
-    //   onChange={(e) => setText(e.target.value)}
-    //   onScroll={onScroll}
-    //   onKeyDown={handleKeyDown}
-    //   style={{
-    //     background: colorMode === 'dark' ? '#1f1f1f' : 'white',
-    //     borderRight: `4px solid ${
-    //       colorMode === 'dark' ? '#4a4a4a' : '#e0e0e0'
-    //     }`,
-    //     overflow: 'auto',
-    //     outline: 'none',
-    //   }}
-    // />
     <Box
       flex={1.1}
       height="full"
