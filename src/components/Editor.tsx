@@ -37,18 +37,18 @@ function Editor({ editorRef, onScroll }: Props) {
   const [monacoEditorObject, setMonacoEditorObject] =
     useState<editor.IStandaloneCodeEditor>()
 
-  function handleEditorWillMount(
+  const handleEditorWillMount = (
     monaco: typeof import('monaco-editor/esm/vs/editor/editor.api')
-  ) {
+  ) => {
     // here is the monaco instance
     // do something before editor is mounted
     monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true)
   }
 
-  function handleEditorDidMount(
+  const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
     monaco: typeof import('monaco-editor/esm/vs/editor/editor.api')
-  ) {
+  ) => {
     // here is another way to get monaco instance
     // you can also store it in `useRef` for further usage
     setMonacoEditorObject(editor)
