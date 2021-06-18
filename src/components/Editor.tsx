@@ -10,9 +10,9 @@ import {
   IKeyboardEvent,
   IScrollEvent,
 } from 'monaco-editor/esm/vs/editor/editor.api'
-import { CommandModalContext } from './CommandModal/CommandModalContext'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
 import { updateRawText } from '../appSlice'
+import { handleClose, handleOpen } from './CommandModal/commandModalSlice'
 
 loader.config({
   paths: {
@@ -26,17 +26,16 @@ export interface Props {
 }
 
 function Editor({ editorRef, onScroll }: Props) {
-  const {
-    commandModalIsOpen,
-    handleCommandModalOpen,
-    handleCommandModalClose,
-  } = useContext(CommandModalContext)
-  const { colorMode } = useColorMode()
-  const monaco = useMonaco()
-  const [monacoEditorObject, setMonacoEditorObject] = useState<editor.IStandaloneCodeEditor>()
-
+  const commandModalIsOpen = useReduxSelector(
+    (state) => state.commandModal.isOpen
+  )
   const rawText = useReduxSelector((state) => state.app.rawText)
   const dispatch = useReduxDispatch()
+
+  const { colorMode } = useColorMode()
+  const monaco = useMonaco()
+  const [monacoEditorObject, setMonacoEditorObject] =
+    useState<editor.IStandaloneCodeEditor>()
 
   function handleEditorWillMount(
     monaco: typeof import('monaco-editor/esm/vs/editor/editor.api')
@@ -66,38 +65,41 @@ function Editor({ editorRef, onScroll }: Props) {
 
   useEffect(() => {
     if (monaco) {
-      monacoEditorObject?.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => {
-        // onSave : ctrl + s
-        const prettifiedText = prettier.format(rawText, {
-          parser: 'markdown',
-          plugins: [parserMarkdown],
-        })
-        dispatch(updateRawText(prettifiedText))
-      })
-      monacoEditorObject?.addCommand(monaco.KeyMod.Alt | monaco.KeyCode.KEY_Z, () => {
-        // toggleWordWrap : alt + z
-        monacoEditorObject?.updateOptions({
-          wordWrap:
-            monacoEditorObject.getOption(monaco.editor.EditorOption.wordWrap) === 'on'
-              ? 'off'
-              : 'on',
-        })
-      })
-      monacoEditorObject?.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_K, () => {
-        // toggleCommandBar : ctrl + k
-        if (commandModalIsOpen) handleCommandModalClose()
-        else handleCommandModalOpen()
-      })
+      monacoEditorObject?.addCommand(
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
+        () => {
+          // onSave : ctrl + s
+          const prettifiedText = prettier.format(rawText, {
+            parser: 'markdown',
+            plugins: [parserMarkdown],
+          })
+          dispatch(updateRawText(prettifiedText))
+        }
+      )
+      monacoEditorObject?.addCommand(
+        monaco.KeyMod.Alt | monaco.KeyCode.KEY_Z,
+        () => {
+          // toggleWordWrap : alt + z
+          monacoEditorObject?.updateOptions({
+            wordWrap:
+              monacoEditorObject.getOption(
+                monaco.editor.EditorOption.wordWrap
+              ) === 'on'
+                ? 'off'
+                : 'on',
+          })
+        }
+      )
+      monacoEditorObject?.addCommand(
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_K,
+        () => {
+          // toggleCommandBar : ctrl + k
+          if (commandModalIsOpen) dispatch(handleClose())
+          else dispatch(handleOpen())
+        }
+      )
     }
-  }, [
-    commandModalIsOpen,
-    handleCommandModalClose,
-    handleCommandModalOpen,
-    monaco,
-    rawText,
-    dispatch,
-    monacoEditorObject,
-  ])
+  }, [commandModalIsOpen, monaco, rawText, dispatch, monacoEditorObject])
 
   useEffect(() => {
     if (onScroll) {
