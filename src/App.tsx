@@ -11,31 +11,32 @@ import { MdThemeContext, MdThemeTypes } from './styles/markdown'
 import Bottombar from './components/Bottombar'
 import CommandModal from './components/CommandModal'
 import { editor, IScrollEvent } from 'monaco-editor'
-import { CommandModalContext } from './components/CommandModal/CommandModalContext'
+import { useReduxDispatch, useReduxSelector } from './redux/hooks'
+import {
+  handleClose,
+  handleOpen,
+} from './components/CommandModal/commandModalSlice'
 
-function App() {
+const App = () => {
   const { colorMode } = useColorMode()
   const [mdTheme, setMdTheme] = useState<MdThemeTypes>('solarized-dark')
+  const commandModalIsOpen = useReduxSelector(
+    (state) => state.commandModal.isOpen
+  )
+  const dispatch = useReduxDispatch()
 
   const renderBoxRef = useRef<HTMLDivElement>(null)
   const editorTextAreaRef = useRef<editor.IStandaloneCodeEditor>(null)
-
-  // Command Modal
-  const {
-    isOpen: commandModalIsOpen,
-    onOpen: handleCommandModalOpen,
-    onClose: handleCommandModalClose,
-  } = useDisclosure()
 
   const handleGlobalKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key === 'k') {
         event.preventDefault()
-        if (commandModalIsOpen) handleCommandModalClose()
-        else handleCommandModalOpen()
+        if (commandModalIsOpen) dispatch(handleClose())
+        else dispatch(handleOpen())
       }
     },
-    [commandModalIsOpen, handleCommandModalClose, handleCommandModalOpen]
+    [commandModalIsOpen, dispatch]
   )
 
   const handleViewScroll = (
@@ -88,55 +89,39 @@ function App() {
   }, [handleGlobalKeyDown])
 
   return (
-    <CommandModalContext.Provider
+    <MdThemeContext.Provider
       value={{
-        commandModalIsOpen,
-        handleCommandModalClose,
-        handleCommandModalOpen,
+        theme: mdTheme,
+        setMdTheme,
       }}
     >
-      <MdThemeContext.Provider
-        value={{
-          theme: mdTheme,
-          setMdTheme,
-        }}
+      <Box
+        paddingTop={2}
+        paddingLeft={2}
+        paddingRight={2}
+        width="100vw"
+        height="100vh"
+        background={colorMode === 'dark' ? '#2b2b2b' : '#ffffff'}
+        fontSize={18}
       >
+        <Topbar height="5vh" />
         <Box
-          paddingTop={2}
-          paddingLeft={2}
-          paddingRight={2}
-          width="100vw"
-          height="100vh"
-          background={colorMode === 'dark' ? '#2b2b2b' : '#ffffff'}
-          fontSize={18}
+          display="flex"
+          width="full"
+          rounded="sm"
+          height="89.5vh"
+          marginY="1"
+          style={{
+            border: `4px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
+          }}
         >
-          <Topbar height="5vh" />
-          <Box
-            display="flex"
-            width="full"
-            rounded="sm"
-            height="89.5vh"
-            marginY="1"
-            style={{
-              border: `4px solid ${
-                colorMode === 'dark' ? '#404040' : '#d4d4d4'
-              }`,
-            }}
-          >
-            <Editor
-              editorRef={editorTextAreaRef}
-              onScroll={handleEditorScroll}
-            />
-            <Render renderBoxRef={renderBoxRef} onScroll={handleViewScroll} />
-          </Box>
-          <Bottombar height="2vh" />
-          <CommandModal
-            isOpen={commandModalIsOpen}
-            onClose={handleCommandModalClose}
-          />
+          <Editor editorRef={editorTextAreaRef} onScroll={handleEditorScroll} />
+          <Render renderBoxRef={renderBoxRef} onScroll={handleViewScroll} />
         </Box>
-      </MdThemeContext.Provider>
-    </CommandModalContext.Provider>
+        <Bottombar height="2vh" />
+        <CommandModal />
+      </Box>
+    </MdThemeContext.Provider>
   )
 }
 

@@ -28,6 +28,8 @@ import {
 import { Button } from '@chakra-ui/button'
 import { AiOutlineEnter } from 'react-icons/ai'
 import { IconType } from 'react-icons/lib'
+import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
+import { handleClose } from './commandModalSlice'
 
 const commandItems: any = [
   AddIcon,
@@ -51,7 +53,7 @@ export type CommandItemProps = {
   onClick?: ListItemProps['onClick']
 }
 
-function CommandItem({
+const CommandItem = ({
   id,
   title,
   subtitle,
@@ -59,7 +61,7 @@ function CommandItem({
   focused = false,
   selected = false,
   onClick,
-}: CommandItemProps) {
+}: CommandItemProps) => {
   return (
     <ListItem
       id={id}
@@ -90,12 +92,9 @@ function CommandItem({
   )
 }
 
-export type CommandModalProps = {
-  isOpen: ModalProps['isOpen']
-  onClose: ModalProps['onClose']
-}
-
-function CommandModal({ isOpen, onClose }: CommandModalProps) {
+const CommandModal = () => {
+  const isOpen = useReduxSelector((state) => state.commandModal.isOpen)
+  const dispatch = useReduxDispatch()
   const [focusedItem, setFocusedItem] = useState(0)
   const [selectedItem, setSelectedItem] = useState(0)
   const commandItemsDivRef = useRef<HTMLDivElement>(null)
@@ -105,7 +104,8 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
       case 'ArrowUp': {
         event.preventDefault()
         setFocusedItem((old) => {
-          if (old < commandItems.length - 5) commandItemsDivRef.current?.scrollBy({ top: -60 })
+          if (old < commandItems.length - 5)
+            commandItemsDivRef.current?.scrollBy({ top: -60 })
           return old - 1 < 0 ? 0 : old - 1
         })
         break
@@ -113,9 +113,10 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
       case 'ArrowDown': {
         event.preventDefault()
         setFocusedItem((old) => {
-          if (old > 4)
-            commandItemsDivRef.current?.scrollBy({ top: 60 })
-          return old + 1 > commandItems.length - 1 ? commandItems.length - 1 : old + 1
+          if (old > 4) commandItemsDivRef.current?.scrollBy({ top: 60 })
+          return old + 1 > commandItems.length - 1
+            ? commandItems.length - 1
+            : old + 1
         })
         break
       }
@@ -133,7 +134,7 @@ function CommandModal({ isOpen, onClose }: CommandModalProps) {
     <Modal
       closeOnOverlayClick={true}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => dispatch(handleClose())}
       motionPreset="scale"
       size="lg"
     >
