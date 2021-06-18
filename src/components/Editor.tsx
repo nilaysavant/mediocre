@@ -57,7 +57,7 @@ function Editor({ editorRef, onScroll }: Props) {
   }
 
   const handleEditorChange = useCallback(
-    (value, event) => {
+    (value, _event) => {
       if (value !== undefined) dispatch(updateRawText(value))
     },
     [dispatch]
