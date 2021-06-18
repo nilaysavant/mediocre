@@ -6,7 +6,7 @@ import { Box, BoxProps } from '@chakra-ui/layout'
 import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
 import {
-  mdThemeList,
+  mdThemes,
   MdThemeTypes,
   updateTheme,
 } from '../styles/markdown/markdownThemeSlice'
@@ -85,21 +85,23 @@ const Topbar = ({ ...rest }: TopbarProps) => {
             value={mdTheme}
             onSelect={(e) => console.log(e)}
           >
-            {mdTheme}
+            {mdThemes.byId[mdTheme].label}
           </MenuButton>
           <MenuList borderRadius="sm" fontSize="md">
-            {mdThemeList.map((theme) => (
+            {mdThemes.list.map((theme) => (
               <MenuItem
                 key={`mdThemeMenuItem-${theme}`}
                 display="flex"
                 justifyContent="space-between"
                 value={theme}
                 onClick={(e) =>
-                  mdThemeList.includes(e.currentTarget.value as MdThemeTypes) &&
+                  mdThemes.list.includes(
+                    e.currentTarget.value as MdThemeTypes
+                  ) &&
                   dispatch(updateTheme(e.currentTarget.value as MdThemeTypes))
                 }
               >
-                {theme}
+                {mdThemes.byId[theme].label}
               </MenuItem>
             ))}
           </MenuList>
