@@ -10,7 +10,7 @@ import {
   IKeyboardEvent,
   IScrollEvent,
 } from 'monaco-editor/esm/vs/editor/editor.api'
-import { CommandModalContext } from './CommandModalContext'
+import { CommandModalContext } from './CommandModal/CommandModalContext'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
 import { updateRawText } from '../appSlice'
 

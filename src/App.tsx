@@ -11,7 +11,7 @@ import { MdThemeContext, MdThemeTypes } from './styles/markdown'
 import Bottombar from './components/Bottombar'
 import CommandModal from './components/CommandModal'
 import { editor, IScrollEvent } from 'monaco-editor'
-import { CommandModalContext } from './components/CommandModalContext'
+import { CommandModalContext } from './components/CommandModal/CommandModalContext'
 
 function App() {
   const { colorMode } = useColorMode()
