@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { MouseEvent, useCallback, useEffect, useRef } from 'react'
 import { Box, useColorMode } from '@chakra-ui/react'
 import './App.css'
 import Editor from './components/Editor'
@@ -12,6 +12,8 @@ import {
   handleClose,
   handleOpen,
 } from './components/CommandModal/commandModalSlice'
+import { shell } from '@tauri-apps/api'
+import isTauri from './utils/isTauri'
 
 const App = () => {
   const { colorMode } = useColorMode()
@@ -75,10 +77,25 @@ const App = () => {
     }
   }
 
+  const handleGlobalClick = (e: unknown) => {
+    const event = e as MouseEvent
+    const element = event.target as HTMLAnchorElement
+    if (
+      element?.tagName === 'A' &&
+      element?.href.startsWith('http') &&
+      !element?.href.startsWith('http://localhost')
+    ) {
+      event.preventDefault()
+      if (isTauri()) shell.open(element.href)
+    }
+  }
+
   useEffect(() => {
     document.addEventListener('keydown', handleGlobalKeyDown)
+    document.addEventListener('click', handleGlobalClick)
     return () => {
       document.removeEventListener('keydown', handleGlobalKeyDown)
+      document.removeEventListener('click', handleGlobalClick)
     }
   }, [handleGlobalKeyDown])
 
