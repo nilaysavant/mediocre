@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import { MdThemeContext } from '../styles/markdown'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
 import { tauri } from '@tauri-apps/api'
-import { updateMdText } from '../appSlice'
+import { updateMdText } from '../utils/markdownParser/markdownParserSlice'
 import isTauri from '../utils/isTauri'
 
 export interface Props {
@@ -18,8 +18,8 @@ function Render({ renderBoxRef, onScroll }: Props) {
   const { colorMode } = useColorMode()
   const { theme: mdTheme } = useContext(MdThemeContext)
 
-  const mdText = useReduxSelector((state) => state.app.mdText)
-  const rawText = useReduxSelector((state) => state.app.rawText)
+  const mdText = useReduxSelector((state) => state.markdownParser.mdText)
+  const rawText = useReduxSelector((state) => state.markdownParser.rawText)
   const dispatch = useReduxDispatch()
 
   useEffect(() => {

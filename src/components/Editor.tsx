@@ -11,7 +11,7 @@ import {
   IScrollEvent,
 } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
-import { updateRawText } from '../appSlice'
+import { updateRawText } from '../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from './CommandModal/commandModalSlice'
 
 loader.config({
@@ -29,7 +29,7 @@ function Editor({ editorRef, onScroll }: Props) {
   const commandModalIsOpen = useReduxSelector(
     (state) => state.commandModal.isOpen
   )
-  const rawText = useReduxSelector((state) => state.app.rawText)
+  const rawText = useReduxSelector((state) => state.markdownParser.rawText)
   const dispatch = useReduxDispatch()
 
   const { colorMode } = useColorMode()
