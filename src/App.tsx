@@ -1,12 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { tauri } from '@tauri-apps/api'
-import { Box, useColorMode, useDisclosure } from '@chakra-ui/react'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { Box, useColorMode } from '@chakra-ui/react'
 import './App.css'
 import Editor from './components/Editor'
 import Render from './components/Render'
 import Topbar from './components/Topbar'
-import theme from './theme'
-import testMarkdown from './test/testMarkdown'
 import Bottombar from './components/Bottombar'
 import CommandModal from './components/CommandModal'
 import { editor, IScrollEvent } from 'monaco-editor'
@@ -22,7 +19,6 @@ const App = () => {
     (state) => state.commandModal.isOpen
   )
   const dispatch = useReduxDispatch()
-
   const renderBoxRef = useRef<HTMLDivElement>(null)
   const editorTextAreaRef = useRef<editor.IStandaloneCodeEditor>(null)
 

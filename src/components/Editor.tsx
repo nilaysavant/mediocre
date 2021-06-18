@@ -1,13 +1,11 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
-import { Textarea } from '@chakra-ui/textarea'
 import prettier from 'prettier'
 import parserMarkdown from 'prettier/parser-markdown'
 import MonacoEditor, { loader, useMonaco } from '@monaco-editor/react'
 import { Box } from '@chakra-ui/layout'
 import {
   editor,
-  IKeyboardEvent,
   IScrollEvent,
 } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
@@ -31,7 +29,6 @@ const Editor = ({ editorRef, onScroll }: Props) => {
   )
   const rawText = useReduxSelector((state) => state.markdownParser.rawText)
   const dispatch = useReduxDispatch()
-
   const { colorMode } = useColorMode()
   const monaco = useMonaco()
   const [monacoEditorObject, setMonacoEditorObject] =

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import 'github-markdown-css/github-markdown.css'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Box } from '@chakra-ui/layout'
