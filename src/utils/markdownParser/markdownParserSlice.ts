@@ -14,7 +14,7 @@ const initialState: MarkdownParserState = {
 }
 
 export const markdownParserSlice = createSlice({
-  name: 'app',
+  name: 'markdownParser',
   initialState,
   reducers: {
     // Use the PayloadAction type to declare the contents of `action.payload`
