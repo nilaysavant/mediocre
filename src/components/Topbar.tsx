@@ -13,7 +13,7 @@ import {
 
 export type TopbarProps = BoxProps
 
-function Topbar({ ...rest }: TopbarProps) {
+const Topbar = ({ ...rest }: TopbarProps) => {
   const { colorMode, toggleColorMode } = useColorMode()
   const mdTheme = useReduxSelector((state) => state.markdownTheme.theme)
   const dispatch = useReduxDispatch()

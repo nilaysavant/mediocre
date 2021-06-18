@@ -13,7 +13,7 @@ export interface Props {
   onScroll?: React.UIEventHandler<HTMLDivElement>
 }
 
-function Render({ renderBoxRef, onScroll }: Props) {
+const Render = ({ renderBoxRef, onScroll }: Props) => {
   const { colorMode } = useColorMode()
   const mdTheme = useReduxSelector((state) => state.markdownTheme.theme)
   const { mdText, rawText } = useReduxSelector((state) => state.markdownParser)

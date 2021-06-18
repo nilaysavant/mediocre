@@ -25,7 +25,7 @@ export interface Props {
   onScroll?: (e: IScrollEvent) => void
 }
 
-function Editor({ editorRef, onScroll }: Props) {
+const Editor = ({ editorRef, onScroll }: Props) => {
   const commandModalIsOpen = useReduxSelector(
     (state) => state.commandModal.isOpen
   )
