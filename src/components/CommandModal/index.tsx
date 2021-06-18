@@ -18,30 +18,13 @@ import {
   ModalProps,
 } from '@chakra-ui/modal'
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input'
-import {
-  AddIcon,
-  ExternalLinkIcon,
-  QuestionIcon,
-  SearchIcon,
-  SettingsIcon,
-} from '@chakra-ui/icons'
+import { SearchIcon } from '@chakra-ui/icons'
 import { Button } from '@chakra-ui/button'
 import { AiOutlineEnter } from 'react-icons/ai'
 import { IconType } from 'react-icons/lib'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import { handleClose } from './commandModalSlice'
-
-const commandItems: any = [
-  AddIcon,
-  ExternalLinkIcon,
-  QuestionIcon,
-  SearchIcon,
-  SettingsIcon,
-  ExternalLinkIcon,
-  QuestionIcon,
-  SearchIcon,
-  SettingsIcon,
-]
+import commandItems from './commandItems'
 
 export type CommandItemProps = {
   id: string
@@ -123,6 +106,8 @@ const CommandModal = () => {
       case 'Enter': {
         event.preventDefault()
         setSelectedItem(focusedItem)
+        const itemObject = commandItems[focusedItem]
+        if (itemObject.onSelect) itemObject.onSelect()
         break
       }
       default:
@@ -165,18 +150,19 @@ const CommandModal = () => {
             ref={commandItemsDivRef}
           >
             <List spacing={3}>
-              {commandItems.map((v: any, i: number) => (
+              {commandItems.map((item, i: number) => (
                 <CommandItem
-                  key={`a${i}`}
-                  id="add"
-                  title="Note Manager"
-                  subtitle="Add new Mediocre Note. Make something awesome!"
-                  icon={v}
+                  key={`a${item.id}`}
+                  id={item.id}
+                  title={item.title}
+                  subtitle={item.subtitle}
+                  icon={item.icon}
                   focused={focusedItem === i}
                   selected={selectedItem === i}
-                  onClick={() => {
+                  onClick={(e) => {
                     setFocusedItem(i)
                     setSelectedItem(i)
+                    if (item.onSelect) item.onSelect()
                   }}
                 />
               ))}

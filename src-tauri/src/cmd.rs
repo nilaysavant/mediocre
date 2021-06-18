@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use comrak::{markdown_to_html, ComrakOptions};
 use serde::{Deserialize, Serialize};
 
@@ -29,4 +31,16 @@ pub fn parse_md_to_mu(md_string: String) -> MdResponse {
   comrak_options.extension.front_matter_delimiter = Some("---".to_owned()); // Ignore front-mater starting with '---'
   let mu_string = markdown_to_html(&md_string, &comrak_options);
   MdResponse { markup: mu_string }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct EnvResponse {
+  app_dir_path: Option<PathBuf>,
+}
+
+/// Get Environment Variables
+#[tauri::command]
+pub fn get_env() -> EnvResponse {
+  let app_dir_path = tauri::api::path::app_dir(&tauri::Config::default());
+  EnvResponse { app_dir_path }
 }
