@@ -2,9 +2,11 @@ import { configureStore } from '@reduxjs/toolkit'
 import markdownParserSlice from '../utils/markdownParser/markdownParserSlice'
 import commandModalSlice from '../components/CommandModal/commandModalSlice'
 import counterSlice from '../utils/counterSlice'
+import appSlice from '../appSlice'
 
 export const store = configureStore({
   reducer: {
+    app: appSlice,
     markdownParser: markdownParserSlice,
     commandModal: commandModalSlice,
     counter: counterSlice,
