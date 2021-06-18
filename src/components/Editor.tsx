@@ -47,7 +47,7 @@ function Editor({ editorRef, onScroll }: Props) {
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
-    monaco: typeof import('monaco-editor/esm/vs/editor/editor.api')
+    _monaco: typeof import('monaco-editor/esm/vs/editor/editor.api')
   ) => {
     // here is another way to get monaco instance
     // you can also store it in `useRef` for further usage
