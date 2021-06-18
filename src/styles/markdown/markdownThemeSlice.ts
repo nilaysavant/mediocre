@@ -1,4 +1,4 @@
-import React, { createContext} from 'react'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import './markdown.css'
 import './clearness/clearness.css'
 import './clearness-dark/clearness-dark.css'
@@ -11,7 +11,7 @@ import './solarized-light/solarized-light.css'
 import './wood/wood.css'
 import './wood-ri/wood-ri.css'
 
-const mdThemes = [
+export const mdThemeList: MdThemeTypes[] = [
   'clearness',
   'clearness-dark',
   'github',
@@ -40,16 +40,28 @@ export type MdThemeTypes =
   | 'wood'
   | 'wood-ri'
 
-export type MdThemeContextType = {
+// Define a type for the slice state
+interface MarkdownThemeState {
   theme: MdThemeTypes
-  setMdTheme: (theme: MdThemeTypes) => void
 }
 
-export const MdThemeContext = createContext<MdThemeContextType>({
+// Define the initial state using that type
+const initialState: MarkdownThemeState = {
   theme: 'solarized-dark',
-  setMdTheme: (theme) => {
-    return {}
+}
+
+export const markdownThemeSlice = createSlice({
+  name: 'markdownTheme',
+  initialState,
+  reducers: {
+    // Use the PayloadAction type to declare the contents of `action.payload`
+    updateTheme: (state, action: PayloadAction<MdThemeTypes>) => {
+      state.theme = action.payload
+    },
   },
 })
 
-export default mdThemes
+// Action creators are generated for each case reducer function
+export const { updateTheme } = markdownThemeSlice.actions
+
+export default markdownThemeSlice.reducer

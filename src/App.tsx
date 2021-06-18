@@ -7,7 +7,6 @@ import Render from './components/Render'
 import Topbar from './components/Topbar'
 import theme from './theme'
 import testMarkdown from './test/testMarkdown'
-import { MdThemeContext, MdThemeTypes } from './styles/markdown'
 import Bottombar from './components/Bottombar'
 import CommandModal from './components/CommandModal'
 import { editor, IScrollEvent } from 'monaco-editor'
@@ -19,7 +18,6 @@ import {
 
 const App = () => {
   const { colorMode } = useColorMode()
-  const [mdTheme, setMdTheme] = useState<MdThemeTypes>('solarized-dark')
   const commandModalIsOpen = useReduxSelector(
     (state) => state.commandModal.isOpen
   )
@@ -89,39 +87,32 @@ const App = () => {
   }, [handleGlobalKeyDown])
 
   return (
-    <MdThemeContext.Provider
-      value={{
-        theme: mdTheme,
-        setMdTheme,
-      }}
+    <Box
+      paddingTop={2}
+      paddingLeft={2}
+      paddingRight={2}
+      width="100vw"
+      height="100vh"
+      background={colorMode === 'dark' ? '#2b2b2b' : '#ffffff'}
+      fontSize={18}
     >
+      <Topbar height="5vh" />
       <Box
-        paddingTop={2}
-        paddingLeft={2}
-        paddingRight={2}
-        width="100vw"
-        height="100vh"
-        background={colorMode === 'dark' ? '#2b2b2b' : '#ffffff'}
-        fontSize={18}
+        display="flex"
+        width="full"
+        rounded="sm"
+        height="89.5vh"
+        marginY="1"
+        style={{
+          border: `4px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
+        }}
       >
-        <Topbar height="5vh" />
-        <Box
-          display="flex"
-          width="full"
-          rounded="sm"
-          height="89.5vh"
-          marginY="1"
-          style={{
-            border: `4px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
-          }}
-        >
-          <Editor editorRef={editorTextAreaRef} onScroll={handleEditorScroll} />
-          <Render renderBoxRef={renderBoxRef} onScroll={handleViewScroll} />
-        </Box>
-        <Bottombar height="2vh" />
-        <CommandModal />
+        <Editor editorRef={editorTextAreaRef} onScroll={handleEditorScroll} />
+        <Render renderBoxRef={renderBoxRef} onScroll={handleViewScroll} />
       </Box>
-    </MdThemeContext.Provider>
+      <Bottombar height="2vh" />
+      <CommandModal />
+    </Box>
   )
 }
 

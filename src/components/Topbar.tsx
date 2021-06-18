@@ -4,13 +4,19 @@ import { useColorMode } from '@chakra-ui/color-mode'
 import { ChevronDownIcon, Icon, MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { Box, BoxProps } from '@chakra-ui/layout'
 import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu'
-import mdThemes, { MdThemeContext, MdThemeTypes } from '../styles/markdown'
+import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
+import {
+  mdThemeList,
+  MdThemeTypes,
+  updateTheme,
+} from '../styles/markdown/markdownThemeSlice'
 
 export type TopbarProps = BoxProps
 
 function Topbar({ ...rest }: TopbarProps) {
   const { colorMode, toggleColorMode } = useColorMode()
-  const { theme: mdTheme, setMdTheme } = useContext(MdThemeContext)
+  const mdTheme = useReduxSelector((state) => state.markdownTheme.theme)
+  const dispatch = useReduxDispatch()
 
   return (
     <Box
@@ -82,15 +88,15 @@ function Topbar({ ...rest }: TopbarProps) {
             {mdTheme}
           </MenuButton>
           <MenuList borderRadius="sm" fontSize="md">
-            {mdThemes.map((theme) => (
+            {mdThemeList.map((theme) => (
               <MenuItem
                 key={`mdThemeMenuItem-${theme}`}
                 display="flex"
                 justifyContent="space-between"
                 value={theme}
                 onClick={(e) =>
-                  mdThemes.includes(e.currentTarget.value) &&
-                  setMdTheme(e.currentTarget.value as MdThemeTypes)
+                  mdThemeList.includes(e.currentTarget.value as MdThemeTypes) &&
+                  dispatch(updateTheme(e.currentTarget.value as MdThemeTypes))
                 }
               >
                 {theme}

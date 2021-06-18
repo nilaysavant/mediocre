@@ -3,7 +3,6 @@ import 'github-markdown-css/github-markdown.css'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Box } from '@chakra-ui/layout'
 import clsx from 'clsx'
-import { MdThemeContext } from '../styles/markdown'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
 import { tauri } from '@tauri-apps/api'
 import { updateMdText } from '../utils/markdownParser/markdownParserSlice'
@@ -16,10 +15,8 @@ export interface Props {
 
 function Render({ renderBoxRef, onScroll }: Props) {
   const { colorMode } = useColorMode()
-  const { theme: mdTheme } = useContext(MdThemeContext)
-
-  const mdText = useReduxSelector((state) => state.markdownParser.mdText)
-  const rawText = useReduxSelector((state) => state.markdownParser.rawText)
+  const mdTheme = useReduxSelector((state) => state.markdownTheme.theme)
+  const { mdText, rawText } = useReduxSelector((state) => state.markdownParser)
   const dispatch = useReduxDispatch()
 
   useEffect(() => {
