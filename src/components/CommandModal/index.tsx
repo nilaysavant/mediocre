@@ -80,6 +80,7 @@ const CommandModal = () => {
   const dispatch = useReduxDispatch()
   const [focusedItem, setFocusedItem] = useState(0)
   const [selectedItem, setSelectedItem] = useState(0)
+  const [inputText, setInputText] = useState('')
   const commandItemsDivRef = useRef<HTMLDivElement>(null)
 
   const handleInputKeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -107,7 +108,8 @@ const CommandModal = () => {
         event.preventDefault()
         setSelectedItem(focusedItem)
         const itemObject = commandItems[focusedItem]
-        if (itemObject.onSelect) itemObject.onSelect()
+        if (itemObject.onSelect)
+          itemObject.onSelect({ invokeMessage: inputText })
         break
       }
       default:
@@ -138,6 +140,8 @@ const CommandModal = () => {
               width="full"
               // autoFocus={true}
               onKeyDown={handleInputKeydown}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
             />
           </InputGroup>
         </ModalHeader>

@@ -16,12 +16,12 @@ export type CommandItem = {
   title: string
   subtitle: string
   icon: IconType
-  onSelect?: () => void
+  onSelect?: (data?: any) => void
 }
 
 const commandItems: CommandItem[] = [
   {
-    id: 'GET_ENV',
+    id: 'get_env',
     title: 'Get Environment',
     subtitle: 'Get environmet variables information',
     icon: VscServerEnvironment,
@@ -36,13 +36,14 @@ const commandItems: CommandItem[] = [
     },
   },
   {
-    id: 'GET_ENV_2',
-    title: 'Get Environment',
-    subtitle: 'Get environmet variables information',
+    id: 'my_custom_command',
+    title: 'My Custom Command',
+    subtitle: 'My custom command to test response from Tauri backend',
     icon: VscServerEnvironment,
-    onSelect: async () => {
+    onSelect: async (data) => {
+      const { invokeMessage } = data as { invokeMessage: string }
       if (isTauri()) {
-        const res = await tauri.invoke('get_env')
+        const res = await tauri.invoke('my_custom_command', { invokeMessage })
         console.log(
           '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
           res
