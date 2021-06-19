@@ -8,7 +8,8 @@ import {
 import { ListItemProps } from '@chakra-ui/react'
 import { tauri } from '@tauri-apps/api'
 import { IconType } from 'react-icons/lib'
-import { VscServerEnvironment } from 'react-icons/vsc'
+import { GoTerminal } from 'react-icons/go'
+import { RiTerminalWindowFill } from 'react-icons/ri'
 import isTauri from '../../utils/isTauri'
 
 export type CommandItem = {
@@ -24,7 +25,7 @@ const commandItems: CommandItem[] = [
     id: 'get_env',
     title: 'Get Environment',
     subtitle: 'Get environmet variables information',
-    icon: VscServerEnvironment,
+    icon: RiTerminalWindowFill,
     onSelect: async () => {
       if (isTauri()) {
         const res = await tauri.invoke('get_env')
@@ -39,7 +40,7 @@ const commandItems: CommandItem[] = [
     id: 'my_custom_command',
     title: 'My Custom Command',
     subtitle: 'My custom command to test response from Tauri backend',
-    icon: VscServerEnvironment,
+    icon: GoTerminal,
     onSelect: async (data) => {
       const { invokeMessage } = data as { invokeMessage: string }
       if (isTauri()) {
