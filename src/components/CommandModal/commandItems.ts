@@ -8,8 +8,8 @@ import {
 import { ListItemProps } from '@chakra-ui/react'
 import { tauri } from '@tauri-apps/api'
 import { IconType } from 'react-icons/lib'
-import { GoTerminal } from 'react-icons/go'
-import { RiTerminalWindowFill } from 'react-icons/ri'
+import { GoFileDirectory, GoTerminal } from 'react-icons/go'
+import { IoTerminal } from 'react-icons/io5'
 import isTauri from '../../utils/isTauri'
 import { open } from '@tauri-apps/api/dialog'
 
@@ -26,7 +26,7 @@ const commandItems: CommandItem[] = [
     id: 'get_env',
     title: 'Get Environment',
     subtitle: 'Get environmet variables information',
-    icon: RiTerminalWindowFill,
+    icon: IoTerminal,
     onSelect: async () => {
       if (isTauri()) {
         const res = await tauri.invoke('get_env')
@@ -57,7 +57,7 @@ const commandItems: CommandItem[] = [
     id: 'open_file',
     title: 'Open File',
     subtitle: 'Open file from file system',
-    icon: GoTerminal,
+    icon: GoFileDirectory,
     onSelect: async () => {
       if (isTauri()) {
         const res = open()
