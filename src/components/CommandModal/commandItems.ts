@@ -11,6 +11,7 @@ import { IconType } from 'react-icons/lib'
 import { GoTerminal } from 'react-icons/go'
 import { RiTerminalWindowFill } from 'react-icons/ri'
 import isTauri from '../../utils/isTauri'
+import { open } from '@tauri-apps/api/dialog'
 
 export type CommandItem = {
   id: string
@@ -45,6 +46,21 @@ const commandItems: CommandItem[] = [
       const { invokeMessage } = data as { invokeMessage: string }
       if (isTauri()) {
         const res = await tauri.invoke('my_custom_command', { invokeMessage })
+        console.log(
+          '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
+          res
+        )
+      }
+    },
+  },
+  {
+    id: 'open_file',
+    title: 'Open File',
+    subtitle: 'Open file from file system',
+    icon: GoTerminal,
+    onSelect: async () => {
+      if (isTauri()) {
+        const res = open()
         console.log(
           '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
           res
