@@ -4,12 +4,9 @@ import prettier from 'prettier'
 import parserMarkdown from 'prettier/parser-markdown'
 import MonacoEditor, { loader, useMonaco } from '@monaco-editor/react'
 import { Box } from '@chakra-ui/layout'
-import {
-  editor,
-  IScrollEvent,
-} from 'monaco-editor/esm/vs/editor/editor.api'
+import { editor, IScrollEvent } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
-import { updateRawText } from '../utils/markdownParser/markdownParserSlice'
+import { prettifyRawText, updateRawText } from '../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from './CommandModal/commandModalSlice'
 
 loader.config({
@@ -64,15 +61,13 @@ const Editor = ({ editorRef, onScroll }: Props) => {
     if (monaco) {
       monacoEditorObject?.addCommand(
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
-        () => {
-          // onSave : ctrl + s
-          const prettifiedText = prettier.format(rawText, {
-            parser: 'markdown',
-            plugins: [parserMarkdown],
-          })
-          dispatch(updateRawText(prettifiedText))
-        }
+        () => dispatch(prettifyRawText())
       )
+    }
+  }, [dispatch, monaco, monacoEditorObject])
+
+  useEffect(() => {
+    if (monaco) {
       monacoEditorObject?.addCommand(
         monaco.KeyMod.Alt | monaco.KeyCode.KEY_Z,
         () => {
@@ -96,7 +91,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
         }
       )
     }
-  }, [commandModalIsOpen, monaco, rawText, dispatch, monacoEditorObject])
+  }, [commandModalIsOpen, dispatch, monaco, monacoEditorObject])
 
   useEffect(() => {
     if (onScroll) {

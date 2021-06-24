@@ -7,6 +7,7 @@ import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
 import { tauri } from '@tauri-apps/api'
 import { updateMdText } from '../utils/markdownParser/markdownParserSlice'
 import isTauri from '../utils/isTauri'
+import { useDebounce } from '../utils/hooks/useDebounce'
 
 export interface Props {
   renderBoxRef?: React.RefObject<HTMLDivElement>
@@ -18,6 +19,7 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
   const mdTheme = useReduxSelector((state) => state.markdownTheme.theme)
   const { mdText, rawText } = useReduxSelector((state) => state.markdownParser)
   const dispatch = useReduxDispatch()
+  const debouncedRawText = useDebounce(rawText, 1000)
 
   useEffect(() => {
     /**
@@ -33,13 +35,13 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
     const handleTextChange = async () => {
       if (isTauri()) {
         const res: { markup: string } = await tauri.invoke('parse_md_to_mu', {
-          mdString: rawText,
+          mdString: debouncedRawText,
         })
         dispatch(updateMdText(res.markup))
       }
     }
     handleTextChange()
-  }, [dispatch, rawText])
+  }, [debouncedRawText, dispatch])
 
   return (
     <Box

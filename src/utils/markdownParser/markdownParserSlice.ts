@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import testMarkdown from '../../test/testMarkdown'
+import { prettifyText } from '../prettierFns'
 
 // Define a type for the slice state
 interface MarkdownParserState {
@@ -24,10 +25,13 @@ export const markdownParserSlice = createSlice({
     updateMdText: (state, action: PayloadAction<string>) => {
       state.mdText = action.payload
     },
+    prettifyRawText: (state) => {
+      state.rawText = prettifyText(state.rawText)
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { updateRawText, updateMdText } = markdownParserSlice.actions
+export const { updateRawText, updateMdText, prettifyRawText } = markdownParserSlice.actions
 
 export default markdownParserSlice.reducer
