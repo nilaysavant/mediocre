@@ -10,7 +10,22 @@
   /* list-style: unset; */
 }
 
-.markdown ol, .markdown ul {
+.markdown ol,
+.markdown ul {
   margin-left: 1rem;
   padding-left: 1rem;
+}
+
+.markdown > h1,
+.markdown > h2,
+.markdown > h3,
+.markdown > h4,
+.markdown > h5,
+.markdown > h6 {
+  margin-top: 0.5em !important;
+  margin-bottom: 0rem !important;
+}
+
+.markdown> *:first-child {
+  margin-top: 0 !important;
 }
