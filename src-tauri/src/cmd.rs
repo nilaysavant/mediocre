@@ -31,8 +31,13 @@ pub fn parse_md_to_mu(md_string: String) -> MdResponse {
   comrak_options.extension.front_matter_delimiter = Some("---".to_owned()); // Ignore front-mater starting with '---'
   comrak_options.render.unsafe_ = true;
   let unsafe_mu_string = markdown_to_html(&md_string, &comrak_options);
-  let safe_mu_string = ammonia::clean(&unsafe_mu_string);
-  MdResponse { markup: safe_mu_string }
+  let safe_mu_string = ammonia::Builder::new()
+    .add_tag_attributes("code", &["class"])
+    .clean(&unsafe_mu_string)
+    .to_string();
+  MdResponse {
+    markup: safe_mu_string,
+  }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
