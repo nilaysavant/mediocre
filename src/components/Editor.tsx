@@ -6,7 +6,10 @@ import MonacoEditor, { loader, useMonaco } from '@monaco-editor/react'
 import { Box } from '@chakra-ui/layout'
 import { editor, IScrollEvent } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
-import { prettifyRawText, updateRawText } from '../utils/markdownParser/markdownParserSlice'
+import {
+  prettifyRawText,
+  updateRawText,
+} from '../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from './CommandModal/commandModalSlice'
 
 loader.config({
@@ -68,10 +71,14 @@ const Editor = ({ editorRef, onScroll }: Props) => {
 
   useEffect(() => {
     if (monaco) {
+      /** Set initial options */
+      monacoEditorObject?.updateOptions({
+        wordWrap: 'on',
+      })
+      /** toggleWordWrap : alt + z */
       monacoEditorObject?.addCommand(
         monaco.KeyMod.Alt | monaco.KeyCode.KEY_Z,
         () => {
-          // toggleWordWrap : alt + z
           monacoEditorObject?.updateOptions({
             wordWrap:
               monacoEditorObject.getOption(
@@ -82,10 +89,10 @@ const Editor = ({ editorRef, onScroll }: Props) => {
           })
         }
       )
+      /** toggleCommandBar : ctrl + k */
       monacoEditorObject?.addCommand(
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_K,
         () => {
-          // toggleCommandBar : ctrl + k
           if (commandModalIsOpen) dispatch(handleClose())
           else dispatch(handleOpen())
         }
