@@ -51,16 +51,15 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
       ref={renderBoxRef}
       marginLeft={0}
       flex={1}
-      padding={4}
+      padding="4"
       textAlign="left"
       height="full"
       overflowY="auto"
       fontSize="sm"
-      style={{
-        background: colorMode === 'dark' ? '#1f1f1f' : 'white',
-        borderLeft: `4px solid ${colorMode === 'dark' ? '#303030' : '#d6d6d6'}`,
-        color: colorMode === 'dark' ? '#ededed' : '#1f1f1f',
-      }}
+      background={colorMode === 'dark' ? '#1f1f1f' : 'white'}
+      borderLeft={`4px solid ${colorMode === 'dark' ? '#303030' : '#d6d6d6'}`}
+      color={colorMode === 'dark' ? '#ededed' : '#1f1f1f'}
+      outline="none"
       onScroll={onScroll}
       dangerouslySetInnerHTML={{
         __html: mdText || '<i>Type something...</i>',

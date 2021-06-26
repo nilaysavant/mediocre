@@ -74,6 +74,15 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       /** Set initial options */
       monacoEditorObject?.updateOptions({
         wordWrap: 'on',
+        scrollbar: {
+          verticalScrollbarSize: 0,
+        },
+        minimap: {
+          enabled: false,
+        },
+        lineNumbers: 'off',
+        fontSize: 13,
+        lineHeight: 20,
       })
       /** toggleWordWrap : alt + z */
       monacoEditorObject?.addCommand(
@@ -110,7 +119,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
 
   return (
     <Box
-      flex={1.3}
+      flex={1.1}
       height="full"
       borderRadius={0}
       fontSize="md"
@@ -118,14 +127,10 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       resize="none"
       placeholder="Type something..."
       // onScroll={onScroll}
-      style={{
-        background: colorMode === 'dark' ? '#1f1f1f' : 'white',
-        borderRight: `4px solid ${
-          colorMode === 'dark' ? '#4a4a4a' : '#e0e0e0'
-        }`,
-        overflow: 'auto',
-        outline: 'none',
-      }}
+      background={colorMode === 'dark' ? '#1f1f1f' : 'white'}
+      borderRight={`4px solid ${colorMode === 'dark' ? '#4a4a4a' : '#e0e0e0'}`}
+      overflow="auto"
+      outline="none"
     >
       <MonacoEditor
         defaultLanguage="markdown"
