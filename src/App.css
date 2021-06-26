@@ -10,6 +10,24 @@
   /* list-style: unset; */
 }
 
+.markdown::-webkit-scrollbar {
+  width: 1em;
+  /* background: blue; */
+}
+
+.markdown::-webkit-scrollbar-thumb {
+  background: rgba(90, 90, 90, 0);
+  height: 1rem;
+}
+
+.markdown:hover::-webkit-scrollbar-thumb {
+  background: rgba(90, 90, 90, 0.438);
+}
+
+.markdown:hover::-webkit-scrollbar-thumb:active {
+  background: rgba(90, 90, 90, 0.712);
+}
+
 .markdown ol,
 .markdown ul {
   margin-left: 1rem;
@@ -26,6 +44,6 @@
   margin-bottom: 0rem !important;
 }
 
-.markdown> *:first-child {
+.markdown > *:first-child {
   margin-top: 0 !important;
 }
