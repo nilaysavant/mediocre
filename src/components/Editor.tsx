@@ -71,6 +71,15 @@ const Editor = ({ editorRef, onScroll }: Props) => {
 
   useEffect(() => {
     if (monaco) {
+      /** define theme */
+      monaco.editor.defineTheme('monaco-mediocre-dark', {
+        base: 'vs-dark',
+        colors: {
+          'editor.background': '#1f1f1f',
+        },
+        inherit: true,
+        rules: [],
+      })
       /** Set initial options */
       monacoEditorObject?.updateOptions({
         wordWrap: 'on',
@@ -137,7 +146,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
         // defaultValue={text}
         value={rawText}
         onChange={handleEditorChange}
-        theme={colorMode === 'dark' ? 'vs-dark' : 'light'}
+        theme={colorMode === 'dark' ? 'monaco-mediocre-dark' : 'light'}
         height="100%"
         width="100%"
         beforeMount={handleEditorWillMount}
