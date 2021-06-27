@@ -18,6 +18,7 @@ import {
   openFileSelectionDialog,
   saveFileToCustomPath,
 } from '../../functions/fileSystem'
+import { getEnvironment } from '../../functions/environment'
 
 export type MediocreCommandId =
   | 'get_env'
@@ -38,10 +39,15 @@ export type OnSelectData = {
     }
 )
 
-export type OnSelectResult = void | {
-  selectedPath: string
-  saveResult: any
-}
+export type OnSelectResult =
+  | void
+  | {
+      selectedPath: string
+      saveResult: any
+    }
+  | {
+      app_dir_path: string
+    }
 
 export type MediocreCommand = {
   id: MediocreCommandId
@@ -66,14 +72,9 @@ const allMediocreCommands: AllMediocreCommands = {
       title: 'Get Environment',
       subtitle: 'Get environmet variables information',
       icon: IoTerminal,
-      onSelect: async (_data) => {
-        if (isTauri()) {
-          const res = await tauri.invoke('get_env')
-          console.log(
-            '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
-            res
-          )
-        }
+      onSelect: async () => {
+        const envResult = await getEnvironment()
+        return envResult
       },
     },
     my_custom_command: {
@@ -109,7 +110,10 @@ const allMediocreCommands: AllMediocreCommands = {
           const selectedFilePath = await openFileSelectionDialog({
             fileTypes: ['md'],
           })
-          console.log("🚀 ~ file: commandItems.ts ~ line 112 ~ onSelect: ~ selectedFilePath", selectedFilePath)
+          console.log(
+            '🚀 ~ file: commandItems.ts ~ line 112 ~ onSelect: ~ selectedFilePath',
+            selectedFilePath
+          )
         }
       },
     },
@@ -119,26 +123,22 @@ const allMediocreCommands: AllMediocreCommands = {
       subtitle: 'Save the file to a path in your file system',
       icon: GoFileDirectory,
       onSelect: async (data) => {
-        if (isTauri()) {
-          if (!(data && data.commandId === 'save_file_to_path'))
-            throw new Error(`data is invalid!`)
-          const selectedPath = await openFileSelectionDialog({
-            directory: true,
-            fileTypes: ['md'],
-          })
-          if (selectedPath && !Array.isArray(selectedPath) && data.fileName) {
-            const fileData = store.getState().markdownParser.rawText
-            const saveResult = saveFileToCustomPath(
-              selectedPath,
-              data.fileName,
-              fileData
-            )
-            return { selectedPath, saveResult }
-          } else
-            throw new Error(
-              `file path (res) is invalid or fileName is invalid!`
-            )
-        }
+        if (!(data && data.commandId === 'save_file_to_path'))
+          throw new Error(`data is invalid!`)
+        const selectedPath = await openFileSelectionDialog({
+          directory: true,
+          fileTypes: ['md'],
+        })
+        if (selectedPath && !Array.isArray(selectedPath) && data.fileName) {
+          const fileData = store.getState().markdownParser.rawText
+          const saveResult = saveFileToCustomPath(
+            selectedPath,
+            data.fileName,
+            fileData
+          )
+          return { selectedPath, saveResult }
+        } else
+          throw new Error(`file path (res) is invalid or fileName is invalid!`)
       },
     },
   },

@@ -94,6 +94,10 @@ const CommandModal = () => {
             await command.onSelect({ commandId, message: inputText })
             break
           }
+          case 'get_env': {
+            await command.onSelect()
+            break
+          }
           case 'save_file_to_path': {
             await command.onSelect({ commandId, fileName: inputText })
             break

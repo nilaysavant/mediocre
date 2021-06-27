@@ -43,11 +43,10 @@ export const saveFileToCustomPath = async (
 ) => {
   if (isTauri()) {
     if (!(dirPath && fileName)) throw new Error(`dirPath/fileName invalid!`)
-    type InvokeResult = {
+    const invokeRes: {
       status: boolean
       message: string
-    }
-    const invokeRes: InvokeResult = await tauri.invoke('save_file_to', {
+    } = await tauri.invoke('save_file_to', {
       savePath: `${dirPath}/${fileName}`,
       fileData,
     })
