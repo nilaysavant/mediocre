@@ -83,6 +83,13 @@ const Editor = ({ editorRef, onScroll }: Props) => {
         lineNumbers: 'off',
         fontSize: 13,
         lineHeight: 20,
+        padding: {
+          top: 12,
+        },
+        lineDecorationsWidth: 10,
+        lineNumbersMinChars: 0,
+        folding: false,
+        glyphMargin: false,
       })
       /** toggleWordWrap : alt + z */
       monacoEditorObject?.addCommand(
@@ -119,7 +126,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
 
   return (
     <Box
-      flex={1.1}
+      flex={1}
       height="full"
       borderRadius={0}
       fontSize="md"

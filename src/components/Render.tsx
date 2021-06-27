@@ -51,11 +51,11 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
       ref={renderBoxRef}
       marginLeft={0}
       flex={1}
-      padding="4"
+      padding="10px"
       textAlign="left"
       height="full"
       overflowY="auto"
-      fontSize="sm"
+      fontSize="13px"
       background={colorMode === 'dark' ? '#1f1f1f' : 'white'}
       borderLeft={`1px solid ${colorMode === 'dark' ? '#303030' : '#d6d6d6'}`}
       color={colorMode === 'dark' ? '#ededed' : '#1f1f1f'}
