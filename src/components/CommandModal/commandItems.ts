@@ -31,7 +31,7 @@ const commandItems: CommandItem[] = [
     title: 'Get Environment',
     subtitle: 'Get environmet variables information',
     icon: IoTerminal,
-    onSelect: async () => {
+    onSelect: async (_data) => {
       try {
         if (isTauri()) {
           const res = await tauri.invoke('get_env')
@@ -72,7 +72,7 @@ const commandItems: CommandItem[] = [
     title: 'Open File',
     subtitle: 'Open file from file system',
     icon: GoFileDirectory,
-    onSelect: async () => {
+    onSelect: async (_data) => {
       try {
         if (isTauri()) {
           const res = open()
