@@ -86,7 +86,19 @@ const CommandModal = () => {
   const handleRunCommand = (focusedItemIndex: number) => {
     setSelectedItem(focusedItemIndex)
     const itemObject = commandItems[focusedItemIndex]
-    if (itemObject.onSelect) itemObject.onSelect({ message: inputText })
+    if (itemObject.onSelect)
+      switch (itemObject.id) {
+        case 'my_custom_command': {
+          itemObject.onSelect({ commandId: itemObject.id, message: inputText })
+          break
+        }
+        case 'save_file_to_path': {
+          itemObject.onSelect({ commandId: itemObject.id, fileName: inputText })
+          break
+        }
+        default:
+          break
+      }
   }
 
   const handleInputKeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {

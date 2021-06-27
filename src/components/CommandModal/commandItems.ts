@@ -13,13 +13,29 @@ import { IoTerminal } from 'react-icons/io5'
 import isTauri from '../../utils/isTauri'
 import { open } from '@tauri-apps/api/dialog'
 import { homeDir } from '@tauri-apps/api/path'
+import { store } from '../../redux/store'
+
+export type CommandId =
+  | 'get_env'
+  | 'my_custom_command'
+  | 'open_file'
+  | 'save_file_to_path'
 
 export type OnSelectInputSchemaType = {
-  message: string
-}
+  commandId: CommandId
+} & (
+  | {
+      commandId: 'my_custom_command'
+      message: string
+    }
+  | {
+      commandId: 'save_file_to_path'
+      fileName: string
+    }
+)
 
 export type CommandItem = {
-  id: string
+  id: CommandId
   title: string
   subtitle: string
   icon: IconType
@@ -53,7 +69,8 @@ const commandItems: CommandItem[] = [
     icon: GoTerminal,
     onSelect: async (data) => {
       try {
-        if (!data) throw new Error(`data is invalid!`)
+        if (!(data && data.commandId === 'my_custom_command'))
+          throw new Error(`data is invalid!`)
         if (isTauri()) {
           const res = await tauri.invoke('my_custom_command', {
             message: data.message,
@@ -92,9 +109,11 @@ const commandItems: CommandItem[] = [
     title: 'Save File To Path',
     subtitle: 'Save the file to a path in your file system',
     icon: GoFileDirectory,
-    onSelect: async (_data) => {
+    onSelect: async (data) => {
       try {
         if (isTauri()) {
+          if (!(data && data.commandId === 'save_file_to_path'))
+            throw new Error(`data is invalid!`)
           const res = await open({
             defaultPath: await homeDir(),
             directory: true,
@@ -109,17 +128,20 @@ const commandItems: CommandItem[] = [
             '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
             res
           )
-          if (res && !Array.isArray(res)) {
-            const fileName = 'my-file.md'
+          if (res && !Array.isArray(res) && data.fileName) {
+            const fileData = store.getState().markdownParser.mdText
             const invokeRes = await tauri.invoke('save_file_to', {
-              savePath: `${res}/${fileName}`,
-              fileData: 'Hello World!',
+              savePath: `${res}/${data.fileName}`,
+              fileData,
             })
             console.log(
               '🚀 ~ file: commandItems.ts ~ line 119 ~ onSelect: ~ invokeRes',
               invokeRes
             )
-          }
+          } else
+            throw new Error(
+              `file path (res) is invalid or fileName is invalid!`
+            )
         }
       } catch (error) {
         console.error(error)
