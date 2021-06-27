@@ -62,15 +62,16 @@ const Editor = ({ editorRef, onScroll }: Props) => {
 
   useEffect(() => {
     if (monaco) {
-      monacoEditorObject?.addCommand(
-        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
-        () => dispatch(prettifyRawText())
-      )
-    }
-  }, [dispatch, monaco, monacoEditorObject])
-
-  useEffect(() => {
-    if (monaco) {
+      /** Define theme */
+      monaco.editor.defineTheme('mediocre-monaco-dark', {
+        base: 'vs-dark',
+        inherit: true,
+        colors: {
+          'scrollbar.shadow': '#00000000',
+        },
+        rules: [],
+        encodedTokensColors: [],
+      })
       /** Set initial options */
       monacoEditorObject?.updateOptions({
         wordWrap: 'on',
@@ -105,6 +106,20 @@ const Editor = ({ editorRef, onScroll }: Props) => {
           })
         }
       )
+    }
+  }, [monaco, monacoEditorObject])
+
+  useEffect(() => {
+    if (monaco) {
+      /** Set theme based on colorMode */
+      monacoEditorObject?.updateOptions({
+        theme: colorMode === 'dark' ? 'mediocre-monaco-dark' : 'light',
+      })
+    }
+  }, [colorMode, monaco, monacoEditorObject])
+
+  useEffect(() => {
+    if (monaco) {
       /** toggleCommandBar : ctrl + k */
       monacoEditorObject?.addCommand(
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_K,
@@ -115,6 +130,16 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       )
     }
   }, [commandModalIsOpen, dispatch, monaco, monacoEditorObject])
+
+  useEffect(() => {
+    if (monaco) {
+      /** Prettify code shortcut */
+      monacoEditorObject?.addCommand(
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
+        () => dispatch(prettifyRawText())
+      )
+    }
+  }, [dispatch, monaco, monacoEditorObject])
 
   useEffect(() => {
     if (onScroll) {
@@ -144,7 +169,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
         // defaultValue={text}
         value={rawText}
         onChange={handleEditorChange}
-        theme={colorMode === 'dark' ? 'vs-dark' : 'light'}
+        // theme={colorMode === 'dark' ? 'mediocre-monaco-dark' : 'light'}
         height="100%"
         width="100%"
         beforeMount={handleEditorWillMount}
