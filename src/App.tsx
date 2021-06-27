@@ -117,7 +117,7 @@ const App = () => {
         height="89.5vh"
         marginY="1"
         style={{
-          border: `4px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
+          border: `1px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
         }}
       >
         <Editor editorRef={editorTextAreaRef} onScroll={handleEditorScroll} />

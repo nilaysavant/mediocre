@@ -57,7 +57,7 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
       overflowY="auto"
       fontSize="13px"
       background={colorMode === 'dark' ? '#1f1f1f' : 'white'}
-      borderLeft={`1px solid ${colorMode === 'dark' ? '#303030' : '#d6d6d6'}`}
+      borderLeft={`0px solid ${colorMode === 'dark' ? '#303030' : '#d6d6d6'}`}
       color={colorMode === 'dark' ? '#ededed' : '#1f1f1f'}
       outline="none"
       onScroll={onScroll}
