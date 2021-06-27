@@ -27,7 +27,7 @@ const Topbar = ({ ...rest }: TopbarProps) => {
       {...rest}
     >
       <Box display="flex" alignItems="center">
-        <Menu gutter={1}>
+        <Menu gutter={0}>
           <MenuButton
             as={Button}
             rightIcon={<ChevronDownIcon />}
@@ -41,30 +41,20 @@ const Topbar = ({ ...rest }: TopbarProps) => {
           >
             File
           </MenuButton>
-          <MenuList borderRadius="none" fontSize="md">
-            <MenuItem display="flex" justifyContent="space-between">
-              <Box>New</Box>
-              <Box
-                color="gray.700"
-                fontSize="sm"
-                background="gray.300"
-                rounded="sm"
-                paddingX="2"
-              >
-                Ctrl+N
-              </Box>
+          <MenuList borderRadius="none" fontSize="xs" minWidth="36">
+            <MenuItem
+              display="flex"
+              justifyContent="space-between"
+              command="Ctrl+N"
+            >
+              New
             </MenuItem>
-            <MenuItem display="flex" justifyContent="space-between">
-              <Box>Save</Box>
-              <Box
-                color="gray.700"
-                fontSize="sm"
-                background="gray.300"
-                rounded="sm"
-                paddingX="2"
-              >
-                Ctrl+S
-              </Box>
+            <MenuItem
+              display="flex"
+              justifyContent="space-between"
+              command="Ctrl+S"
+            >
+              Save
             </MenuItem>
             <MenuItem>Duplicate</MenuItem>
             <MenuItem>Quit</MenuItem>
@@ -72,7 +62,7 @@ const Topbar = ({ ...rest }: TopbarProps) => {
         </Menu>
       </Box>
       <Box display="flex" alignItems="center">
-        <Menu gutter={1}>
+        <Menu gutter={0}>
           <MenuButton
             as={Button}
             rightIcon={<ChevronDownIcon />}
@@ -88,7 +78,7 @@ const Topbar = ({ ...rest }: TopbarProps) => {
           >
             {mdThemes.byId[mdTheme].label}
           </MenuButton>
-          <MenuList borderRadius="none" fontSize="md">
+          <MenuList borderRadius="none" fontSize="xs" minWidth="36">
             {mdThemes.list.map((theme) => (
               <MenuItem
                 key={`mdThemeMenuItem-${theme}`}
