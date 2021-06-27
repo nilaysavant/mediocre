@@ -26,21 +26,22 @@ const Topbar = ({ ...rest }: TopbarProps) => {
       alignItems="center"
       {...rest}
     >
-      <Box>
+      <Box display="flex" alignItems="center">
         <Menu gutter={1}>
           <MenuButton
             as={Button}
             rightIcon={<ChevronDownIcon />}
-            size="sm"
-            borderRadius="sm"
+            size="xs"
+            borderRadius="none"
             _focus={{
               outline: 'none',
-              borderBottom: '4px solid #616161',
+              borderBottom: '1px solid #616161',
             }}
+            fontWeight="hairline"
           >
             File
           </MenuButton>
-          <MenuList borderRadius="sm" fontSize="md">
+          <MenuList borderRadius="none" fontSize="md">
             <MenuItem display="flex" justifyContent="space-between">
               <Box>New</Box>
               <Box
@@ -75,19 +76,19 @@ const Topbar = ({ ...rest }: TopbarProps) => {
           <MenuButton
             as={Button}
             rightIcon={<ChevronDownIcon />}
-            size="sm"
-            borderRadius="sm"
-            marginX="0.5"
+            size="xs"
+            borderRadius="none"
             _focus={{
               outline: 'none',
-              borderBottom: '4px solid #616161',
+              borderBottom: '1px solid #616161',
             }}
+            fontWeight="hairline"
             value={mdTheme}
             onSelect={(e) => console.log(e)}
           >
             {mdThemes.byId[mdTheme].label}
           </MenuButton>
-          <MenuList borderRadius="sm" fontSize="md">
+          <MenuList borderRadius="none" fontSize="md">
             {mdThemes.list.map((theme) => (
               <MenuItem
                 key={`mdThemeMenuItem-${theme}`}
@@ -107,13 +108,13 @@ const Topbar = ({ ...rest }: TopbarProps) => {
           </MenuList>
         </Menu>
         <IconButton
-          size="sm"
-          borderRadius="sm"
-          marginLeft="0.5"
+          size="xs"
+          borderRadius="none"
           _focus={{
             outline: 'none',
-            borderBottom: '4px solid #616161',
+            borderBottom: '1px solid #616161',
           }}
+          fontWeight="hairline"
           aria-label="Toggle theme"
           onClick={toggleColorMode}
           icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}

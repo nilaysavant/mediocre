@@ -113,8 +113,8 @@ const App = () => {
         flex="1"
         display="flex"
         width="full"
-        rounded="sm"
-        height="89.5vh"
+        rounded="none"
+        minHeight="0"
         style={{
           border: `1px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
         }}
