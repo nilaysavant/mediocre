@@ -1604,6 +1604,8 @@ version = "0.1.0"
 dependencies = [
  "ammonia",
  "comrak",
+ "derive_more",
+ "log",
  "serde",
  "serde_json",
  "tauri",

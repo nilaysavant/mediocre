@@ -12,6 +12,7 @@ import { GoFileDirectory, GoTerminal } from 'react-icons/go'
 import { IoTerminal } from 'react-icons/io5'
 import isTauri from '../../utils/isTauri'
 import { open } from '@tauri-apps/api/dialog'
+import { homeDir } from '@tauri-apps/api/path'
 
 export type OnSelectInputSchemaType = {
   message: string
@@ -75,11 +76,50 @@ const commandItems: CommandItem[] = [
     onSelect: async (_data) => {
       try {
         if (isTauri()) {
-          const res = open()
+          const res = await open()
           console.log(
             '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
             res
           )
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    },
+  },
+  {
+    id: 'save_file_to_path',
+    title: 'Save File To Path',
+    subtitle: 'Save the file to a path in your file system',
+    icon: GoFileDirectory,
+    onSelect: async (_data) => {
+      try {
+        if (isTauri()) {
+          const res = await open({
+            defaultPath: await homeDir(),
+            directory: true,
+            filters: [
+              {
+                name: 'Markdown file filter',
+                extensions: ['md'],
+              },
+            ],
+          })
+          console.log(
+            '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
+            res
+          )
+          if (res && !Array.isArray(res)) {
+            const fileName = 'my-file.md'
+            const invokeRes = await tauri.invoke('save_file_to', {
+              savePath: `${res}/${fileName}`,
+              fileData: 'Hello World!',
+            })
+            console.log(
+              '🚀 ~ file: commandItems.ts ~ line 119 ~ onSelect: ~ invokeRes',
+              invokeRes
+            )
+          }
         }
       } catch (error) {
         console.error(error)

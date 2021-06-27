@@ -1,5 +1,9 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
+use crate::{
+  models::server_error::{map_to_server_error, ServerError},
+  utils::fsutils,
+};
 use comrak::{markdown_to_html, ComrakOptions};
 use serde::{Deserialize, Serialize};
 
@@ -11,9 +15,7 @@ pub struct Response {
 #[tauri::command]
 pub fn my_custom_command(message: String) -> Response {
   println!("I was invoked from JS! Message: {}", message);
-  Response {
-    message,
-  }
+  Response { message }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -50,4 +52,21 @@ pub struct EnvResponse {
 pub fn get_env() -> EnvResponse {
   let app_dir_path = tauri::api::path::app_dir(&tauri::Config::default());
   EnvResponse { app_dir_path }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct SaveFileToResponse {
+  status: bool,
+  message: String,
+}
+
+/// Get Environment Variables
+#[tauri::command]
+pub fn save_file_to(save_path: String, file_data: String) -> Result<SaveFileToResponse, String> {
+  let save_path = Path::new(save_path.as_str());
+  fsutils::write_to_path(save_path, file_data).map_err(|e| e.to_string())?;
+  Ok(SaveFileToResponse {
+    status: true,
+    message: "Success".to_string(),
+  })
 }
