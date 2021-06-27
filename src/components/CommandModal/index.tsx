@@ -83,23 +83,27 @@ const CommandModal = () => {
   const [inputText, setInputText] = useState('')
   const commandItemsDivRef = useRef<HTMLDivElement>(null)
 
-  const handleRunCommand = (focusedItemIndex: number) => {
-    setSelectedItem(focusedItemIndex)
-    const commandId = allMediocreCommands.list[focusedItemIndex]
-    const command = allMediocreCommands.byId[commandId]
-    if (command.onSelect)
-      switch (commandId) {
-        case 'my_custom_command': {
-          command.onSelect({ commandId, message: inputText })
-          break
+  const handleRunCommand = async (focusedItemIndex: number) => {
+    try {
+      setSelectedItem(focusedItemIndex)
+      const commandId = allMediocreCommands.list[focusedItemIndex]
+      const command = allMediocreCommands.byId[commandId]
+      if (command.onSelect)
+        switch (commandId) {
+          case 'my_custom_command': {
+            await command.onSelect({ commandId, message: inputText })
+            break
+          }
+          case 'save_file_to_path': {
+            await command.onSelect({ commandId, fileName: inputText })
+            break
+          }
+          default:
+            break
         }
-        case 'save_file_to_path': {
-          command.onSelect({ commandId, fileName: inputText })
-          break
-        }
-        default:
-          break
-      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleInputKeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {

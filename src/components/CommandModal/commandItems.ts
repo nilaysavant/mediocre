@@ -14,6 +14,10 @@ import isTauri from '../../utils/isTauri'
 import { open } from '@tauri-apps/api/dialog'
 import { homeDir } from '@tauri-apps/api/path'
 import { store } from '../../redux/store'
+import {
+  openFileSelectionDialog,
+  saveFileToCustomPath,
+} from '../../functions/fileSystem'
 
 export type MediocreCommandId =
   | 'get_env'
@@ -34,12 +38,17 @@ export type OnSelectData = {
     }
 )
 
+export type OnSelectResult = void | {
+  selectedPath: string
+  saveResult: any
+}
+
 export type MediocreCommand = {
   id: MediocreCommandId
   title: string
   subtitle: string
   icon: IconType
-  onSelect?: (data?: OnSelectData) => void
+  onSelect?: (data?: OnSelectData) => Promise<OnSelectResult>
 }
 
 export type AllMediocreCommands = {
@@ -58,16 +67,12 @@ const allMediocreCommands: AllMediocreCommands = {
       subtitle: 'Get environmet variables information',
       icon: IoTerminal,
       onSelect: async (_data) => {
-        try {
-          if (isTauri()) {
-            const res = await tauri.invoke('get_env')
-            console.log(
-              '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
-              res
-            )
-          }
-        } catch (error) {
-          console.error(error)
+        if (isTauri()) {
+          const res = await tauri.invoke('get_env')
+          console.log(
+            '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
+            res
+          )
         }
       },
     },
@@ -100,16 +105,11 @@ const allMediocreCommands: AllMediocreCommands = {
       subtitle: 'Open file from file system',
       icon: GoFileDirectory,
       onSelect: async (_data) => {
-        try {
-          if (isTauri()) {
-            const res = await open()
-            console.log(
-              '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
-              res
-            )
-          }
-        } catch (error) {
-          console.error(error)
+        if (isTauri()) {
+          const selectedFilePath = await openFileSelectionDialog({
+            fileTypes: ['md'],
+          })
+          console.log("🚀 ~ file: commandItems.ts ~ line 112 ~ onSelect: ~ selectedFilePath", selectedFilePath)
         }
       },
     },
@@ -119,41 +119,25 @@ const allMediocreCommands: AllMediocreCommands = {
       subtitle: 'Save the file to a path in your file system',
       icon: GoFileDirectory,
       onSelect: async (data) => {
-        try {
-          if (isTauri()) {
-            if (!(data && data.commandId === 'save_file_to_path'))
-              throw new Error(`data is invalid!`)
-            const res = await open({
-              defaultPath: await homeDir(),
-              directory: true,
-              filters: [
-                {
-                  name: 'Markdown file filter',
-                  extensions: ['md'],
-                },
-              ],
-            })
-            console.log(
-              '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
-              res
+        if (isTauri()) {
+          if (!(data && data.commandId === 'save_file_to_path'))
+            throw new Error(`data is invalid!`)
+          const selectedPath = await openFileSelectionDialog({
+            directory: true,
+            fileTypes: ['md'],
+          })
+          if (selectedPath && !Array.isArray(selectedPath) && data.fileName) {
+            const fileData = store.getState().markdownParser.rawText
+            const saveResult = saveFileToCustomPath(
+              selectedPath,
+              data.fileName,
+              fileData
             )
-            if (res && !Array.isArray(res) && data.fileName) {
-              const fileData = store.getState().markdownParser.rawText
-              const invokeRes = await tauri.invoke('save_file_to', {
-                savePath: `${res}/${data.fileName}`,
-                fileData,
-              })
-              console.log(
-                '🚀 ~ file: commandItems.ts ~ line 119 ~ onSelect: ~ invokeRes',
-                invokeRes
-              )
-            } else
-              throw new Error(
-                `file path (res) is invalid or fileName is invalid!`
-              )
-          }
-        } catch (error) {
-          console.error(error)
+            return { selectedPath, saveResult }
+          } else
+            throw new Error(
+              `file path (res) is invalid or fileName is invalid!`
+            )
         }
       },
     },
