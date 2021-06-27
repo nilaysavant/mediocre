@@ -83,6 +83,12 @@ const CommandModal = () => {
   const [inputText, setInputText] = useState('')
   const commandItemsDivRef = useRef<HTMLDivElement>(null)
 
+  const handleRunCommand = (focusedItemIndex: number) => {
+    setSelectedItem(focusedItemIndex)
+    const itemObject = commandItems[focusedItemIndex]
+    if (itemObject.onSelect) itemObject.onSelect({ message: inputText })
+  }
+
   const handleInputKeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     switch (event.key) {
       case 'ArrowUp': {
@@ -106,10 +112,7 @@ const CommandModal = () => {
       }
       case 'Enter': {
         event.preventDefault()
-        setSelectedItem(focusedItem)
-        const itemObject = commandItems[focusedItem]
-        if (itemObject.onSelect)
-          itemObject.onSelect({ invokeMessage: inputText })
+        handleRunCommand(focusedItem)
         break
       }
       default:
@@ -163,11 +166,9 @@ const CommandModal = () => {
                   icon={item.icon}
                   focused={focusedItem === i}
                   selected={selectedItem === i}
-                  onClick={(e) => {
+                  onClick={() => {
                     setFocusedItem(i)
-                    setSelectedItem(i)
-                    if (item.onSelect)
-                      item.onSelect({ invokeMessage: inputText })
+                    handleRunCommand(i)
                   }}
                 />
               ))}

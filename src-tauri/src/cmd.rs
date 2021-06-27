@@ -9,10 +9,10 @@ pub struct Response {
 }
 
 #[tauri::command]
-pub fn my_custom_command(invoke_message: String) -> Response {
-  println!("I was invoked from JS! Message: {}", invoke_message);
+pub fn my_custom_command(message: String) -> Response {
+  println!("I was invoked from JS! Message: {}", message);
   Response {
-    message: invoke_message,
+    message,
   }
 }
 

@@ -13,12 +13,16 @@ import { IoTerminal } from 'react-icons/io5'
 import isTauri from '../../utils/isTauri'
 import { open } from '@tauri-apps/api/dialog'
 
+export type OnSelectInputSchemaType = {
+  message: string
+}
+
 export type CommandItem = {
   id: string
   title: string
   subtitle: string
   icon: IconType
-  onSelect?: (data?: any) => void
+  onSelect?: (data?: OnSelectInputSchemaType) => void
 }
 
 const commandItems: CommandItem[] = [
@@ -47,11 +51,12 @@ const commandItems: CommandItem[] = [
     subtitle: 'My custom command to test response from Tauri backend',
     icon: GoTerminal,
     onSelect: async (data) => {
-      console.log("🚀 ~ file: commandItems.ts ~ line 50 ~ onSelect: ~ data", data)
       try {
-        const { invokeMessage } = data as { invokeMessage: string }
+        if (!data) throw new Error(`data is invalid!`)
         if (isTauri()) {
-          const res = await tauri.invoke('my_custom_command', { invokeMessage })
+          const res = await tauri.invoke('my_custom_command', {
+            message: data.message,
+          })
           console.log(
             '🚀 ~ file: commandItems.ts ~ line 24 ~ onClick: ~ res',
             res
