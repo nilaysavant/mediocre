@@ -32,7 +32,7 @@ pub fn parse_md_to_mu(md_string: String) -> MdResponse {
   comrak_options.render.unsafe_ = true;
   let unsafe_mu_string = markdown_to_html(&md_string, &comrak_options);
   let safe_mu_string = ammonia::Builder::new()
-    .add_tag_attributes("code", &["class"])
+    .add_tag_attributes("code", &["class"]) // Allow class on <code> tag (needed for code syntax highlighting)
     .clean(&unsafe_mu_string)
     .to_string();
   MdResponse {
