@@ -101,21 +101,20 @@ const App = () => {
 
   return (
     <Box
-      paddingTop={2}
-      paddingLeft={2}
-      paddingRight={2}
       width="100vw"
       height="100vh"
       background={colorMode === 'dark' ? '#2b2b2b' : '#ffffff'}
       fontSize={18}
+      display="flex"
+      flexDir="column"
     >
-      <Topbar height="5vh" />
+      <Topbar />
       <Box
+        flex="1"
         display="flex"
         width="full"
         rounded="sm"
         height="89.5vh"
-        marginY="1"
         style={{
           border: `1px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
         }}
@@ -123,7 +122,7 @@ const App = () => {
         <Editor editorRef={editorTextAreaRef} onScroll={handleEditorScroll} />
         <Render renderBoxRef={renderBoxRef} onScroll={handleViewScroll} />
       </Box>
-      <Bottombar height="2vh" />
+      {/* <Bottombar /> */}
       <CommandModal />
     </Box>
   )
