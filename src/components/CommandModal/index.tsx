@@ -166,7 +166,8 @@ const CommandModal = () => {
                   onClick={(e) => {
                     setFocusedItem(i)
                     setSelectedItem(i)
-                    if (item.onSelect) item.onSelect()
+                    if (item.onSelect)
+                      item.onSelect({ invokeMessage: inputText })
                   }}
                 />
               ))}
