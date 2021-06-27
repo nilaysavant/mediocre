@@ -24,7 +24,7 @@ import { AiOutlineEnter } from 'react-icons/ai'
 import { IconType } from 'react-icons/lib'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import { handleClose } from './commandModalSlice'
-import commandItems from './commandItems'
+import allMediocreCommands from './commandItems'
 
 export type CommandItemProps = {
   id: string
@@ -85,15 +85,16 @@ const CommandModal = () => {
 
   const handleRunCommand = (focusedItemIndex: number) => {
     setSelectedItem(focusedItemIndex)
-    const itemObject = commandItems[focusedItemIndex]
-    if (itemObject.onSelect)
-      switch (itemObject.id) {
+    const commandId = allMediocreCommands.list[focusedItemIndex]
+    const command = allMediocreCommands.byId[commandId]
+    if (command.onSelect)
+      switch (commandId) {
         case 'my_custom_command': {
-          itemObject.onSelect({ commandId: itemObject.id, message: inputText })
+          command.onSelect({ commandId, message: inputText })
           break
         }
         case 'save_file_to_path': {
-          itemObject.onSelect({ commandId: itemObject.id, fileName: inputText })
+          command.onSelect({ commandId, fileName: inputText })
           break
         }
         default:
@@ -106,7 +107,7 @@ const CommandModal = () => {
       case 'ArrowUp': {
         event.preventDefault()
         setFocusedItem((old) => {
-          if (old < commandItems.length - 5)
+          if (old < allMediocreCommands.list.length - 5)
             commandItemsDivRef.current?.scrollBy({ top: -60 })
           return old - 1 < 0 ? 0 : old - 1
         })
@@ -116,8 +117,8 @@ const CommandModal = () => {
         event.preventDefault()
         setFocusedItem((old) => {
           if (old > 4) commandItemsDivRef.current?.scrollBy({ top: 60 })
-          return old + 1 > commandItems.length - 1
-            ? commandItems.length - 1
+          return old + 1 > allMediocreCommands.list.length - 1
+            ? allMediocreCommands.list.length - 1
             : old + 1
         })
         break
@@ -160,7 +161,7 @@ const CommandModal = () => {
             />
           </InputGroup>
         </ModalHeader>
-        {commandItems.length > 0 && (
+        {allMediocreCommands.list.length > 0 && (
           <ModalBody
             pb={4}
             paddingX="4"
@@ -169,13 +170,13 @@ const CommandModal = () => {
             ref={commandItemsDivRef}
           >
             <List spacing={3}>
-              {commandItems.map((item, i: number) => (
+              {allMediocreCommands.list.map((commandId, i: number) => (
                 <CommandItem
-                  key={`a${item.id}`}
-                  id={item.id}
-                  title={item.title}
-                  subtitle={item.subtitle}
-                  icon={item.icon}
+                  key={`a${commandId}`}
+                  id={commandId}
+                  title={allMediocreCommands.byId[commandId].title}
+                  subtitle={allMediocreCommands.byId[commandId].subtitle}
+                  icon={allMediocreCommands.byId[commandId].icon}
                   focused={focusedItem === i}
                   selected={selectedItem === i}
                   onClick={() => {
