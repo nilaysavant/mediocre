@@ -38,7 +38,14 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       bg="#212121"
       {...rest}
     >
-      <Box bg="#2e2e2e" px="1" py="1.5" display="flex" alignItems="center">
+      <Box
+        bg="#2e2e2e"
+        px="1"
+        py="1.5"
+        display="flex"
+        alignItems="center"
+        borderBottom="2px solid #ffffff1c"
+      >
         <Circle bg="#ffffff17" px="2.5" mr="1">
           {sidebarItems.length}
         </Circle>
@@ -50,7 +57,6 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
         spacing="0.5"
         color="#e3e3e3"
         width="full"
-        paddingY="1"
         overflow="auto"
         css={{
           /** Style Scrollbar */
@@ -71,13 +77,14 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
           },
         }}
       >
-        {sidebarItems.map((item) => (
+        {sidebarItems.map((item, idx) => (
           <ListItem
             key={item.label}
             display="flex"
             alignItems="center"
             width="full"
             paddingX="0.5"
+            paddingTop={idx === 0 ? 1 : undefined}
             userSelect="none"
             cursor="pointer"
             _hover={{
