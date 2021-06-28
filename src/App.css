@@ -41,7 +41,7 @@
 .markdown > h5,
 .markdown > h6 {
   margin-top: 0.5em !important;
-  margin-bottom: 0rem !important;
+  margin-bottom: 0.05em !important;
 }
 
 .markdown > *:first-child {

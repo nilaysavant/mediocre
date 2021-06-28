@@ -83,6 +83,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
         },
         lineNumbers: 'off',
         fontSize: 13,
+        fontFamily: `"Droid Sans Mono", monospace, monospace, "Droid Sans Fallback"`,
         lineHeight: 20,
         padding: {
           top: 12,
@@ -151,7 +152,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
 
   return (
     <Box
-      flex={1}
+      flex={1.1}
       height="full"
       borderRadius={0}
       fontSize="md"

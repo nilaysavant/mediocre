@@ -49,8 +49,10 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
         mdTheme === 'github2' ? 'markdown-body' : `markdown ${mdTheme}`
       )}
       ref={renderBoxRef}
-      marginLeft={0}
       flex={1}
+      fontFamily={`"Droid Sans Mono", monospace, monospace, "Droid Sans Fallback"`}
+      fontWeight="normal"
+      marginLeft={0}
       padding="10px"
       textAlign="left"
       height="full"
@@ -58,7 +60,7 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
       fontSize="13px"
       background={colorMode === 'dark' ? '#1f1f1f' : 'white'}
       borderLeft={`0px solid ${colorMode === 'dark' ? '#303030' : '#d6d6d6'}`}
-      color={colorMode === 'dark' ? '#ededed' : '#1f1f1f'}
+      color={colorMode === 'dark' ? '#d4d4d4' : '#1f1f1f'}
       outline="none"
       onScroll={onScroll}
       dangerouslySetInnerHTML={{
