@@ -40,7 +40,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
     >
       <Box bg="#2e2e2e" px="1" py="1.5" display="flex" alignItems="center">
         <Circle bg="#ffffff17" px="2.5" mr="1">
-          23
+          {sidebarItems.length}
         </Circle>
         <Text isTruncated color="#ababab">
           documents
