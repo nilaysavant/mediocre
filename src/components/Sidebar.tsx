@@ -53,6 +53,19 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
           documents
         </Text>
       </Box>
+      <Text
+        bg="#ffffff0d"
+        px="1"
+        py="0.18rem"
+        display="flex"
+        alignItems="center"
+        borderBottom="1px solid #ffffff12"
+        isTruncated
+        color="#ebebebeb"
+        fontSize="xs"
+      >
+        My Projects
+      </Text>
       <List
         spacing="0.5"
         color="#e3e3e3"
