@@ -2,7 +2,7 @@ import React from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { AiOutlineFileMarkdown } from 'react-icons/ai'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import { List, ListIcon, ListItem, Text } from '@chakra-ui/react'
+import { Circle, List, ListIcon, ListItem, Text } from '@chakra-ui/react'
 
 const sidebarItems = [
   {
@@ -30,6 +30,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
   return (
     <Box
       display="flex"
+      flexDir="column"
       rounded="none"
       minHeight="0"
       border={`1px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`}
@@ -37,6 +38,14 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       bg="#212121"
       {...rest}
     >
+      <Box bg="#2e2e2e" px="1" py="1.5" display="flex" alignItems="center">
+        <Circle bg="#ffffff17" px="2.5" mr="1">
+          23
+        </Circle>
+        <Text isTruncated color="#ababab">
+          documents
+        </Text>
+      </Box>
       <List
         spacing="0.5"
         color="#e3e3e3"
