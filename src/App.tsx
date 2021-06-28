@@ -111,7 +111,7 @@ const App = () => {
     >
       <Topbar />
       <Box flex="1" display="flex" rounded="none" minHeight="0">
-        <Sidebar />
+        <Sidebar minWidth="17%" />
         <Box
           flex="1"
           minWidth="0"

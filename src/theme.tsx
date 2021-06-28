@@ -11,6 +11,9 @@ const theme = extendTheme({
     global: {
       body: {
         bg: "none",
+      },
+      "*": {
+        fontFamily: "Nunito"
       }
     }
   }

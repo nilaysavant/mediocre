@@ -8,6 +8,7 @@ import theme from './theme'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
+import "@fontsource/nunito"
 
 ReactDOM.render(
   <React.StrictMode>
