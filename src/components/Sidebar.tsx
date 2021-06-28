@@ -2,7 +2,7 @@ import React from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { AiOutlineFileMarkdown } from 'react-icons/ai'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import { List, ListIcon, ListItem } from '@chakra-ui/react'
+import { List, ListIcon, ListItem, Text } from '@chakra-ui/react'
 
 const sidebarItems = [
   {
@@ -14,7 +14,7 @@ const sidebarItems = [
     icon: AiOutlineFileMarkdown,
   },
   {
-    label: 'Testing Notes.md',
+    label: 'Testing Notes For Frontend Development.md',
   },
   {
     label: 'Authors.md',
@@ -33,20 +33,34 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       rounded="none"
       minHeight="0"
       border={`1px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`}
-      fontSize="xs"
+      fontSize="small"
       bg="#212121"
       {...rest}
     >
-      <List spacing="0.5" padding="2" color="#e3e3e3">
+      <List spacing="0.5" color="#e3e3e3" width="full" paddingY="1">
         {sidebarItems.map((item) => (
-          <ListItem key={item.label} display="flex" alignItems="center">
+          <ListItem
+            key={item.label}
+            display="flex"
+            alignItems="center"
+            width="full"
+            paddingX="0.5"
+            userSelect="none"
+            cursor="pointer"
+            _hover={{
+              bg: '#fafafa0d',
+            }}
+            _active={{
+              bg: '#fafafa1f',
+            }}
+          >
             <ListIcon
               as={item.icon ? item.icon : AiOutlineFileMarkdown}
-              color="blue.300"
+              color="#0099e0"
               fontSize="lg"
-              marginRight="1"
+              marginRight="0.5"
             />
-            {item.label}
+            <Text isTruncated>{item.label}</Text>
           </ListItem>
         ))}
       </List>
