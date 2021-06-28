@@ -10,10 +10,12 @@ export const extendedChakraTheme = {
     global: {
       body: {
         bg: 'none',
+
+        /** font config */
         // fontFamily: 'Nunito',
         // fontFamily: "Exo",
         // fontFamily: "Montserrat",
-        fontFamily: "Roboto",
+        fontFamily: 'Roboto',
         // fontFamily: "Roboto Mono",
         // fontFamily: 'Fira Code',
       },

@@ -37,7 +37,31 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       bg="#212121"
       {...rest}
     >
-      <List spacing="0.5" color="#e3e3e3" width="full" paddingY="1">
+      <List
+        spacing="0.5"
+        color="#e3e3e3"
+        width="full"
+        paddingY="1"
+        overflow="auto"
+        css={{
+          /** Style Scrollbar */
+          '&::-webkit-scrollbar': {
+            background: 'rgba(89, 89, 89, 0.1)',
+            height: '1rem',
+            width: 5,
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'rgba(90, 90, 90, 0.1)',
+            height: '1rem',
+          },
+          '&:hover::-webkit-scrollbar-thumb': {
+            background: 'rgba(90, 90, 90, 0.438)',
+          },
+          '&:hover::-webkit-scrollbar-thumb:active': {
+            background: ' rgba(90, 90, 90, 0.712)',
+          },
+        }}
+      >
         {sidebarItems.map((item) => (
           <ListItem
             key={item.label}
@@ -58,7 +82,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
               as={item.icon ? item.icon : AiOutlineFileMarkdown}
               color="#0099e0"
               fontSize="lg"
-              marginRight="0.5"
+              marginRight="0"
             />
             <Text isTruncated>{item.label}</Text>
           </ListItem>
