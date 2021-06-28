@@ -156,7 +156,6 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       borderRadius={0}
       fontSize="md"
       overflowX="auto"
-      resize="none"
       placeholder="Type something..."
       // onScroll={onScroll}
       background={colorMode === 'dark' ? '#1f1f1f' : 'white'}

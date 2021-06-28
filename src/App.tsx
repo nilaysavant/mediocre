@@ -14,6 +14,7 @@ import {
 } from './components/CommandModal/commandModalSlice'
 import { shell } from '@tauri-apps/api'
 import isTauri from './utils/isTauri'
+import Sidebar from './components/Sidebar'
 
 const App = () => {
   const { colorMode } = useColorMode()
@@ -109,18 +110,19 @@ const App = () => {
       flexDir="column"
     >
       <Topbar />
-      <Box
-        flex="1"
-        display="flex"
-        width="full"
-        rounded="none"
-        minHeight="0"
-        style={{
-          border: `1px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`,
-        }}
-      >
-        <Editor editorRef={editorTextAreaRef} onScroll={handleEditorScroll} />
-        <Render renderBoxRef={renderBoxRef} onScroll={handleViewScroll} />
+      <Box flex="1" display="flex" rounded="none" minHeight="0">
+        <Sidebar />
+        <Box
+          flex="1"
+          minWidth="0"
+          display="flex"
+          rounded="none"
+          minHeight="0"
+          border={`1px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`}
+        >
+          <Editor editorRef={editorTextAreaRef} onScroll={handleEditorScroll} />
+          <Render renderBoxRef={renderBoxRef} onScroll={handleViewScroll} />
+        </Box>
       </Box>
       {/* <Bottombar /> */}
       <CommandModal />
