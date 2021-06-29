@@ -40,7 +40,7 @@
   },
   "scripts": {
     "prebuild": "rimraf ./build",
-    "dev:fe": "cross-env BROWSER=none craco start",
+    "devfe": "cross-env BROWSER=none craco start",
     "build:fe": "cross-env CI='' craco build",
     "test:fe": "craco test",
     "eject:cra-fe": "react-scripts eject",
@@ -48,8 +48,8 @@
     "build:tauri-debug": "tauri build --debug",
     "build": "npm run build:fe && npm run build:tauri",
     "build:debug": "npm run build:fe && npm run build:tauri-debug",
-    "start": "concurrently -p \"[{name}]\" -n \"front-end,tauri\" -c \"bgGreen.bold,bgCyan.bold\" \"npm run dev:fe\" \"npm run dev:tauri\"",
-    "dev:tauri": "cross-env RUST_DEBUG=1 tauri dev",
+    "start": "concurrently -p \"[{name}]\" -n \"front-end,tauri\" -c \"bgGreen.bold,bgCyan.bold\" \"npm run devfe\" \"npm run devbe\"",
+    "devbe": "cross-env RUST_DEBUG=1 tauri dev",
     "prettify": "prettier --write ."
   },
   "eslintConfig": {
