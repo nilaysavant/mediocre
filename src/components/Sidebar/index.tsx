@@ -12,21 +12,30 @@ import {
   Text,
 } from '@chakra-ui/react'
 import BottomSection from './BottomSection'
+import { IconType } from 'react-icons/lib'
 
-const sidebarItems = [
+const sidebarItems: {
+  filePath: string
+  fileName: string
+  icon?: IconType
+}[] = [
   {
-    label: 'Docs.md',
+    filePath: '/my-projects/Docs.md',
+    fileName: 'Docs.md',
     icon: AiOutlineFileMarkdown,
   },
   {
-    label: 'README.md',
+    filePath: '/my-projects/README.md',
+    fileName: 'README.md',
     icon: AiOutlineFileMarkdown,
   },
   {
-    label: 'Testing Notes For Frontend Development.md',
+    filePath: '/my-projects/Testing Notes For Frontend Development.md',
+    fileName: 'Testing Notes For Frontend Development.md',
   },
   {
-    label: 'Authors.md',
+    filePath: '/my-projects/Authors.md',
+    fileName: 'Authors.md',
     icon: AiOutlineFileMarkdown,
   },
 ]
@@ -100,7 +109,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       >
         {sidebarItems.map((item, idx) => (
           <ListItem
-            key={item.label}
+            key={item.filePath}
             display="flex"
             alignItems="center"
             width="full"
@@ -121,7 +130,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
               fontSize="lg"
               marginRight="0"
             />
-            <Text isTruncated>{item.label}</Text>
+            <Text isTruncated>{item.fileName}</Text>
           </ListItem>
         ))}
       </List>
