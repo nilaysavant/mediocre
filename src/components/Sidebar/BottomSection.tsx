@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import { Circle, Text } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 
 export type BottomSectionProps = {
   documentsCount: number
