@@ -2,7 +2,8 @@ import React from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { AiOutlineFileMarkdown } from 'react-icons/ai'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import { Circle, List, ListIcon, ListItem, Text } from '@chakra-ui/react'
+import { List, ListIcon, ListItem, Text } from '@chakra-ui/react'
+import BottomSection from './BottomSection'
 
 const sidebarItems = [
   {
@@ -38,21 +39,6 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       bg="#212121"
       {...rest}
     >
-      <Box
-        bg="#2e2e2e"
-        px="1"
-        py="1.5"
-        display="flex"
-        alignItems="center"
-        borderBottom="2px solid #ffffff1c"
-      >
-        <Circle bg="#ffffff17" px="2.5" mr="1">
-          {sidebarItems.length}
-        </Circle>
-        <Text isTruncated color="#ababab">
-          documents
-        </Text>
-      </Box>
       <Text
         bg="#ffffff0d"
         px="1"
@@ -67,6 +53,8 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
         My Projects
       </Text>
       <List
+        flex="1"
+        minHeight="0"
         spacing="0.5"
         color="#e3e3e3"
         width="full"
@@ -117,6 +105,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
           </ListItem>
         ))}
       </List>
+      <BottomSection documentsCount={sidebarItems.length} />
     </Box>
   )
 }
