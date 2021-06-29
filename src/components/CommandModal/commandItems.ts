@@ -58,14 +58,14 @@ export type MediocreCommand = {
 }
 
 export type AllMediocreCommands = {
-  list: MediocreCommandId[]
+  allIds: MediocreCommandId[]
   byId: {
     [key in MediocreCommandId]: MediocreCommand
   }
 }
 
 const allMediocreCommands: AllMediocreCommands = {
-  list: ['get_env', 'my_custom_command', 'open_file', 'save_file_to_path'],
+  allIds: ['get_env', 'my_custom_command', 'open_file', 'save_file_to_path'],
   byId: {
     get_env: {
       id: 'get_env',
