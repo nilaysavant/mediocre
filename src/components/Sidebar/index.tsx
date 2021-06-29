@@ -1,8 +1,16 @@
 import React from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { AiOutlineFileMarkdown } from 'react-icons/ai'
+import { BsPlus } from 'react-icons/bs'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import { List, ListIcon, ListItem, Text } from '@chakra-ui/react'
+import {
+  Icon,
+  IconButton,
+  List,
+  ListIcon,
+  ListItem,
+  Text,
+} from '@chakra-ui/react'
 import BottomSection from './BottomSection'
 
 const sidebarItems = [
@@ -39,19 +47,31 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       bg="#212121"
       {...rest}
     >
-      <Text
+      <Box
         bg="#ffffff0d"
         px="1"
         py="0.18rem"
         display="flex"
         alignItems="center"
+        justifyContent="space-between"
         borderBottom="1px solid #ffffff12"
-        isTruncated
         color="#ebebebeb"
         fontSize="xs"
+        width="full"
       >
-        My Projects
-      </Text>
+        <Text isTruncated>My Projects</Text>
+        <IconButton
+          aria-label="Add new document"
+          icon={<Icon as={BsPlus} />}
+          color="#ebebebeb"
+          minWidth="4"
+          height="4"
+          borderRadius="0"
+          _focus={{
+            boxShadow: '0px 0px 0px 1px #51a3f0b3',
+          }}
+        />
+      </Box>
       <List
         flex="1"
         minHeight="0"
