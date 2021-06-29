@@ -1,6 +1,6 @@
 import React from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
-import { AiOutlineFileMarkdown } from 'react-icons/ai'
+import { AiFillFileMarkdown, AiOutlineFileMarkdown } from 'react-icons/ai'
 import { BsPlus } from 'react-icons/bs'
 import { Box, BoxProps } from '@chakra-ui/layout'
 import {
@@ -13,37 +13,40 @@ import {
 } from '@chakra-ui/react'
 import BottomSection from './BottomSection'
 import { IconType } from 'react-icons/lib'
+import { useReduxSelector } from '../../redux/hooks'
+import { documentsSelectors } from './documentsSlice'
 
-const sidebarItems: {
-  filePath: string
-  fileName: string
-  icon?: IconType
-}[] = [
-  {
-    filePath: '/my-projects/Docs.md',
-    fileName: 'Docs.md',
-    icon: AiOutlineFileMarkdown,
-  },
-  {
-    filePath: '/my-projects/README.md',
-    fileName: 'README.md',
-    icon: AiOutlineFileMarkdown,
-  },
-  {
-    filePath: '/my-projects/Testing Notes For Frontend Development.md',
-    fileName: 'Testing Notes For Frontend Development.md',
-  },
-  {
-    filePath: '/my-projects/Authors.md',
-    fileName: 'Authors.md',
-    icon: AiOutlineFileMarkdown,
-  },
-]
+// const sidebarItems: {
+//   filePath: string
+//   fileName: string
+//   icon?: IconType
+// }[] = [
+//   {
+//     filePath: '/my-projects/Docs.md',
+//     fileName: 'Docs.md',
+//     icon: AiOutlineFileMarkdown,
+//   },
+//   {
+//     filePath: '/my-projects/README.md',
+//     fileName: 'README.md',
+//     icon: AiOutlineFileMarkdown,
+//   },
+//   {
+//     filePath: '/my-projects/Testing Notes For Frontend Development.md',
+//     fileName: 'Testing Notes For Frontend Development.md',
+//   },
+//   {
+//     filePath: '/my-projects/Authors.md',
+//     fileName: 'Authors.md',
+//     icon: AiOutlineFileMarkdown,
+//   },
+// ]
 
 export type SidebarProps = BoxProps
 
 const Sidebar = ({ ...rest }: SidebarProps) => {
   const { colorMode } = useColorMode()
+  const documents = useReduxSelector(documentsSelectors.selectAll)
 
   return (
     <Box
@@ -107,9 +110,9 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
           },
         }}
       >
-        {sidebarItems.map((item, idx) => (
+        {documents.map((item, idx) => (
           <ListItem
-            key={item.filePath}
+            key={item.id}
             display="flex"
             alignItems="center"
             width="full"
@@ -125,16 +128,20 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
             }}
           >
             <ListIcon
-              as={item.icon ? item.icon : AiOutlineFileMarkdown}
+              as={
+                item.type === 'markdown'
+                  ? AiOutlineFileMarkdown
+                  : AiFillFileMarkdown
+              }
               color="#0099e0"
               fontSize="lg"
               marginRight="0"
             />
-            <Text isTruncated>{item.fileName}</Text>
+            <Text isTruncated>{item.name}</Text>
           </ListItem>
         ))}
       </List>
-      <BottomSection documentsCount={sidebarItems.length} />
+      <BottomSection documentsCount={documents.length} />
     </Box>
   )
 }

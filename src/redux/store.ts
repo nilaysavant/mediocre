@@ -4,11 +4,13 @@ import commandModalSlice from '../components/CommandModal/commandModalSlice'
 import counterSlice from '../utils/counterSlice'
 import appSlice from '../appSlice'
 import markdownThemeSlice from '../styles/markdown/markdownThemeSlice'
+import documentsSlice from '../components/Sidebar/documentsSlice'
 
 export const store = configureStore({
   reducer: {
     app: appSlice,
     markdownParser: markdownParserSlice,
+    documents: documentsSlice,
     commandModal: commandModalSlice,
     markdownTheme: markdownThemeSlice,
     counter: counterSlice,
