@@ -15,6 +15,9 @@ export const store = configureStore({
   },
 })
 
+// @ts-expect-error Set global window.REDUX_STORE key to access redux store in dev
+if (process.env.NODE_ENV === 'development') window.REDUX_STORE = store
+
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
