@@ -17,9 +17,9 @@ const BottomSection = ({ documentsCount = 0, ...rest }: BottomSectionProps) => {
       borderBottom="2px solid #ffffff1c"
       {...rest}
     >
-      <Circle bg="#ffffff17" px="2.5" mr="1" fontSize="xs">
+      <Box bg="#ffffff17" px="2.5" mr="1" fontSize="xs" borderRadius="md">
         {documentsCount}
-      </Circle>
+      </Box>
       <Text isTruncated color="#ababab">
         documents
       </Text>
