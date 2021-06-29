@@ -1,46 +1,12 @@
 import React from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { AiFillFileMarkdown, AiOutlineFileMarkdown } from 'react-icons/ai'
-import { BsPlus } from 'react-icons/bs'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import {
-  Icon,
-  IconButton,
-  List,
-  ListIcon,
-  ListItem,
-  Text,
-} from '@chakra-ui/react'
+import { List, ListIcon, ListItem, Text } from '@chakra-ui/react'
 import BottomSection from './BottomSection'
-import { IconType } from 'react-icons/lib'
 import { useReduxSelector } from '../../redux/hooks'
 import { documentsSelectors } from './documentsSlice'
-
-// const sidebarItems: {
-//   filePath: string
-//   fileName: string
-//   icon?: IconType
-// }[] = [
-//   {
-//     filePath: '/my-projects/Docs.md',
-//     fileName: 'Docs.md',
-//     icon: AiOutlineFileMarkdown,
-//   },
-//   {
-//     filePath: '/my-projects/README.md',
-//     fileName: 'README.md',
-//     icon: AiOutlineFileMarkdown,
-//   },
-//   {
-//     filePath: '/my-projects/Testing Notes For Frontend Development.md',
-//     fileName: 'Testing Notes For Frontend Development.md',
-//   },
-//   {
-//     filePath: '/my-projects/Authors.md',
-//     fileName: 'Authors.md',
-//     icon: AiOutlineFileMarkdown,
-//   },
-// ]
+import TopSection from './TopSection'
 
 export type SidebarProps = BoxProps
 
@@ -59,31 +25,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       bg="#212121"
       {...rest}
     >
-      <Box
-        bg="#ffffff0d"
-        px="1"
-        py="0.18rem"
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        borderBottom="1px solid #ffffff12"
-        color="#ebebebeb"
-        fontSize="xs"
-        width="full"
-      >
-        <Text isTruncated>My Projects</Text>
-        <IconButton
-          aria-label="Add new document"
-          icon={<Icon as={BsPlus} />}
-          color="#ebebebeb"
-          minWidth="4"
-          height="4"
-          borderRadius="0"
-          _focus={{
-            boxShadow: '0px 0px 0px 1px #51a3f0b3',
-          }}
-        />
-      </Box>
+      <TopSection dirName="My Projects" />
       <List
         flex="1"
         minHeight="0"
