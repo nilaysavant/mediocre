@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { AiFillFileMarkdown, AiOutlineFileMarkdown } from 'react-icons/ai'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import { List, ListIcon, ListItem, Text } from '@chakra-ui/react'
+import { Input, List, ListIcon, ListItem, Text } from '@chakra-ui/react'
 import BottomSection from './BottomSection'
-import { useReduxSelector } from '../../redux/hooks'
-import { documentsSelectors } from './documentsSlice'
+import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
+import { documentsSelectors, updateDocument } from './documentsSlice'
 import TopSection from './TopSection'
 
 export type SidebarProps = BoxProps
@@ -13,6 +13,12 @@ export type SidebarProps = BoxProps
 const Sidebar = ({ ...rest }: SidebarProps) => {
   const { colorMode } = useColorMode()
   const documents = useReduxSelector(documentsSelectors.selectAll)
+  const dispatch = useReduxDispatch()
+  const renameInputRef = useRef<HTMLInputElement>(null)
+  const [renameItem, setRenameItem] = useState({
+    id: '',
+    value: '',
+  })
 
   return (
     <Box
@@ -23,6 +29,16 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       border={`1px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`}
       fontSize="small"
       bg="#212121"
+      _focus={{
+        boxShadow: 'none',
+      }}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          /** Press Esc to cancel */
+          setRenameItem({ id: '', value: '' })
+        }
+      }}
       {...rest}
     >
       <TopSection dirName="My Projects" />
@@ -68,6 +84,19 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
             _active={{
               bg: '#fafafa1f',
             }}
+            onDoubleClick={() => {
+              setRenameItem({ id: item.id, value: item.name })
+              setTimeout(() => {
+                if (renameInputRef.current) {
+                  renameInputRef.current.focus()
+                  renameInputRef.current.setSelectionRange(
+                    0,
+                    renameInputRef.current.value.length - 3,
+                    'forward'
+                  )
+                }
+              }, 0)
+            }}
           >
             <ListIcon
               as={
@@ -79,7 +108,39 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
               fontSize="lg"
               marginRight="0"
             />
-            <Text isTruncated>{item.name}</Text>
+            {renameItem.id === item.id ? (
+              <Input
+                size="xxs"
+                _focus={{
+                  boxShadow: '0px 0px 0px 1px #51a3f0c9',
+                }}
+                placeholder="Rename Document"
+                ref={renameInputRef}
+                value={renameItem.value}
+                onChange={(e) =>
+                  setRenameItem((old) => ({ ...old, value: e.target.value }))
+                }
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    /** Press Enter to save */
+                    dispatch(
+                      updateDocument({
+                        id: item.id,
+                        changes: {
+                          name: renameItem.value,
+                        },
+                      })
+                    )
+                    setRenameItem({ id: '', value: '' })
+                  } else if (e.key === 'Escape') {
+                    /** Press Esc to cancel */
+                    setRenameItem({ id: '', value: '' })
+                  }
+                }}
+              />
+            ) : (
+              <Text isTruncated>{item.name}</Text>
+            )}
           </ListItem>
         ))}
       </List>
