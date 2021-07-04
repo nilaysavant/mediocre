@@ -1,6 +1,14 @@
 # Mediocre Editor Documentation
 
-## Redux Guide
+Planning, Documentation and design decisions in the making of Mediocre.
+
+## Planning
+
+- [Planning Docs]('Planning.md')
+
+## References
+
+### Redux Guide
 
 - https://redux-toolkit.js.org/tutorials/typescript
 - https://redux-toolkit.js.org/tutorials/quick-start
