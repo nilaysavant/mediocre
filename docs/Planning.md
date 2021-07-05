@@ -28,7 +28,7 @@ export type MediocreDocument = {
   - Tauri (backend)
   - React (frontend)
 
-### Fetch existing documents to redux frontend
+### Fetch existing documents to frontend
 
 Pseudo code
 

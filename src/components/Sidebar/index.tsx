@@ -5,7 +5,7 @@ import { Box, BoxProps } from '@chakra-ui/layout'
 import { Input, List, ListIcon, ListItem, Text } from '@chakra-ui/react'
 import BottomSection from './BottomSection'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
-import { documentsSelectors, updateDocument } from './documentsSlice'
+import { documentsSelectors, documentUpdated } from './documentsSlice'
 import TopSection from './TopSection'
 
 export type SidebarProps = BoxProps
@@ -124,7 +124,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                   if (e.key === 'Enter') {
                     /** Press Enter to save */
                     dispatch(
-                      updateDocument({
+                      documentUpdated({
                         id: item.id,
                         changes: {
                           name: renameItem.value,

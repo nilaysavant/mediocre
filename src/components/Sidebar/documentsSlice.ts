@@ -34,21 +34,21 @@ export const documentsSlice = createSlice({
   initialState: documentsAdapter.getInitialState(),
   reducers: {
     /**
-     * Add new document
+     * New document added
      */
-    addDocument: documentsAdapter.addOne,
+    documentAdded: documentsAdapter.addOne,
     /**
-     * Update document by id
+     * Existing document updated
      */
-    updateDocument: documentsAdapter.updateOne,
+    documentUpdated: documentsAdapter.updateOne,
     /**
-     * Delete document by id
+     * Document Deleted
      */
-    deleteDocument: documentsAdapter.removeOne,
+    documentDeleted: documentsAdapter.removeOne,
   },
 })
 // Action creators are generated for each case reducer function
-export const { addDocument, updateDocument, deleteDocument } =
+export const { documentAdded, documentUpdated, documentDeleted } =
   documentsSlice.actions
 
 // Can create a set of memoized selectors based on the location of this entity state
