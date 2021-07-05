@@ -10,13 +10,14 @@
 
 ```ts
 export type MediocreDocument = {
-  id: string
-  name: string
-  content: string
-  dir: string
-  path: string
-  type: 'markdown'
-  modified: string
+  id: string // doc Id, usually same as path
+  name: string // doc file name
+  content: string // md content
+  dir: string // dir name
+  path: string // full path relative to app data dir
+  type: 'markdown' // currently only md supported
+  modified: string, // modified time and oth meta
+  synced: boolean // if content is same as on fs
 }
 ```
 
@@ -34,25 +35,27 @@ Pseudo code
 
 ```ts
 // FRONTEND
-fetchFileSystemDocs()
-// BACKEND
-onFetchCommand(){
-  fetchFSDocumentPathsWithMetaData()
-  return pathWithMeta[] // Sent to FRONTEND
-}
-// FRONTEND
-onReceiveDocument(pathWithMeta[]) {
-  mappedDocs = pathWithMeta.map({
-    id: pathWithMeta.path,
-    name: getFileNameFromPath(pathWithMeta.path),
-    content: '', // Synced on Demand
-    dir: getDirNameFromPath(pathWithMeta.path),
-    path: pathWithMeta.path,
-    type: 'markdown',
-    modified: pathWithMeta.modified.
-  })
-  // save as init documents
-  setDocumentsInRedux(mappedDocs)
+fetchExistingDocs(){
+  tauriInvoke -> fetchFileSystemDocs()
+  // BACKEND
+  onFetchCommand(){
+    fetchFSDocumentPathsWithMetaData()
+    return pathWithMeta[] // Sent to FRONTEND
+  }
+  // FRONTEND
+  onReceiveDocument(pathWithMeta[]) {
+    mappedDocs = pathWithMeta.map({
+      id: pathWithMeta.path,
+      name: getFileNameFromPath(pathWithMeta.path),
+      content: '', // Synced later on Demand
+      dir: getDirNameFromPath(pathWithMeta.path),
+      path: pathWithMeta.path,
+      type: 'markdown',
+      modified: pathWithMeta.modified,
+      synced: false
+    })
+    reduxDispatch -> documentsInitialized(mappedDocs)
+  }
 }
 ```
 
@@ -62,24 +65,64 @@ Pseudo code
 
 ```ts
 // FRONTEND
-openDocument()
-isDocumentSynced(){
-  case YES: {
-    loadContentToView()
-  }
-  case NO: {
-    requestDocumentContent(documentPath)
-    // BACKEND
-    onDocumentContentRequest(documentPath) {
-      fileContent = readFileFromPath(documentPath)
-      return fileContent
+openDocument(documentId) {
+  isDocumentSynced(documentId){
+    case YES: {
+      loadContentToView(documentId)
     }
-    // FRONTEND
-    onReceiveDocumentContent(fileContent) {
-      updateDocumentInRedux(documentID, {
-        content: fileContent
-      })
+    case NO: {
+      reduxSelect -> getDocumentPath(id)
+      tauriInvoke -> requestDocumentContent(documentPath)
+      // BACKEND
+      onDocumentContentRequest(documentPath) {
+        fileContent = readFileFromPath(documentPath)
+        return fileContent
+      }
+      // FRONTEND
+      onReceiveDocumentContent(fileContent) {
+        reduxDispatch -> documentUpdated(documentID, {
+          content: fileContent,
+          synced: true
+        })
+      }
     }
   }
+}
+```
+
+### Create New Document
+
+Pseudo code
+
+```ts
+// FRONTEND
+createDocument(){
+  reduxDispatch -> documentAdded({
+    id: generatePath(project, name),
+    name: name,
+    content: '',
+    dir: getDirNameFromPath(generatePath(project, name)),
+    path: generatePath(project, name),
+    type: 'markdown',
+    modified: '',
+  })
+}
+// FRONTEND
+onSaveDocument(documentId) {
+  // FRONTEND
+  reduxSelect -> getDocumentPathAndContent(documentId)
+  tauriInvoke -> saveFileToFs({
+    path: path,
+    content: content,
+  })
+  // BACKEND
+  onSaveFileToFs() {
+    writeFileToFs(path, content)
+    return
+  }
+  // FRONTEND
+  reduxDispatch -> documentUpdated(documentId, {
+    synced: true,
+  })
 }
 ```
