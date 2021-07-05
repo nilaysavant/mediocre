@@ -19,6 +19,7 @@ export type MediocreDocument = {
   path: string
   type: 'markdown'
   modified: string
+  synced: boolean
 }
 
 /** Create entity adapter */

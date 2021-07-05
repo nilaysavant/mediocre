@@ -48,6 +48,7 @@ const TopSection = ({ dirName, ...rest }: TopSectionProps) => {
               dir: 'my-projects',
               path: '/tmp',
               modified: new Date().toISOString(),
+              synced: false,
             })
           )
         }
