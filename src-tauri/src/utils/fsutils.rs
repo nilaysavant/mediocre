@@ -1,9 +1,11 @@
 use std::{
+  env,
   fs::{self, OpenOptions},
   io::Write,
   path::{Path, PathBuf},
 };
 
+use log::{error, info};
 use tauri::api::path::home_dir;
 
 use crate::{
@@ -12,15 +14,36 @@ use crate::{
 };
 
 pub fn get_app_root_dir_path() -> Result<PathBuf, ServerError> {
+  let debug_level = env::var("RUST_DEBUG").unwrap_or("0".to_string());
   match home_dir() {
     Some(dir) => {
       let path = dir.join(APP_DATA_DIR_NAME);
-      Ok(path)
+      if debug_level.eq("1") {
+        let mut new_path =
+          path
+            .into_os_string()
+            .into_string()
+            .map_err(|e| ServerError::InternalError {
+              message: e.to_string_lossy().to_string(),
+            })?;
+        new_path.push_str("dev"); // append dev to app dir name
+        let dev_path = Path::new(&new_path).to_path_buf();
+        Ok(dev_path)
+      } else {
+        Ok(path)
+      }
     }
     None => Err(ServerError::UserError {
       message: "Home directory unavailable!".to_string(),
     }),
   }
+}
+
+/// Create default dir for the application user files
+pub fn create_app_default_dir() -> Result<(), ServerError> {
+  let app_path = get_app_root_dir_path().map_err(map_to_server_error)?;
+  fs::create_dir_all(app_path).map_err(map_to_server_error)?;
+  Ok(())
 }
 
 /// Read json file from a path and return contents as string
