@@ -79,12 +79,14 @@ export const documentOpen = createAsyncThunk<
 /** Mediocre DocumentSlice State */
 export type DocumentsState = {
   all: EntityState<MediocreDocument>
+  selectedDocument: string
   isDocumentsFetching: boolean
   isDocumentOpening: boolean
 }
 
 const initialState: DocumentsState = {
   all: documentsAdapter.getInitialState(),
+  selectedDocument: '',
   isDocumentsFetching: false,
   isDocumentOpening: false,
 }
@@ -130,8 +132,12 @@ export const documentsSlice = createSlice({
             modified: docMeta.modified || '',
           }))
         /** Set all documents from fetched documents */
-        if (allDocuments) documentsAdapter.setAll(state.all, allDocuments)
-        else console.error('allDocuments is undefined!')
+        if (allDocuments) {
+          /** Set all documents in store */
+          documentsAdapter.setAll(state.all, allDocuments)
+          /** Set the first document as selected */
+          state.selectedDocument = allDocuments[0].id
+        } else console.error('allDocuments is undefined!')
         /** reset fetching state */
         state.isDocumentsFetching = false
       })
