@@ -49,10 +49,10 @@ pub fn create_app_default_dir() -> Result<(), ServerError> {
   Ok(())
 }
 
-/// Read json file from a path and return contents as string
+/// Read document file from a path and return content as string
 pub fn read_from_path<P: AsRef<Path>>(path: P) -> Result<String, ServerError> {
-  let json_string = fs::read_to_string(path).map_err(map_to_server_error)?;
-  Ok(json_string)
+  let content = fs::read_to_string(path).map_err(map_to_server_error)?;
+  Ok(content)
 }
 
 /// Write `json_data` to the specified file path (recursively create all parent paths)
