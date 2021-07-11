@@ -52,6 +52,7 @@ const TopSection = ({ dirName, isLoading: loading = false, ...rest }: TopSection
               content: '',
               dir: 'my-projects',
               path: '/tmp',
+              relativePath: '',
               modified: new Date().toISOString(),
               synced: false,
             })

@@ -7,6 +7,10 @@ import { open } from '@tauri-apps/api/dialog'
 import { homeDir } from '@tauri-apps/api/path'
 import { IsoDatetime } from '../commonTypes'
 import isTauri from '../utils/isTauri'
+import path from 'path'
+
+const appDirName =
+  process.env.NODE_ENV === 'production' ? '.mediocre' : '.mediocredev'
 
 /**
  * Open File Selection Dialog Box
@@ -69,7 +73,14 @@ export const fetchDocumentsMetadata = async () => {
         modified?: IsoDatetime
       }[]
     } = await tauri.invoke('fetch_docs_info', {})
-    return invokeRes
+    const homeDirPath = await homeDir()
+    if (!homeDirPath) throw new Error('Path to home dir invalid!')
+    const appRootDirPath = path.join(homeDirPath, appDirName)
+    const filesMetaInfo = invokeRes.filesMetaInfo.map((docMeta) => ({
+      ...docMeta,
+      fileRelativePath: path.relative(appRootDirPath, docMeta.filePath),
+    }))
+    return filesMetaInfo
   }
 }
 

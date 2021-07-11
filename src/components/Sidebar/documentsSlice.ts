@@ -22,6 +22,7 @@ export type MediocreDocument = {
   content: string
   dir: string
   path: string
+  relativePath: string
   type: 'markdown'
   modified: string
   synced: boolean
@@ -43,7 +44,7 @@ export const documentsListFetch = createAsyncThunk(
   'documents/documentsListFetch',
   async (_arg, thunkAPI) => {
     const response = await fetchDocumentsMetadata()
-    return response?.filesMetaInfo
+    return response
   }
 )
 
@@ -90,6 +91,7 @@ export const documentsSlice = createSlice({
           id: docMeta.filePath,
           name: docMeta.fileName,
           path: docMeta.filePath,
+          relativePath: docMeta.fileRelativePath,
           dir: docMeta.fileDir || '',
           type: docMeta.fileType || 'markdown',
           content: '',
