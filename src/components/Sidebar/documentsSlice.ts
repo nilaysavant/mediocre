@@ -64,6 +64,7 @@ export const documentsSlice = createSlice({
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(documentsListFetch.fulfilled, (state, action) => {
+      /** get all the validated documents from the async fn */
       const allDocuments: MediocreDocument[] | undefined = action.payload?.map(
         (docMeta) => ({
           id: docMeta.filePath,
