@@ -8,10 +8,10 @@ import { getUniqueIdV4 } from '../../utils/idGenerator'
 
 export type TopSectionProps = {
   dirName: string
-  loading?: boolean
+  isLoading?: boolean
 } & BoxProps
 
-const TopSection = ({ dirName, loading = false, ...rest }: TopSectionProps) => {
+const TopSection = ({ dirName, isLoading: loading = false, ...rest }: TopSectionProps) => {
   const dispatch = useReduxDispatch()
 
   return (
