@@ -84,4 +84,16 @@ export const fetchDocumentsMetadata = async () => {
   }
 }
 
+/**
+ * Read document from the specified relative path
+ */
+export const readDocumentFromRelativePath = async (relativePath: string) => {
+  if (isTauri()) {
+    const invokeRes: {
+      content: string
+    } = await tauri.invoke('read_document', { relativePath })
+    return invokeRes.content
+  }
+}
+
 export default null

@@ -82,6 +82,22 @@ pub struct FetchDocsInfoResponse {
 #[tauri::command]
 pub fn fetch_docs_info() -> Result<FetchDocsInfoResponse, String> {
   let path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
-  let files_meta_info = fsutils::get_files_meta_from_path(path.as_path()).map_err(|e| e.to_string())?;
+  let files_meta_info =
+    fsutils::get_files_meta_from_path(path.as_path()).map_err(|e| e.to_string())?;
   Ok(FetchDocsInfoResponse { files_meta_info })
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ReadDocumentResponse {
+  content: String,
+}
+
+/// Read Document on the specified relative path
+#[tauri::command]
+pub fn read_document(relative_path: String) -> Result<ReadDocumentResponse, String> {
+  let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
+  let file_path = app_dir_path.join(relative_path);
+  let content = fsutils::read_from_path(file_path).map_err(|e| e.to_string())?;
+  Ok(ReadDocumentResponse { content })
 }

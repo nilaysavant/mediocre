@@ -17,6 +17,7 @@ import { store } from '../../redux/store'
 import {
   fetchDocumentsMetadata,
   openFileSelectionDialog,
+  readDocumentFromRelativePath,
   saveFileToCustomPath,
 } from '../../functions/fileSystem'
 import { getEnvironment } from '../../functions/environment'
@@ -27,6 +28,7 @@ export type MediocreCommandId =
   | 'open_file'
   | 'save_file_to_path'
   | 'fetch_docs_info'
+  | 'read_document'
 
 export type OnSelectData = {
   commandId: MediocreCommandId
@@ -38,6 +40,10 @@ export type OnSelectData = {
   | {
       commandId: 'save_file_to_path'
       fileName: string
+    }
+  | {
+      commandId: 'read_document'
+      relativePath: string
     }
 )
 
@@ -67,7 +73,14 @@ export type AllMediocreCommands = {
 }
 
 const allMediocreCommands: AllMediocreCommands = {
-  allIds: ['get_env', 'my_custom_command', 'open_file', 'save_file_to_path', 'fetch_docs_info'],
+  allIds: [
+    'get_env',
+    'my_custom_command',
+    'open_file',
+    'save_file_to_path',
+    'fetch_docs_info',
+    'read_document',
+  ],
   byId: {
     get_env: {
       id: 'get_env',
@@ -150,7 +163,25 @@ const allMediocreCommands: AllMediocreCommands = {
       icon: GoFileDirectory,
       onSelect: async (_data) => {
         const res = await fetchDocumentsMetadata()
-        console.log("🚀 ~ file: commandItems.ts ~ line 153 ~ onSelect: ~ res", res)
+        console.log(
+          '🚀 ~ file: commandItems.ts ~ line 153 ~ onSelect: ~ res',
+          res
+        )
+      },
+    },
+    read_document: {
+      id: 'read_document',
+      title: 'Read document',
+      subtitle: 'Read document from specified relative path',
+      icon: GoFileDirectory,
+      onSelect: async (data) => {
+        if (data?.commandId === 'read_document' && data.relativePath) {
+          const res = await readDocumentFromRelativePath(data.relativePath)
+          console.log(
+            '🚀 ~ file: commandItems.ts ~ line 180 ~ onSelect: ~ res',
+            res
+          )
+        } else throw new Error('Relative path is invalid')
       },
     },
   },

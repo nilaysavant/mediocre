@@ -106,6 +106,10 @@ const CommandModal = () => {
             await command.onSelect()
             break
           }
+          case 'read_document': {
+            await command.onSelect({ commandId, relativePath: inputText })
+            break
+          }
           default:
             break
         }
