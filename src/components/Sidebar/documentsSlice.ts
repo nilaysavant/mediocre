@@ -3,6 +3,7 @@ import {
   createEntityAdapter,
   createSlice,
   EntityId,
+  EntityState,
   PayloadAction,
   Update,
 } from '@reduxjs/toolkit'
@@ -46,11 +47,19 @@ export const documentsListFetch = createAsyncThunk(
   }
 )
 
+export type DocumentsState = {
+  all: EntityState<MediocreDocument>
+  isDocumentsFetching: boolean
+}
+
+const initialState: DocumentsState = {
+  all: documentsAdapter.getInitialState(),
+  isDocumentsFetching: false,
+}
+
 export const documentsSlice = createSlice({
   name: 'documents',
-  initialState: {
-    all: documentsAdapter.getInitialState(),
-  },
+  initialState,
   reducers: {
     /** Dispatched on new doc create/add */
     documentAdd: (state, action: PayloadAction<MediocreDocument>) => {
@@ -87,6 +96,9 @@ export const documentsSlice = createSlice({
       /** Set all documents from fetched documents */
       if (allDocuments) documentsAdapter.setAll(state.all, allDocuments)
       else console.error('allDocuments is undefined!')
+    })
+    builder.addCase(documentsListFetch.pending, (state, action) => {
+      state.isDocumentsFetching = true
     })
   },
 })
