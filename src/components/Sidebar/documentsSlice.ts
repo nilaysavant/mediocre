@@ -12,6 +12,7 @@ import {
   readDocumentFromRelativePath,
 } from '../../functions/fileSystem'
 import { RootState } from '../../redux/store'
+import { updateRawText } from '../../utils/markdownParser/markdownParserSlice'
 
 /**
  * Following entity based redux code
@@ -51,28 +52,41 @@ export const documentsListFetch = createAsyncThunk(
   }
 )
 
-// /**
-//  * Async thunk action to open and read document
-//  * from file system. Uses Tauri command.
-//  */
-// export const documentOpen = createAsyncThunk<void, { a: string }>(
-//   'documents/documentOpen',
-//   async (arg, thunkAPI) => {
-//     console.log('🚀 ~ file: documentsSlice.ts ~ line 61 ~ a', arg)
-//     // const response = await readDocumentFromRelativePath()
-//     // return response
-//   }
-// )
+/**
+ * Async thunk action to open and read document
+ * from file system. Uses Tauri command.
+ */
+export const documentOpen = createAsyncThunk<
+  string | undefined,
+  { documentId: string }
+>('documents/documentOpen', async (arg, { getState, dispatch }) => {
+  const { documentId } = arg
+  const document = (getState() as RootState).documents.all.entities[documentId]
+  if (!document)
+    throw new Error(`document invalid! document with documentId not available`)
+  const { relativePath, synced, content } = document
+  if (!relativePath) throw new Error(`relativePath invalid!`)
+  let updatedContent
+  /** if already synced return the existing content */
+  if (synced) updatedContent = content
+  // else update content from fs
+  else updatedContent = await readDocumentFromRelativePath(relativePath)
+  /** Update editor text */
+  dispatch(updateRawText(updatedContent || ''))
+  return updatedContent
+})
 
 /** Mediocre DocumentSlice State */
 export type DocumentsState = {
   all: EntityState<MediocreDocument>
   isDocumentsFetching: boolean
+  isDocumentOpening: boolean
 }
 
 const initialState: DocumentsState = {
   all: documentsAdapter.getInitialState(),
   isDocumentsFetching: false,
+  isDocumentOpening: false,
 }
 
 export const documentsSlice = createSlice({
@@ -98,7 +112,7 @@ export const documentsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Add reducers for additional action types here, and handle loading state as needed
-      .addCase(documentsListFetch.pending, (state, action) => {
+      .addCase(documentsListFetch.pending, (state, _action) => {
         state.isDocumentsFetching = true
       })
       .addCase(documentsListFetch.fulfilled, (state, action) => {
@@ -120,6 +134,19 @@ export const documentsSlice = createSlice({
         else console.error('allDocuments is undefined!')
         /** reset fetching state */
         state.isDocumentsFetching = false
+      })
+      .addCase(documentOpen.pending, (state, _action) => {
+        state.isDocumentOpening = true
+      })
+      .addCase(documentOpen.fulfilled, (state, action) => {
+        documentsAdapter.updateOne(state.all, {
+          id: action.meta.arg.documentId,
+          changes: {
+            content: action.payload,
+            synced: true,
+          },
+        })
+        state.isDocumentOpening = false
       })
   },
 })

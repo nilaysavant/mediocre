@@ -6,6 +6,7 @@ import { Input, List, ListIcon, ListItem, Text } from '@chakra-ui/react'
 import BottomSection from './BottomSection'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import {
+  documentOpen,
   documentsListFetch,
   documentsSelectors,
   documentUpdate,
@@ -111,6 +112,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                 }
               }, 0)
             }}
+            onClick={() => dispatch(documentOpen({ documentId: item.id }))}
           >
             <ListIcon
               as={
