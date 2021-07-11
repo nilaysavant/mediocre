@@ -5,6 +5,7 @@
 import { tauri } from '@tauri-apps/api'
 import { open } from '@tauri-apps/api/dialog'
 import { homeDir } from '@tauri-apps/api/path'
+import { IsoDatetime } from '../commonTypes'
 import isTauri from '../utils/isTauri'
 
 /**
@@ -59,7 +60,15 @@ export const saveFileToCustomPath = async (
  */
 export const fetchDocumentsMetadata = async () => {
   if (isTauri()) {
-    const invokeRes: unknown = await tauri.invoke('fetch_docs_info', {})
+    const invokeRes: {
+      filesMetaInfo: {
+        fileName: string
+        filePath: string
+        fileDir?: string
+        fileType?: 'markdown'
+        modified?: IsoDatetime
+      }[]
+    } = await tauri.invoke('fetch_docs_info', {})
     return invokeRes
   }
 }
