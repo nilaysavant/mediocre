@@ -16,8 +16,11 @@ export type SidebarProps = BoxProps
 
 const Sidebar = ({ ...rest }: SidebarProps) => {
   const { colorMode } = useColorMode()
-  const documents = useReduxSelector(documentsSelectors.selectAll)
   const dispatch = useReduxDispatch()
+  const documents = useReduxSelector(documentsSelectors.selectAll)
+  const isDocumentsFetching = useReduxSelector(
+    (state) => state.documents.isDocumentsFetching
+  )
   const renameInputRef = useRef<HTMLInputElement>(null)
   const [renameItem, setRenameItem] = useState({
     id: '',
@@ -49,7 +52,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       }}
       {...rest}
     >
-      <TopSection dirName="My Projects" />
+      <TopSection dirName="My Projects" isLoading={isDocumentsFetching} />
       <List
         flex="1"
         minHeight="0"

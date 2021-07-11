@@ -47,6 +47,7 @@ export const documentsListFetch = createAsyncThunk(
   }
 )
 
+/** Mediocre DocumentSlice State */
 export type DocumentsState = {
   all: EntityState<MediocreDocument>
   isDocumentsFetching: boolean
@@ -79,6 +80,9 @@ export const documentsSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
+    builder.addCase(documentsListFetch.pending, (state, action) => {
+      state.isDocumentsFetching = true
+    })
     builder.addCase(documentsListFetch.fulfilled, (state, action) => {
       /** get all the validated documents from the async fn */
       const allDocuments: MediocreDocument[] | undefined = action.payload?.map(
@@ -96,9 +100,8 @@ export const documentsSlice = createSlice({
       /** Set all documents from fetched documents */
       if (allDocuments) documentsAdapter.setAll(state.all, allDocuments)
       else console.error('allDocuments is undefined!')
-    })
-    builder.addCase(documentsListFetch.pending, (state, action) => {
-      state.isDocumentsFetching = true
+      /** reset fetching state */
+      state.isDocumentsFetching = false
     })
   },
 })
