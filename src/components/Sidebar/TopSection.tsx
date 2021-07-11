@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import { Icon, IconButton, Text } from '@chakra-ui/react'
+import { Icon, IconButton, Spacer, Spinner, Text } from '@chakra-ui/react'
 import { BsPlus } from 'react-icons/bs'
 import { useReduxDispatch } from '../../redux/hooks'
 import { documentAdd } from './documentsSlice'
@@ -8,9 +8,10 @@ import { getUniqueIdV4 } from '../../utils/idGenerator'
 
 export type TopSectionProps = {
   dirName: string
+  loading?: boolean
 } & BoxProps
 
-const TopSection = ({ dirName, ...rest }: TopSectionProps) => {
+const TopSection = ({ dirName, loading = false, ...rest }: TopSectionProps) => {
   const dispatch = useReduxDispatch()
 
   return (
@@ -20,14 +21,18 @@ const TopSection = ({ dirName, ...rest }: TopSectionProps) => {
       py="0.18rem"
       display="flex"
       alignItems="center"
-      justifyContent="space-between"
       borderBottom="1px solid #ffffff12"
       color="#ebebebeb"
       fontSize="xs"
       width="full"
       {...rest}
     >
-      <Text isTruncated>{dirName}</Text>
+      <Box display="flex" alignItems="center" minWidth="0" flex="1">
+        <Text isTruncated flex="1">
+          {dirName}
+        </Text>
+        {loading ? <Spinner width="0.8rem" height="0.8rem" mr="1.5" /> : null}
+      </Box>
       <IconButton
         aria-label="Add new document"
         icon={<Icon as={BsPlus} />}
