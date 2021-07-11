@@ -94,6 +94,7 @@ pub fn remove_from_path<P: AsRef<Path> + Copy>(path: P) -> Result<String, Server
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct FileMetaInfo {
   file_name: String,
   file_path: String,
