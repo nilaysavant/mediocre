@@ -5,8 +5,11 @@ use std::{
   path::{Path, PathBuf},
 };
 
+use chrono::{DateTime, SecondsFormat, Utc};
 use log::{error, info};
+use serde::{Deserialize, Serialize};
 use tauri::api::path::home_dir;
+use walkdir::WalkDir;
 
 use crate::{
   constants::paths::APP_DATA_DIR_NAME,
@@ -88,4 +91,77 @@ pub fn remove_from_path<P: AsRef<Path> + Copy>(path: P) -> Result<String, Server
     fs::remove_file(path).map_err(map_to_server_error)?;
   }
   Ok(json_string)
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct FileMetaInfo {
+  file_name: String,
+  file_path: String,
+  file_dir: Option<String>,
+  file_type: Option<String>,
+  modified: Option<String>,
+}
+
+/// Get all files meta info for given path
+pub fn get_files_meta_from_path<P: AsRef<Path> + Copy>(
+  path: P,
+) -> Result<Vec<FileMetaInfo>, ServerError> {
+  let meta_info = WalkDir::new(path)
+    .into_iter()
+    .filter_map(|e| e.ok())
+    .filter_map(|e| match e.metadata() {
+      Ok(m) => {
+        if m.is_file() {
+          Some(e)
+        } else {
+          None
+        }
+      }
+      Err(_) => None,
+    })
+    .filter_map(|e| {
+      // There have been discussions wrt differences in file
+      // path serialization between various platforms namely win and unix
+      // Currently will assume valid and serialize(able) chars are used
+      // as file names and paths will be constructed using the app itself.
+      let file_name = e.file_name().to_string_lossy().to_string();
+      let file_path = e.path().to_string_lossy().to_string();
+      let file_dir = match e.path().parent() {
+        Some(p) => match p.components().last() {
+          Some(c) => Some(c.as_os_str().to_string_lossy().to_string()),
+          None => None,
+        },
+        None => None,
+      };
+      let file_type = match e.path().extension() {
+        Some(ext) => {
+          if ext.eq(Path::new("test.md").extension().unwrap()) {
+            Some("markdown".to_string())
+          } else {
+            None
+          }
+        }
+        None => None,
+      };
+      let modified = match e.metadata() {
+        Ok(m) => match m.modified() {
+          Ok(t) => {
+            let system_time: DateTime<Utc> = t.into();
+            Some(system_time.to_rfc3339_opts(SecondsFormat::Millis, true))
+          }
+          Err(_) => None,
+        },
+        Err(_) => None,
+      };
+      Some(FileMetaInfo {
+        file_name,
+        file_path,
+        file_dir,
+        file_type,
+        modified,
+      })
+    })
+    .collect::<Vec<FileMetaInfo>>();
+
+  Ok(meta_info)
 }

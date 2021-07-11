@@ -1624,6 +1624,7 @@ name = "mediocre-editor"
 version = "0.1.0"
 dependencies = [
  "ammonia",
+ "chrono",
  "comrak",
  "derive_more",
  "env_logger",

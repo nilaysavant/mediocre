@@ -1,9 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use crate::{
-  models::server_error::{map_to_server_error, ServerError},
-  utils::fsutils,
-};
+use crate::utils::fsutils;
 use comrak::{markdown_to_html, ComrakOptions};
 use serde::{Deserialize, Serialize};
 
@@ -60,7 +57,7 @@ pub struct SaveFileToResponse {
   message: String,
 }
 
-/// Get Environment Variables
+/// Save File to Command
 #[tauri::command]
 pub fn save_file_to(save_path: String, file_data: String) -> Result<SaveFileToResponse, String> {
   let save_path = Path::new(save_path.as_str());
@@ -69,4 +66,17 @@ pub fn save_file_to(save_path: String, file_data: String) -> Result<SaveFileToRe
     status: true,
     message: "Success".to_string(),
   })
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct FetchDocsInfoResponse {
+  files_meta_info: Vec<fsutils::FileMetaInfo>,
+}
+
+/// Fetch Documents info from app root dir
+#[tauri::command]
+pub fn fetch_docs_info() -> Result<FetchDocsInfoResponse, String> {
+  let path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
+  let files_meta_info = fsutils::get_files_meta_from_path(path.as_path()).map_err(|e| e.to_string())?;
+  Ok(FetchDocsInfoResponse { files_meta_info })
 }

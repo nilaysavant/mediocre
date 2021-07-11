@@ -54,4 +54,14 @@ export const saveFileToCustomPath = async (
   }
 }
 
+/**
+ * fetch Documents Meta data fom FS
+ */
+export const fetchDocumentsMetadata = async () => {
+  if (isTauri()) {
+    const invokeRes: unknown = await tauri.invoke('fetch_docs_info', {})
+    return invokeRes
+  }
+}
+
 export default null
