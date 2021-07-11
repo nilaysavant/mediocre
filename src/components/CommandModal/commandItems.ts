@@ -150,6 +150,7 @@ const allMediocreCommands: AllMediocreCommands = {
       icon: GoFileDirectory,
       onSelect: async (_data) => {
         const res = await fetchDocumentsMetadata()
+        console.log("🚀 ~ file: commandItems.ts ~ line 153 ~ onSelect: ~ res", res)
       },
     },
   },

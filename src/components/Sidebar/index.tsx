@@ -1,11 +1,15 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { AiFillFileMarkdown, AiOutlineFileMarkdown } from 'react-icons/ai'
 import { Box, BoxProps } from '@chakra-ui/layout'
 import { Input, List, ListIcon, ListItem, Text } from '@chakra-ui/react'
 import BottomSection from './BottomSection'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
-import { documentsSelectors, documentUpdate } from './documentsSlice'
+import {
+  documentsListFetch,
+  documentsSelectors,
+  documentUpdate,
+} from './documentsSlice'
 import TopSection from './TopSection'
 
 export type SidebarProps = BoxProps
@@ -19,6 +23,10 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
     id: '',
     value: '',
   })
+
+  useEffect(() => {
+    dispatch(documentsListFetch())
+  }, [dispatch])
 
   return (
     <Box

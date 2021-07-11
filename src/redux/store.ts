@@ -5,6 +5,7 @@ import counterSlice from '../utils/counterSlice'
 import appSlice from '../appSlice'
 import markdownThemeSlice from '../styles/markdown/markdownThemeSlice'
 import documentsSlice from '../components/Sidebar/documentsSlice'
+import reduxLogger from 'redux-logger'
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,8 @@ export const store = configureStore({
     markdownTheme: markdownThemeSlice,
     counter: counterSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(reduxLogger),
 })
 
 // @ts-expect-error Set global window.REDUX_STORE key to access redux store in dev

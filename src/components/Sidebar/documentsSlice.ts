@@ -1,8 +1,10 @@
 import {
+  createAsyncThunk,
   createEntityAdapter,
   createSlice,
   PayloadAction,
 } from '@reduxjs/toolkit'
+import { fetchDocumentsMetadata } from '../../functions/fileSystem'
 import { RootState } from '../../redux/store'
 
 /**
@@ -30,6 +32,18 @@ const documentsAdapter = createEntityAdapter<MediocreDocument>({
   sortComparer: (a, b) => a.modified.localeCompare(b.modified),
 })
 
+/**
+ * Async thunk action to fetch documents list from
+ * file system. Uses Tauri command.
+ */
+export const documentsListFetch = createAsyncThunk(
+  'documents/documentsListFetch',
+  async (_arg, thunkAPI) => {
+    const response = await fetchDocumentsMetadata()
+    return response?.filesMetaInfo
+  }
+)
+
 export const documentsSlice = createSlice({
   name: 'documents',
   initialState: documentsAdapter.getInitialState(),
@@ -46,6 +60,26 @@ export const documentsSlice = createSlice({
      * Document Deleted
      */
     documentDelete: documentsAdapter.removeOne,
+  },
+  extraReducers: (builder) => {
+    // Add reducers for additional action types here, and handle loading state as needed
+    builder.addCase(documentsListFetch.fulfilled, (state, action) => {
+      const allDocuments: MediocreDocument[] | undefined = action.payload?.map(
+        (docMeta) => ({
+          id: docMeta.filePath,
+          name: docMeta.fileName,
+          path: docMeta.filePath,
+          dir: docMeta.fileDir || '',
+          type: docMeta.fileType || 'markdown',
+          content: '',
+          synced: false,
+          modified: docMeta.modified || '',
+        })
+      )
+      /** Set all documents from fetched documents */
+      if (allDocuments) documentsAdapter.setAll(state, allDocuments)
+      else console.error('allDocuments is undefined!')
+    })
   },
 })
 // Action creators are generated for each case reducer function
