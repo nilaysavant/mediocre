@@ -2,7 +2,9 @@ import {
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
+  EntityId,
   PayloadAction,
+  Update,
 } from '@reduxjs/toolkit'
 import { fetchDocumentsMetadata } from '../../functions/fileSystem'
 import { RootState } from '../../redux/store'
@@ -46,20 +48,25 @@ export const documentsListFetch = createAsyncThunk(
 
 export const documentsSlice = createSlice({
   name: 'documents',
-  initialState: documentsAdapter.getInitialState(),
+  initialState: {
+    all: documentsAdapter.getInitialState(),
+  },
   reducers: {
-    /**
-     * New document added
-     */
-    documentAdd: documentsAdapter.addOne,
-    /**
-     * Existing document updated
-     */
-    documentUpdate: documentsAdapter.updateOne,
-    /**
-     * Document Deleted
-     */
-    documentDelete: documentsAdapter.removeOne,
+    /** Dispatched on new doc create/add */
+    documentAdd: (state, action: PayloadAction<MediocreDocument>) => {
+      documentsAdapter.addOne(state.all, action.payload)
+    },
+    /** Dispatched on document update(s) */
+    documentUpdate: (
+      state,
+      action: PayloadAction<Update<MediocreDocument>>
+    ) => {
+      documentsAdapter.updateOne(state.all, action.payload)
+    },
+    /** Dispatched on document delete */
+    documentDelete: (state, action: PayloadAction<EntityId>) => {
+      documentsAdapter.removeOne(state.all, action.payload)
+    },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
@@ -78,7 +85,7 @@ export const documentsSlice = createSlice({
         })
       )
       /** Set all documents from fetched documents */
-      if (allDocuments) documentsAdapter.setAll(state, allDocuments)
+      if (allDocuments) documentsAdapter.setAll(state.all, allDocuments)
       else console.error('allDocuments is undefined!')
     })
   },
@@ -90,7 +97,7 @@ export const { documentAdd, documentUpdate, documentDelete } =
 // Can create a set of memoized selectors based on the location of this entity state
 // ref: https://github.com/reduxjs/redux-toolkit/issues/497
 export const documentsSelectors = documentsAdapter.getSelectors<RootState>(
-  (state) => state.documents
+  (state) => state.documents.all
 )
 
 export default documentsSlice.reducer
