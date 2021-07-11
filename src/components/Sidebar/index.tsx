@@ -22,6 +22,9 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
   const isDocumentsFetching = useReduxSelector(
     (state) => state.documents.isDocumentsFetching
   )
+  const selectedDocument = useReduxSelector(
+    (state) => state.documents.selectedDocument
+  )
   const renameInputRef = useRef<HTMLInputElement>(null)
   const [renameItem, setRenameItem] = useState({
     id: '',
@@ -90,9 +93,10 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
             alignItems="center"
             width="full"
             paddingX="0.5"
-            paddingTop={idx === 0 ? 1 : undefined}
+            paddingTop={idx === 0 ? 0.5 : undefined}
             userSelect="none"
             cursor="pointer"
+            bg={item.id === selectedDocument ? '#adadad21' : undefined}
             _hover={{
               bg: '#fafafa0d',
             }}

@@ -145,6 +145,8 @@ export const documentsSlice = createSlice({
         state.isDocumentOpening = true
       })
       .addCase(documentOpen.fulfilled, (state, action) => {
+        /** Set the selected document on Open */
+        state.selectedDocument = action.meta.arg.documentId
         documentsAdapter.updateOne(state.all, {
           id: action.meta.arg.documentId,
           changes: {
