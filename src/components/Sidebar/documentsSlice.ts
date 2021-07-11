@@ -7,7 +7,10 @@ import {
   PayloadAction,
   Update,
 } from '@reduxjs/toolkit'
-import { fetchDocumentsMetadata } from '../../functions/fileSystem'
+import {
+  fetchDocumentsMetadata,
+  readDocumentFromRelativePath,
+} from '../../functions/fileSystem'
 import { RootState } from '../../redux/store'
 
 /**
@@ -48,6 +51,19 @@ export const documentsListFetch = createAsyncThunk(
   }
 )
 
+// /**
+//  * Async thunk action to open and read document
+//  * from file system. Uses Tauri command.
+//  */
+// export const documentOpen = createAsyncThunk<void, { a: string }>(
+//   'documents/documentOpen',
+//   async (arg, thunkAPI) => {
+//     console.log('🚀 ~ file: documentsSlice.ts ~ line 61 ~ a', arg)
+//     // const response = await readDocumentFromRelativePath()
+//     // return response
+//   }
+// )
+
 /** Mediocre DocumentSlice State */
 export type DocumentsState = {
   all: EntityState<MediocreDocument>
@@ -80,31 +96,31 @@ export const documentsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(documentsListFetch.pending, (state, action) => {
-      state.isDocumentsFetching = true
-    })
-    builder.addCase(documentsListFetch.fulfilled, (state, action) => {
-      /** get all the validated documents from the async fn */
-      const allDocuments: MediocreDocument[] | undefined = action.payload?.map(
-        (docMeta) => ({
-          id: docMeta.filePath,
-          name: docMeta.fileName,
-          path: docMeta.filePath,
-          relativePath: docMeta.fileRelativePath,
-          dir: docMeta.fileDir || '',
-          type: docMeta.fileType || 'markdown',
-          content: '',
-          synced: false,
-          modified: docMeta.modified || '',
-        })
-      )
-      /** Set all documents from fetched documents */
-      if (allDocuments) documentsAdapter.setAll(state.all, allDocuments)
-      else console.error('allDocuments is undefined!')
-      /** reset fetching state */
-      state.isDocumentsFetching = false
-    })
+    builder
+      // Add reducers for additional action types here, and handle loading state as needed
+      .addCase(documentsListFetch.pending, (state, action) => {
+        state.isDocumentsFetching = true
+      })
+      .addCase(documentsListFetch.fulfilled, (state, action) => {
+        /** get all the validated documents from the async fn */
+        const allDocuments: MediocreDocument[] | undefined =
+          action.payload?.map((docMeta) => ({
+            id: docMeta.filePath,
+            name: docMeta.fileName,
+            path: docMeta.filePath,
+            relativePath: docMeta.fileRelativePath,
+            dir: docMeta.fileDir || '',
+            type: docMeta.fileType || 'markdown',
+            content: '',
+            synced: false,
+            modified: docMeta.modified || '',
+          }))
+        /** Set all documents from fetched documents */
+        if (allDocuments) documentsAdapter.setAll(state.all, allDocuments)
+        else console.error('allDocuments is undefined!')
+        /** reset fetching state */
+        state.isDocumentsFetching = false
+      })
   },
 })
 // Action creators are generated for each case reducer function

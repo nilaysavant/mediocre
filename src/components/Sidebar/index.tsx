@@ -28,7 +28,10 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
   })
 
   useEffect(() => {
-    dispatch(documentsListFetch())
+    const dlfPromise = dispatch(documentsListFetch())
+    return () => {
+      dlfPromise.abort('Sidebar unmounted')
+    }
   }, [dispatch])
 
   return (
