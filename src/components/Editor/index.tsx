@@ -3,15 +3,15 @@ import { useColorMode } from '@chakra-ui/color-mode'
 import MonacoEditor, { loader, useMonaco } from '@monaco-editor/react'
 import { Box } from '@chakra-ui/layout'
 import { editor, IScrollEvent } from 'monaco-editor/esm/vs/editor/editor.api'
-import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
+import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import {
   prettifyRawText,
   rawTextUpdate,
   updateRawText,
-} from '../utils/markdownParser/markdownParserSlice'
-import { handleClose, handleOpen } from './CommandModal/commandModalSlice'
+} from '../../utils/markdownParser/markdownParserSlice'
+import { handleClose, handleOpen } from '../CommandModal/commandModalSlice'
 import { Spacer, Spinner, Text } from '@chakra-ui/react'
-import { documentSave } from './Sidebar/documentsSlice'
+import { documentSave } from '../Sidebar/documentsSlice'
 
 loader.config({
   paths: {
