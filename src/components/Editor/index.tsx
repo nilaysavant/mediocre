@@ -12,6 +12,7 @@ import {
 import { handleClose, handleOpen } from '../CommandModal/commandModalSlice'
 import { Spacer, Spinner, Text } from '@chakra-ui/react'
 import { documentSave } from '../Sidebar/documentsSlice'
+import Loading from './Loading'
 
 loader.config({
   paths: {
@@ -29,8 +30,8 @@ const Editor = ({ editorRef, onScroll }: Props) => {
     (state) => state.commandModal.isOpen
   )
   const rawText = useReduxSelector((state) => state.markdownParser.rawText)
-  const isDocumentOpening = useReduxSelector(
-    (state) => state.documents.isDocumentOpening
+  const { isDocumentOpening, isDocumentSaving } = useReduxSelector(
+    (state) => state.documents
   )
   const dispatch = useReduxDispatch()
   const { colorMode } = useColorMode()
@@ -177,21 +178,10 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       outline="none"
       position="relative"
     >
-      {isDocumentOpening ? (
-        <Box
-          position="absolute"
-          zIndex="toast"
-          bottom="0.5"
-          right="1.5"
-          display="flex"
-          alignItems="center"
-          opacity="0.4"
-        >
-          <Text fontSize="x-small">Loading</Text>
-          <Spacer w="1" />
-          <Spinner width="0.7rem" height="0.7rem" />
-        </Box>
-      ) : null}
+      <Box position="absolute" zIndex="toast" bottom="0.5" right="1.5">
+        {isDocumentOpening ? <Loading message="Opening..." /> : null}
+        {isDocumentSaving ? <Loading message="Saving..." /> : null}
+      </Box>
       <MonacoEditor
         defaultLanguage="markdown"
         // defaultValue={text}
