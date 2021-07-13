@@ -94,9 +94,9 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
           },
         }}
       >
-        {documents.map((item, idx) => (
+        {documents.map((doc, idx) => (
           <ListItem
-            key={item.id}
+            key={doc.id}
             display="flex"
             alignItems="center"
             width="full"
@@ -104,7 +104,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
             paddingTop={idx === 0 ? 0.5 : undefined}
             userSelect="none"
             cursor="pointer"
-            bg={item.id === selectedDocument ? '#adadad21' : undefined}
+            bg={doc.id === selectedDocument ? '#adadad21' : undefined}
             _hover={{
               bg: '#fafafa0d',
             }}
@@ -112,7 +112,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
               bg: '#fafafa1f',
             }}
             onDoubleClick={() => {
-              setRenameItem({ id: item.id, value: item.name })
+              setRenameItem({ id: doc.id, value: doc.name })
               setTimeout(() => {
                 if (renameInputRef.current) {
                   renameInputRef.current.focus()
@@ -124,11 +124,11 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                 }
               }, 0)
             }}
-            onClick={() => dispatch(documentOpen({ documentId: item.id }))}
+            onClick={() => dispatch(documentOpen({ documentId: doc.id }))}
           >
             <ListIcon
               as={
-                item.type === 'markdown'
+                doc.type === 'markdown'
                   ? AiOutlineFileMarkdown
                   : AiFillFileMarkdown
               }
@@ -136,7 +136,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
               fontSize="lg"
               marginRight="0"
             />
-            {renameItem.id === item.id ? (
+            {renameItem.id === doc.id ? (
               <Input
                 size="xxs"
                 _focus={{
@@ -153,7 +153,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                     /** Press Enter to save */
                     dispatch(
                       documentUpdate({
-                        id: item.id,
+                        id: doc.id,
                         changes: {
                           name: renameItem.value,
                         },
@@ -175,7 +175,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                 justifyContent="space-between"
                 pr="0.5"
               >
-                <Text isTruncated>{item.name}</Text>
+                <Text isTruncated>{doc.name}</Text>
                 <Circle size="0.5rem" bg="whiteAlpha.400" />
               </Box>
             )}
