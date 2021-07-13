@@ -115,6 +115,7 @@ export const documentSave = createAsyncThunk<string, void>(
       updatedContent
     )
     if (!response?.status) throw new Error('Response status is invalid!')
+    dispatch(updateRawText(updatedContent)) // Update the md raw text as well
     return updatedContent
   }
 )
