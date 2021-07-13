@@ -2,7 +2,15 @@ import React, { useRef, useState, useEffect } from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { AiFillFileMarkdown, AiOutlineFileMarkdown } from 'react-icons/ai'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import { Input, List, ListIcon, ListItem, Text } from '@chakra-ui/react'
+import {
+  Circle,
+  Input,
+  List,
+  ListIcon,
+  ListItem,
+  Spacer,
+  Text,
+} from '@chakra-ui/react'
 import BottomSection from './BottomSection'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import {
@@ -159,7 +167,17 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                 }}
               />
             ) : (
-              <Text isTruncated>{item.name}</Text>
+              <Box
+                flex="1"
+                minW="0"
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                pr="0.5"
+              >
+                <Text isTruncated>{item.name}</Text>
+                <Circle size="0.5rem" bg="whiteAlpha.400" />
+              </Box>
             )}
           </ListItem>
         ))}
