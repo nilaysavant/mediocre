@@ -19,6 +19,7 @@ import {
   openFileSelectionDialog,
   readDocumentFromRelativePath,
   saveFileToCustomPath,
+  writeDocumentToRelativePath,
 } from '../../functions/fileSystem'
 import { getEnvironment } from '../../functions/environment'
 
@@ -29,6 +30,7 @@ export type MediocreCommandId =
   | 'save_file_to_path'
   | 'fetch_docs_info'
   | 'read_document'
+  | 'write_document'
 
 export type OnSelectData = {
   commandId: MediocreCommandId
@@ -43,6 +45,10 @@ export type OnSelectData = {
     }
   | {
       commandId: 'read_document'
+      relativePath: string
+    }
+  | {
+      commandId: 'write_document'
       relativePath: string
     }
 )
@@ -80,6 +86,7 @@ const allMediocreCommands: AllMediocreCommands = {
     'save_file_to_path',
     'fetch_docs_info',
     'read_document',
+    'write_document',
   ],
   byId: {
     get_env: {
@@ -181,6 +188,18 @@ const allMediocreCommands: AllMediocreCommands = {
             '🚀 ~ file: commandItems.ts ~ line 180 ~ onSelect: ~ res',
             res
           )
+        } else throw new Error('Relative path is invalid')
+      },
+    },
+    write_document: {
+      id: 'write_document',
+      title: 'Write document',
+      subtitle: 'Write document to specified relative path',
+      icon: GoFileDirectory,
+      onSelect: async (data) => {
+        if (data?.commandId === 'write_document' && data.relativePath) {
+          const res = await writeDocumentToRelativePath(data.relativePath, '# Hello World!')
+          console.log("🚀 ~ file: commandItems.ts ~ line 201 ~ onSelect: ~ res", res)
         } else throw new Error('Relative path is invalid')
       },
     },

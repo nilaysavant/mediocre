@@ -34,7 +34,8 @@ fn main() {
       cmd::get_env,
       cmd::save_file_to,
       cmd::fetch_docs_info,
-      cmd::read_document
+      cmd::read_document,
+      cmd::write_document
     ])
     .run(tauri::generate_context!())
     .expect("failed to run app");

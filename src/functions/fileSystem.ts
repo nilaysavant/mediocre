@@ -96,4 +96,19 @@ export const readDocumentFromRelativePath = async (relativePath: string) => {
   }
 }
 
+/**
+ * Write document to a specified relative path
+ */
+export const writeDocumentToRelativePath = async (
+  relativePath: string,
+  content: string
+) => {
+  if (isTauri()) {
+    const invokeRes: {
+      status: boolean
+    } = await tauri.invoke('write_document', { relativePath, content })
+    return invokeRes
+  }
+}
+
 export default null

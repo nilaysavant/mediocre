@@ -110,6 +110,10 @@ const CommandModal = () => {
             await command.onSelect({ commandId, relativePath: inputText })
             break
           }
+          case 'write_document': {
+            await command.onSelect({ commandId, relativePath: inputText })
+            break
+          }
           default:
             break
         }

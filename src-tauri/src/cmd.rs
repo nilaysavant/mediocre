@@ -101,3 +101,18 @@ pub fn read_document(relative_path: String) -> Result<ReadDocumentResponse, Stri
   let content = fsutils::read_from_path(file_path).map_err(|e| e.to_string())?;
   Ok(ReadDocumentResponse { content })
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WriteDocumentResponse {
+  status: bool,
+}
+
+/// Write Document to the specified relative path
+#[tauri::command]
+pub fn write_document(relative_path: String, content: String) -> Result<WriteDocumentResponse, String> {
+  let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
+  let file_path = app_dir_path.join(relative_path);
+  fsutils::write_to_path(file_path.as_path(), content).map_err(|e| e.to_string())?;
+  Ok(WriteDocumentResponse { status: true })
+}
