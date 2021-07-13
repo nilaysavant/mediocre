@@ -29,7 +29,10 @@ export type MediocreDocument = {
   relativePath: string
   type: 'markdown'
   modified: string
+  /** If current content is loaded from fs (represents backward data sync) */
   synced: boolean
+  /** If current content is written to fs (represents forward data sync) */
+  saved: boolean
 }
 
 /** Create entity adapter */
@@ -129,6 +132,7 @@ export const documentsSlice = createSlice({
             type: docMeta.fileType || 'markdown',
             content: '',
             synced: false,
+            saved: true,
             modified: docMeta.modified || '',
           }))
         /** Set all documents from fetched documents */

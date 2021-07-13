@@ -176,7 +176,9 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                 pr="0.5"
               >
                 <Text isTruncated>{doc.name}</Text>
-                <Circle size="0.5rem" bg="whiteAlpha.400" />
+                {!doc.saved ? (
+                  <Circle size="0.5rem" bg="whiteAlpha.400" />
+                ) : null}
               </Box>
             )}
           </ListItem>

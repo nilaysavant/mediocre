@@ -11,7 +11,11 @@ export type TopSectionProps = {
   isLoading?: boolean
 } & BoxProps
 
-const TopSection = ({ dirName, isLoading: loading = false, ...rest }: TopSectionProps) => {
+const TopSection = ({
+  dirName,
+  isLoading: loading = false,
+  ...rest
+}: TopSectionProps) => {
   const dispatch = useReduxDispatch()
 
   return (
@@ -55,6 +59,7 @@ const TopSection = ({ dirName, isLoading: loading = false, ...rest }: TopSection
               relativePath: '',
               modified: new Date().toISOString(),
               synced: false,
+              saved: true,
             })
           )
         }
