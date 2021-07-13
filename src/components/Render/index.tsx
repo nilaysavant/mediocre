@@ -3,11 +3,11 @@ import 'github-markdown-css/github-markdown.css'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Box } from '@chakra-ui/layout'
 import clsx from 'clsx'
-import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
+import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import { tauri } from '@tauri-apps/api'
-import { updateMdText } from '../utils/markdownParser/markdownParserSlice'
-import isTauri from '../utils/isTauri'
-import { useDebounce } from '../utils/hooks/useDebounce'
+import { updateMdText } from '../../utils/markdownParser/markdownParserSlice'
+import isTauri from '../../utils/isTauri'
+import { useDebounce } from '../../utils/hooks/useDebounce'
 
 export interface Props {
   renderBoxRef?: React.RefObject<HTMLDivElement>
