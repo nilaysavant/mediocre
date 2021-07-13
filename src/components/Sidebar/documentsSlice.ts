@@ -29,9 +29,12 @@ export type MediocreDocument = {
   relativePath: string
   type: 'markdown'
   modified: string
-  /** If current content is loaded from fs (represents backward data sync) */
+  /** If current store content is synced with fs (represents fs data sync) */
   synced: boolean
-  /** If current content is written to fs (represents forward data sync) */
+  /**
+   * If current editor content is synced with store (represents frontend data sync).
+   * Complete sync is when both synced and saved are true.
+   */
   saved: boolean
 }
 

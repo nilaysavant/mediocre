@@ -8,6 +8,7 @@ import { editor, IScrollEvent } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useReduxDispatch, useReduxSelector } from '../redux/hooks'
 import {
   prettifyRawText,
+  rawTextUpdate,
   updateRawText,
 } from '../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from './CommandModal/commandModalSlice'
@@ -59,7 +60,12 @@ const Editor = ({ editorRef, onScroll }: Props) => {
 
   const handleEditorChange = useCallback(
     (value, _event) => {
-      if (value !== undefined) dispatch(updateRawText(value))
+      if (value !== undefined)
+        dispatch(
+          rawTextUpdate({
+            rawText: value,
+          })
+        )
     },
     [dispatch]
   )
@@ -76,6 +82,9 @@ const Editor = ({ editorRef, onScroll }: Props) => {
         rules: [],
         encodedTokensColors: [],
       })
+      /** Set the EOL preference */
+      const model = monacoEditorObject?.getModel()
+      model?.setEOL(0)
       /** Set initial options */
       monacoEditorObject?.updateOptions({
         wordWrap: 'on',
