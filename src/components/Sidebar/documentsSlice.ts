@@ -142,8 +142,6 @@ export const documentsSlice = createSlice({
         if (allDocuments) {
           /** Set all documents in store */
           documentsAdapter.setAll(state.all, allDocuments)
-          /** Set the first document as selected */
-          state.selectedDocument = allDocuments[0].id
         } else console.error('allDocuments is undefined!')
         /** reset fetching state */
         state.isDocumentsFetching = false
