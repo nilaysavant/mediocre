@@ -11,6 +11,7 @@ import {
 } from '../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from './CommandModal/commandModalSlice'
 import { Spacer, Spinner, Text } from '@chakra-ui/react'
+import { documentSave } from './Sidebar/documentsSlice'
 
 loader.config({
   paths: {
@@ -145,10 +146,10 @@ const Editor = ({ editorRef, onScroll }: Props) => {
 
   useEffect(() => {
     if (monaco) {
-      /** Prettify code shortcut */
+      /** Save Document shortcut */
       monacoEditorObject?.addCommand(
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
-        () => dispatch(prettifyRawText())
+        () => dispatch(documentSave())
       )
     }
   }, [dispatch, monaco, monacoEditorObject])

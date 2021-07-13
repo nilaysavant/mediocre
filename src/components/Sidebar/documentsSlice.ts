@@ -10,9 +10,11 @@ import {
 import {
   fetchDocumentsMetadata,
   readDocumentFromRelativePath,
+  writeDocumentToRelativePath,
 } from '../../functions/fileSystem'
 import { RootState } from '../../redux/store'
 import { updateRawText } from '../../utils/markdownParser/markdownParserSlice'
+import { prettifyText } from '../../utils/prettierFns'
 
 /**
  * Following entity based redux code
@@ -82,12 +84,48 @@ export const documentOpen = createAsyncThunk<
   return updatedContent
 })
 
+/**
+ * Async thunk action to save/write document
+ * to file system. Uses Tauri command.
+ */
+export const documentSave = createAsyncThunk<string, void>(
+  'documents/documentSave',
+  async (arg, { getState, dispatch }) => {
+    const selectedDocumentId = (getState() as RootState).documents
+      .selectedDocument
+    const document = (getState() as RootState).documents.all.entities[
+      selectedDocumentId
+    ]
+    const rawText = (getState() as RootState).markdownParser.rawText
+    const updatedContent = prettifyText(rawText) // prettify unformatted raw text content
+    if (!document)
+      throw new Error(
+        `document invalid! document with selectedDocumentId not available`
+      )
+    const { relativePath, content } = document
+    if (!relativePath) throw new Error(`relativePath invalid!`)
+    /** Verify if content on fs is changed */
+    const contentOnFs = await readDocumentFromRelativePath(relativePath)
+    if (contentOnFs !== content)
+      throw new Error(
+        'Content on file system is changed! Please reload the app'
+      )
+    const response = await writeDocumentToRelativePath(
+      relativePath,
+      updatedContent
+    )
+    if (!response?.status) throw new Error('Response status is invalid!')
+    return updatedContent
+  }
+)
+
 /** Mediocre DocumentSlice State */
 export type DocumentsState = {
   all: EntityState<MediocreDocument>
   selectedDocument: string
   isDocumentsFetching: boolean
   isDocumentOpening: boolean
+  isDocumentSaving: boolean
 }
 
 const initialState: DocumentsState = {
@@ -95,6 +133,7 @@ const initialState: DocumentsState = {
   selectedDocument: '',
   isDocumentsFetching: false,
   isDocumentOpening: false,
+  isDocumentSaving: false,
 }
 
 export const documentsSlice = createSlice({
@@ -160,6 +199,20 @@ export const documentsSlice = createSlice({
           },
         })
         state.isDocumentOpening = false
+      })
+      .addCase(documentSave.pending, (state, _action) => {
+        state.isDocumentSaving = true
+      })
+      .addCase(documentSave.fulfilled, (state, action) => {
+        /** update the saved document ie. the current selected document */
+        documentsAdapter.updateOne(state.all, {
+          id: state.selectedDocument,
+          changes: {
+            content: action.payload,
+            saved: true,
+          },
+        })
+        state.isDocumentSaving = false
       })
   },
 })
