@@ -3,7 +3,7 @@ import { Box, BoxProps } from '@chakra-ui/layout'
 import { Icon, IconButton, Spacer, Spinner, Text } from '@chakra-ui/react'
 import { BsPlus } from 'react-icons/bs'
 import { useReduxDispatch } from '../../redux/hooks'
-import { documentAdd } from './documentsSlice'
+import { localDocumentAdd } from './documentsSlice'
 import { getUniqueIdV4 } from '../../utils/idGenerator'
 
 export type TopSectionProps = {
@@ -49,7 +49,7 @@ const TopSection = ({
         }}
         onClick={() =>
           dispatch(
-            documentAdd({
+            localDocumentAdd({
               id: getUniqueIdV4(),
               name: 'My New Doc.md',
               type: 'markdown',

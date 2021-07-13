@@ -17,7 +17,7 @@ import {
   documentOpen,
   documentsListFetch,
   documentsSelectors,
-  documentUpdate,
+  localDocumentUpdate,
 } from './documentsSlice'
 import TopSection from './TopSection'
 
@@ -152,7 +152,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                   if (e.key === 'Enter') {
                     /** Press Enter to save */
                     dispatch(
-                      documentUpdate({
+                      localDocumentUpdate({
                         id: doc.id,
                         changes: {
                           name: renameItem.value,
