@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
-import prettier from 'prettier'
-import parserMarkdown from 'prettier/parser-markdown'
 import MonacoEditor, { loader, useMonaco } from '@monaco-editor/react'
 import { Box } from '@chakra-ui/layout'
 import { editor, IScrollEvent } from 'monaco-editor/esm/vs/editor/editor.api'
