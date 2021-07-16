@@ -15,6 +15,7 @@ import {
 import { shell } from '@tauri-apps/api'
 import isTauri from './utils/isTauri'
 import Sidebar from './components/Sidebar'
+import Titlebar from './components/Titlebar'
 
 const App = () => {
   const { colorMode } = useColorMode()
@@ -109,6 +110,7 @@ const App = () => {
       display="flex"
       flexDir="column"
     >
+      <Titlebar />
       <Topbar />
       <Box flex="1" display="flex" rounded="none" minHeight="0">
         <Sidebar width="15%" />
