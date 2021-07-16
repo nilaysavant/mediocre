@@ -6,7 +6,7 @@ import { editor, IScrollEvent } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import {
   prettifyRawText,
-  rawTextUpdate,
+  globalRawTextUpdate,
   updateRawText,
 } from '../../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from '../CommandModal/commandModalSlice'
@@ -62,7 +62,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
     (value, _event) => {
       if (value !== undefined)
         dispatch(
-          rawTextUpdate({
+          globalRawTextUpdate({
             rawText: value,
           })
         )

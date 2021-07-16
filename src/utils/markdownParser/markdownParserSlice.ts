@@ -20,8 +20,8 @@ const initialState: MarkdownParserState = {
  * Async thunk action fired when raw text of md parser
  * is changed
  */
-export const rawTextUpdate = createAsyncThunk<string, { rawText: string }>(
-  'markdownParser/rawTextUpdate',
+export const globalRawTextUpdate = createAsyncThunk<string, { rawText: string }>(
+  'markdownParser/globalRawTextUpdate',
   async (arg, { getState, dispatch }) => {
     /** Get selected document */
     const { selectedDocument: selectedDocumentId, all: allDocuments } = (
@@ -73,7 +73,7 @@ export const markdownParserSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Add reducers for additional action types here, and handle loading state as needed
-      .addCase(rawTextUpdate.fulfilled, (state, action) => {
+      .addCase(globalRawTextUpdate.fulfilled, (state, action) => {
         state.rawText = action.payload
       })
   },
