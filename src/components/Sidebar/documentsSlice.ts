@@ -142,18 +142,18 @@ export const documentsSlice = createSlice({
   initialState,
   reducers: {
     /** Dispatched on local document create/add */
-    localDocumentAdd: (state, action: PayloadAction<MediocreDocument>) => {
+    documentAdd: (state, action: PayloadAction<MediocreDocument>) => {
       documentsAdapter.addOne(state.all, action.payload)
     },
     /** Dispatched on local document update(s) */
-    localDocumentUpdate: (
+    documentUpdate: (
       state,
       action: PayloadAction<Update<MediocreDocument>>
     ) => {
       documentsAdapter.updateOne(state.all, action.payload)
     },
     /** Dispatched on local document delete */
-    localDocumentDelete: (state, action: PayloadAction<EntityId>) => {
+    documentDelete: (state, action: PayloadAction<EntityId>) => {
       documentsAdapter.removeOne(state.all, action.payload)
     },
   },
@@ -218,7 +218,7 @@ export const documentsSlice = createSlice({
   },
 })
 // Action creators are generated for each case reducer function
-export const { localDocumentAdd, localDocumentUpdate, localDocumentDelete } =
+export const { documentAdd, documentUpdate, documentDelete } =
   documentsSlice.actions
 
 // Can create a set of memoized selectors based on the location of this entity state

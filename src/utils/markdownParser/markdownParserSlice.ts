@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { localDocumentUpdate } from '../../components/Sidebar/documentsSlice'
+import { documentUpdate } from '../../components/Sidebar/documentsSlice'
 import { RootState } from '../../redux/store'
 import testMarkdown from '../../test/testMarkdown'
 import { prettifyText } from '../prettierFns'
@@ -33,7 +33,7 @@ export const rawTextUpdate = createAsyncThunk<string, { rawText: string }>(
       // if content is small do a comparison
       const saved = selectedDocument.content === arg.rawText
       dispatch(
-        localDocumentUpdate({
+        documentUpdate({
           id: selectedDocumentId,
           changes: {
             saved,
@@ -44,7 +44,7 @@ export const rawTextUpdate = createAsyncThunk<string, { rawText: string }>(
     // for larger content set saved to false by default as comparison will be heavy op
     else
       dispatch(
-        localDocumentUpdate({
+        documentUpdate({
           id: selectedDocumentId,
           changes: {
             saved: false,
