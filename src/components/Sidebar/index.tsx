@@ -15,6 +15,7 @@ import {
 import TopSection from './TopSection'
 import { getUniqueIdV4 } from '../../utils/idGenerator'
 import dayjs from 'dayjs'
+import AddDocItem from './AddDocItem'
 
 export type SidebarProps = BoxProps
 
@@ -28,6 +29,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
   const selectedDocument = useReduxSelector(
     (state) => state.documents.selectedDocument
   )
+  const [addItemInputActive, setAddItemInputActive] = useState(false)
   const renameInputRef = useRef<HTMLInputElement>(null)
   const [renameItem, setRenameItem] = useState({
     id: '',
@@ -65,22 +67,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       <TopSection
         dirName="My Projects"
         isLoading={isDocumentsFetching}
-        onAdd={() =>
-          dispatch(
-            documentAdd({
-              id: getUniqueIdV4(),
-              name: 'My New Doc.md',
-              type: 'markdown',
-              content: '',
-              dir: 'my-projects',
-              path: '/tmp',
-              relativePath: '',
-              modified: new Date().toISOString(),
-              synced: false,
-              saved: true,
-            })
-          )
-        }
+        onAddClick={() => setAddItemInputActive(true)}
       />
       <List
         flex="1"
@@ -108,6 +95,35 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
           },
         }}
       >
+        {addItemInputActive ? (
+          <AddDocItem
+            paddingTop="0.5"
+            _hover={{
+              bg: '#fafafa0d',
+            }}
+            _active={{
+              bg: '#fafafa1f',
+            }}
+            onAdd={(fileName) => {
+              dispatch(
+                documentAdd({
+                  id: getUniqueIdV4(),
+                  name: fileName,
+                  type: 'markdown',
+                  content: '',
+                  dir: '',
+                  path: '',
+                  relativePath: fileName,
+                  modified: new Date().toISOString(),
+                  synced: false,
+                  saved: true,
+                })
+              )
+              setAddItemInputActive(false)
+            }}
+            onCancel={() => setAddItemInputActive(false)}
+          />
+        ) : null}
         {documents
           .sort((prev, next) => {
             const prevMod = dayjs(prev.modified).unix()

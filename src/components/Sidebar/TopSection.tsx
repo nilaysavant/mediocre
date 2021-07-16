@@ -7,13 +7,13 @@ import { useReduxDispatch } from '../../redux/hooks'
 export type TopSectionProps = {
   dirName: string
   isLoading?: boolean
-  onAdd: () => void
+  onAddClick: () => void
 } & BoxProps
 
 const TopSection = ({
   dirName,
   isLoading: loading = false,
-  onAdd,
+  onAddClick,
   ...rest
 }: TopSectionProps) => {
   return (
@@ -45,7 +45,7 @@ const TopSection = ({
         _focus={{
           boxShadow: '0px 0px 0px 1px #51a3f0b3',
         }}
-        onClick={onAdd}
+        onClick={onAddClick}
       />
     </Box>
   )
