@@ -51,9 +51,14 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       flexDir="column"
       rounded="none"
       minHeight="0"
-      border={`1px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`}
+      // borderStyle="solid"
+      // borderWidth="1px"
+      // borderColor={colorMode === 'dark' ? 'border.dark.500' : 'white'}
+      // borderLeft="none"
+      // borderBottom="none"
+      borderTop="none"
       fontSize="small"
-      bg="#212121"
+      bg="bg.dark.500"
       _focus={{
         boxShadow: 'none',
       }}
@@ -187,7 +192,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                     ? AiOutlineFileMarkdown
                     : AiFillFileMarkdown
                 }
-                color="#0099e0"
+                color="icon.dark"
                 fontSize="lg"
                 marginRight="0"
               />

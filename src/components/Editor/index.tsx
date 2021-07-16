@@ -75,6 +75,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
         inherit: true,
         colors: {
           'scrollbar.shadow': '#00000000',
+          'editor.background': '#16191d',
         },
         rules: [],
         encodedTokensColors: [],
@@ -170,7 +171,11 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       placeholder="Type something..."
       // onScroll={onScroll}
       background={colorMode === 'dark' ? '#1f1f1f' : 'white'}
-      borderRight={`1px solid ${colorMode === 'dark' ? '#4a4a4a' : '#e0e0e0'}`}
+      borderWidth="1px"
+      borderStyle="solid"
+      borderColor={colorMode === 'dark' ? 'border.dark.500' : '#e0e0e0'}
+      borderLeft="none"
+      borderY="none"
       overflow="auto"
       outline="none"
       position="relative"
