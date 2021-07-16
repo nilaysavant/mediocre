@@ -14,6 +14,7 @@ import {
 } from './documentsSlice'
 import TopSection from './TopSection'
 import { getUniqueIdV4 } from '../../utils/idGenerator'
+import dayjs from 'dayjs'
 
 export type SidebarProps = BoxProps
 
@@ -107,95 +108,104 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
           },
         }}
       >
-        {documents.map((doc, idx) => (
-          <ListItem
-            key={doc.id}
-            display="flex"
-            alignItems="center"
-            width="full"
-            paddingX="0.5"
-            paddingTop={idx === 0 ? 0.5 : undefined}
-            userSelect="none"
-            cursor="pointer"
-            bg={doc.id === selectedDocument ? '#adadad21' : undefined}
-            _hover={{
-              bg: '#fafafa0d',
-            }}
-            _active={{
-              bg: '#fafafa1f',
-            }}
-            onDoubleClick={() => {
-              setRenameItem({ id: doc.id, value: doc.name })
-              setTimeout(() => {
-                if (renameInputRef.current) {
-                  renameInputRef.current.focus()
-                  renameInputRef.current.setSelectionRange(
-                    0,
-                    renameInputRef.current.value.length - 3,
-                    'forward'
-                  )
-                }
-              }, 0)
-            }}
-            onClick={() => dispatch(globalDocumentOpen({ documentId: doc.id }))}
-          >
-            <ListIcon
-              as={
-                doc.type === 'markdown'
-                  ? AiOutlineFileMarkdown
-                  : AiFillFileMarkdown
-              }
-              color="#0099e0"
-              fontSize="lg"
-              marginRight="0"
-            />
-            {renameItem.id === doc.id ? (
-              <Input
-                size="xxs"
-                _focus={{
-                  boxShadow: '0px 0px 0px 1px #51a3f0c9',
-                }}
-                placeholder="Rename Document"
-                ref={renameInputRef}
-                value={renameItem.value}
-                onChange={(e) =>
-                  setRenameItem((old) => ({ ...old, value: e.target.value }))
-                }
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    /** Press Enter to save */
-                    dispatch(
-                      documentUpdate({
-                        id: doc.id,
-                        changes: {
-                          name: renameItem.value,
-                        },
-                      })
+        {documents
+          .sort((prev, next) => {
+            const prevMod = dayjs(prev.modified).unix()
+            const nextMod = dayjs(next.modified).unix()
+            /** descending order of modified date, ie. latest modified is first */
+            return nextMod - prevMod
+          })
+          .map((doc, idx) => (
+            <ListItem
+              key={doc.id}
+              display="flex"
+              alignItems="center"
+              width="full"
+              paddingX="0.5"
+              paddingTop={idx === 0 ? 0.5 : undefined}
+              userSelect="none"
+              cursor="pointer"
+              bg={doc.id === selectedDocument ? '#adadad21' : undefined}
+              _hover={{
+                bg: '#fafafa0d',
+              }}
+              _active={{
+                bg: '#fafafa1f',
+              }}
+              onDoubleClick={() => {
+                setRenameItem({ id: doc.id, value: doc.name })
+                setTimeout(() => {
+                  if (renameInputRef.current) {
+                    renameInputRef.current.focus()
+                    renameInputRef.current.setSelectionRange(
+                      0,
+                      renameInputRef.current.value.length - 3,
+                      'forward'
                     )
-                    setRenameItem({ id: '', value: '' })
-                  } else if (e.key === 'Escape') {
-                    /** Press Esc to cancel */
-                    setRenameItem({ id: '', value: '' })
                   }
-                }}
+                }, 0)
+              }}
+              onClick={() =>
+                dispatch(globalDocumentOpen({ documentId: doc.id }))
+              }
+            >
+              <ListIcon
+                as={
+                  doc.type === 'markdown'
+                    ? AiOutlineFileMarkdown
+                    : AiFillFileMarkdown
+                }
+                color="#0099e0"
+                fontSize="lg"
+                marginRight="0"
               />
-            ) : (
-              <Box
-                flex="1"
-                minW="0"
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                pr="0.5"
-              >
-                <Text isTruncated>{doc.name}</Text>
-                {!doc.saved ? (
-                  <Circle size="0.5rem" bg="whiteAlpha.400" />
-                ) : null}
-              </Box>
-            )}
-          </ListItem>
-        ))}
+              {renameItem.id === doc.id ? (
+                <Input
+                  size="xxs"
+                  _focus={{
+                    boxShadow: '0px 0px 0px 1px #51a3f0c9',
+                  }}
+                  placeholder="Rename Document"
+                  ref={renameInputRef}
+                  value={renameItem.value}
+                  onChange={(e) =>
+                    setRenameItem((old) => ({ ...old, value: e.target.value }))
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      /** Press Enter to save */
+                      dispatch(
+                        documentUpdate({
+                          id: doc.id,
+                          changes: {
+                            name: renameItem.value,
+                          },
+                        })
+                      )
+                      setRenameItem({ id: '', value: '' })
+                    } else if (e.key === 'Escape') {
+                      /** Press Esc to cancel */
+                      setRenameItem({ id: '', value: '' })
+                    }
+                  }}
+                />
+              ) : (
+                <Box
+                  flex="1"
+                  minW="0"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  pr="0.5"
+                >
+                  <Text isTruncated>{doc.name}</Text>
+                  {!doc.saved ? (
+                    <Circle size="0.5rem" bg="whiteAlpha.400" />
+                  ) : null}
+                </Box>
+              )}
+            </ListItem>
+          ))}
       </List>
       <BottomSection documentsCount={documents.length} />
     </Box>

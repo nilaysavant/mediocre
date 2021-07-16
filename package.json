@@ -28,6 +28,7 @@
     "@types/redux-logger": "^3.0.9",
     "@types/uuid": "^8.3.0",
     "clsx": "^1.1.1",
+    "dayjs": "^1.10.6",
     "framer-motion": "^4",
     "github-markdown-css": "^4.0.0",
     "monaco-editor": "^0.24.0",
