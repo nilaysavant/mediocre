@@ -14,8 +14,8 @@ import {
 import BottomSection from './BottomSection'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import {
-  documentOpen,
-  documentsListFetch,
+  globalDocumentOpen,
+  globalDocumentsListFetch,
   documentsSelectors,
   documentUpdate,
 } from './documentsSlice'
@@ -40,9 +40,9 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
   })
 
   useEffect(() => {
-    const dlfPromise = dispatch(documentsListFetch())
+    const gdlfPromise = dispatch(globalDocumentsListFetch())
     return () => {
-      dlfPromise.abort('Sidebar unmounted')
+      gdlfPromise.abort('Sidebar unmounted')
     }
   }, [dispatch])
 
@@ -124,7 +124,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                 }
               }, 0)
             }}
-            onClick={() => dispatch(documentOpen({ documentId: doc.id }))}
+            onClick={() => dispatch(globalDocumentOpen({ documentId: doc.id }))}
           >
             <ListIcon
               as={

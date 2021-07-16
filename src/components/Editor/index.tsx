@@ -11,7 +11,7 @@ import {
 } from '../../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from '../CommandModal/commandModalSlice'
 import { Spacer, Spinner, Text } from '@chakra-ui/react'
-import { documentSave } from '../Sidebar/documentsSlice'
+import { globalDocumentSave } from '../Sidebar/documentsSlice'
 import Loading from './Loading'
 
 loader.config({
@@ -150,7 +150,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       /** Save Document shortcut */
       monacoEditorObject?.addCommand(
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
-        () => dispatch(documentSave())
+        () => dispatch(globalDocumentSave())
       )
     }
   }, [dispatch, monaco, monacoEditorObject])

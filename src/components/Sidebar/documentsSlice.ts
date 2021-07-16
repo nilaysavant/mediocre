@@ -52,8 +52,8 @@ const documentsAdapter = createEntityAdapter<MediocreDocument>({
  * Async thunk action to fetch documents list from
  * file system. Uses Tauri command.
  */
-export const documentsListFetch = createAsyncThunk(
-  'documents/documentsListFetch',
+export const globalDocumentsListFetch = createAsyncThunk(
+  'documents/globalDocumentsListFetch',
   async (_arg, thunkAPI) => {
     const response = await fetchDocumentsMetadata()
     return response
@@ -64,10 +64,10 @@ export const documentsListFetch = createAsyncThunk(
  * Async thunk action to open and read document
  * from file system. Uses Tauri command.
  */
-export const documentOpen = createAsyncThunk<
+export const globalDocumentOpen = createAsyncThunk<
   string | undefined,
   { documentId: string }
->('documents/documentOpen', async (arg, { getState, dispatch }) => {
+>('documents/globalDocumentOpen', async (arg, { getState, dispatch }) => {
   const { documentId } = arg
   const document = (getState() as RootState).documents.all.entities[documentId]
   if (!document)
@@ -88,8 +88,8 @@ export const documentOpen = createAsyncThunk<
  * Async thunk action to save/write document
  * to file system. Uses Tauri command.
  */
-export const documentSave = createAsyncThunk<string, void>(
-  'documents/documentSave',
+export const globalDocumentSave = createAsyncThunk<string, void>(
+  'documents/globalDocumentSave',
   async (arg, { getState, dispatch }) => {
     const selectedDocumentId = (getState() as RootState).documents
       .selectedDocument
@@ -160,10 +160,10 @@ export const documentsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Add reducers for additional action types here, and handle loading state as needed
-      .addCase(documentsListFetch.pending, (state, _action) => {
+      .addCase(globalDocumentsListFetch.pending, (state, _action) => {
         state.isDocumentsFetching = true
       })
-      .addCase(documentsListFetch.fulfilled, (state, action) => {
+      .addCase(globalDocumentsListFetch.fulfilled, (state, action) => {
         /** get all the validated documents from the async fn */
         const allDocuments: MediocreDocument[] | undefined =
           action.payload?.map((docMeta) => ({
@@ -186,10 +186,10 @@ export const documentsSlice = createSlice({
         /** reset fetching state */
         state.isDocumentsFetching = false
       })
-      .addCase(documentOpen.pending, (state, _action) => {
+      .addCase(globalDocumentOpen.pending, (state, _action) => {
         state.isDocumentOpening = true
       })
-      .addCase(documentOpen.fulfilled, (state, action) => {
+      .addCase(globalDocumentOpen.fulfilled, (state, action) => {
         /** Set the selected document on Open */
         state.selectedDocument = action.meta.arg.documentId
         documentsAdapter.updateOne(state.all, {
@@ -201,10 +201,10 @@ export const documentsSlice = createSlice({
         })
         state.isDocumentOpening = false
       })
-      .addCase(documentSave.pending, (state, _action) => {
+      .addCase(globalDocumentSave.pending, (state, _action) => {
         state.isDocumentSaving = true
       })
-      .addCase(documentSave.fulfilled, (state, action) => {
+      .addCase(globalDocumentSave.fulfilled, (state, action) => {
         /** update the saved document ie. the current selected document */
         documentsAdapter.updateOne(state.all, {
           id: state.selectedDocument,
