@@ -2,7 +2,6 @@ import React from 'react'
 import { Box, BoxProps } from '@chakra-ui/layout'
 import { Icon, IconButton, Spacer, Spinner, Text } from '@chakra-ui/react'
 import { BsPlus } from 'react-icons/bs'
-import { useReduxDispatch } from '../../redux/hooks'
 
 export type TopSectionProps = {
   dirName: string

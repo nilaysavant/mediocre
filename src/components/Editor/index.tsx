@@ -5,12 +5,9 @@ import { Box } from '@chakra-ui/layout'
 import { editor, IScrollEvent } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import {
-  prettifyRawText,
   globalRawTextUpdate,
-  updateRawText,
 } from '../../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from '../CommandModal/commandModalSlice'
-import { Spacer, Spinner, Text } from '@chakra-ui/react'
 import { globalDocumentSave } from '../Sidebar/documentsSlice'
 import Loading from './Loading'
 

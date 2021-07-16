@@ -1,12 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { AiOutlineFileMarkdown } from 'react-icons/ai'
-import {
-  Input,
-  ListIcon,
-  ListItem,
-  ListItemProps,
-  Text,
-} from '@chakra-ui/react'
+import { Input, ListIcon, ListItem, ListItemProps } from '@chakra-ui/react'
 
 export type AddDocItemProps = {
   inputRef?: React.MutableRefObject<HTMLInputElement | null>
