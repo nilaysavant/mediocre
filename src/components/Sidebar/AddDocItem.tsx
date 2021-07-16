@@ -9,12 +9,17 @@ import {
 } from '@chakra-ui/react'
 
 export type AddDocItemProps = {
+  inputRef?: React.MutableRefObject<HTMLInputElement | null>
   onAdd: (fileName: string) => void
   onCancel: () => void
 } & ListItemProps
 
-const AddDocItem = ({ onAdd, onCancel, ...rest }: AddDocItemProps) => {
-  const addInputRef = useRef<HTMLInputElement>(null)
+const AddDocItem = ({
+  inputRef,
+  onAdd,
+  onCancel,
+  ...rest
+}: AddDocItemProps) => {
   const [addItem, setAddItem] = useState({
     value: 'Untitled.md',
   })
@@ -30,11 +35,11 @@ const AddDocItem = ({ onAdd, onCancel, ...rest }: AddDocItemProps) => {
       // bg={doc.id === selectedDocument ? '#adadad21' : undefined}
       onClick={() => {
         setTimeout(() => {
-          if (addInputRef.current) {
-            addInputRef.current.focus()
-            addInputRef.current.setSelectionRange(
+          if (inputRef?.current) {
+            inputRef.current.focus()
+            inputRef.current.setSelectionRange(
               0,
-              addInputRef.current.value.length - 3,
+              inputRef.current.value.length - 3,
               'forward'
             )
           }
@@ -54,7 +59,7 @@ const AddDocItem = ({ onAdd, onCancel, ...rest }: AddDocItemProps) => {
           boxShadow: '0px 0px 0px 1px #51a3f0c9',
         }}
         placeholder="Rename Document"
-        ref={addInputRef}
+        ref={inputRef}
         value={addItem.value}
         onChange={(e) =>
           setAddItem((old) => ({ ...old, value: e.target.value }))
@@ -70,6 +75,7 @@ const AddDocItem = ({ onAdd, onCancel, ...rest }: AddDocItemProps) => {
             setAddItem({ value: '' })
           }
         }}
+        onBlur={() => onCancel()}
       />
     </ListItem>
   )

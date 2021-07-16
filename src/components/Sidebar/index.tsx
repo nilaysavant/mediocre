@@ -31,6 +31,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
   )
   const [addItemInputActive, setAddItemInputActive] = useState(false)
   const renameInputRef = useRef<HTMLInputElement>(null)
+  const addInputRef = useRef<HTMLInputElement>(null)
   const [renameItem, setRenameItem] = useState({
     id: '',
     value: '',
@@ -67,7 +68,19 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       <TopSection
         dirName="My Projects"
         isLoading={isDocumentsFetching}
-        onAddClick={() => setAddItemInputActive(true)}
+        onAddClick={() => {
+          setAddItemInputActive(true)
+          setTimeout(() => {
+            if (addInputRef?.current) {
+              addInputRef.current.focus()
+              addInputRef.current.setSelectionRange(
+                0,
+                addInputRef.current.value.length - 3,
+                'forward'
+              )
+            }
+          }, 0)
+        }}
       />
       <List
         flex="1"
@@ -104,6 +117,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
             _active={{
               bg: '#fafafa1f',
             }}
+            inputRef={addInputRef}
             onAdd={(fileName) => {
               dispatch(
                 documentAdd({
