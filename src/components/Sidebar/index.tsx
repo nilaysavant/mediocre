@@ -2,14 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { AiFillFileMarkdown, AiOutlineFileMarkdown } from 'react-icons/ai'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import {
-  Circle,
-  Input,
-  List,
-  ListIcon,
-  ListItem,
-  Text,
-} from '@chakra-ui/react'
+import { Circle, Input, List, ListIcon, ListItem, Text } from '@chakra-ui/react'
 import BottomSection from './BottomSection'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import {
