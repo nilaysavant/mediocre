@@ -120,6 +120,29 @@ export const globalDocumentSave = createAsyncThunk<string, void>(
   }
 )
 
+/**
+ * Async thunk action to add/create a new document
+ * from file system. Uses Tauri command.
+ */
+export const globalDocumentAdd = createAsyncThunk<
+  void,
+  { documentFileName: string }
+>('documents/globalDocumentAdd', async (arg, { getState, dispatch }) => {
+  const { documentFileName } = arg // get documentFileName
+  /** write to fs, using fileName as relative oath atm as we're creating docs at the top level */
+  const response = await writeDocumentToRelativePath(documentFileName, '')
+  if (!response?.status) throw new Error(`Response status is invalid!`)
+  /** Refetch all docs info */
+  const result = await dispatch(globalDocumentsListFetch()).unwrap()
+  if (!result) throw new Error(`Result invalid!`)
+  const newDocument = result?.find(
+    (doc) => doc.fileRelativePath === documentFileName
+  )
+  if (!newDocument) throw new Error(`newDocument invalid`)
+  /** Open the newDocument with id being the filePath of it */
+  dispatch(globalDocumentOpen({ documentId: newDocument.filePath }))
+})
+
 /** Mediocre DocumentSlice State */
 export type DocumentsState = {
   all: EntityState<MediocreDocument>
@@ -127,6 +150,7 @@ export type DocumentsState = {
   isDocumentsFetching: boolean
   isDocumentOpening: boolean
   isDocumentSaving: boolean
+  isDocumentAdding: boolean
 }
 
 const initialState: DocumentsState = {
@@ -135,6 +159,7 @@ const initialState: DocumentsState = {
   isDocumentsFetching: false,
   isDocumentOpening: false,
   isDocumentSaving: false,
+  isDocumentAdding: false,
 }
 
 export const documentsSlice = createSlice({
@@ -214,6 +239,12 @@ export const documentsSlice = createSlice({
           },
         })
         state.isDocumentSaving = false
+      })
+      .addCase(globalDocumentAdd.pending, (state, _action) => {
+        state.isDocumentAdding = true
+      })
+      .addCase(globalDocumentAdd.fulfilled, (state, action) => {
+        state.isDocumentAdding = false
       })
   },
 })

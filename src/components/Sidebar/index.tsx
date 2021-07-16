@@ -11,6 +11,7 @@ import {
   documentsSelectors,
   documentUpdate,
   documentAdd,
+  globalDocumentAdd,
 } from './documentsSlice'
 import TopSection from './TopSection'
 import { getUniqueIdV4 } from '../../utils/idGenerator'
@@ -119,20 +120,21 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
             }}
             inputRef={addInputRef}
             onAdd={(fileName) => {
-              dispatch(
-                documentAdd({
-                  id: getUniqueIdV4(),
-                  name: fileName,
-                  type: 'markdown',
-                  content: '',
-                  dir: '',
-                  path: '',
-                  relativePath: fileName,
-                  modified: new Date().toISOString(),
-                  synced: false,
-                  saved: true,
-                })
-              )
+              // dispatch(
+              //   documentAdd({
+              //     id: getUniqueIdV4(),
+              //     name: fileName,
+              //     type: 'markdown',
+              //     content: '',
+              //     dir: '',
+              //     path: '',
+              //     relativePath: fileName,
+              //     modified: new Date().toISOString(),
+              //     synced: false,
+              //     saved: true,
+              //   })
+              // )
+              dispatch(globalDocumentAdd({ documentFileName: fileName }))
               setAddItemInputActive(false)
             }}
             onCancel={() => setAddItemInputActive(false)}
