@@ -8,7 +8,6 @@ import {
   List,
   ListIcon,
   ListItem,
-  Spacer,
   Text,
 } from '@chakra-ui/react'
 import BottomSection from './BottomSection'
@@ -18,8 +17,10 @@ import {
   globalDocumentsListFetch,
   documentsSelectors,
   documentUpdate,
+  documentAdd,
 } from './documentsSlice'
 import TopSection from './TopSection'
+import { getUniqueIdV4 } from '../../utils/idGenerator'
 
 export type SidebarProps = BoxProps
 
@@ -67,7 +68,26 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       }}
       {...rest}
     >
-      <TopSection dirName="My Projects" isLoading={isDocumentsFetching} />
+      <TopSection
+        dirName="My Projects"
+        isLoading={isDocumentsFetching}
+        onAdd={() =>
+          dispatch(
+            documentAdd({
+              id: getUniqueIdV4(),
+              name: 'My New Doc.md',
+              type: 'markdown',
+              content: '',
+              dir: 'my-projects',
+              path: '/tmp',
+              relativePath: '',
+              modified: new Date().toISOString(),
+              synced: false,
+              saved: true,
+            })
+          )
+        }
+      />
       <List
         flex="1"
         minHeight="0"
