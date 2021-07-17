@@ -193,7 +193,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                     : AiFillFileMarkdown
                 }
                 color="icon.dark"
-                fontSize="lg"
+                fontSize="xl"
                 marginRight="0"
               />
               {renameItem.id === doc.id ? (

@@ -27,16 +27,16 @@ export const themeOverrides: ThemeOverride = {
         500: 'rgb(69, 76, 82)',
       },
     },
+    /** for icons */
+    icon: {
+      dark: 'rgb(0,200,255)',
+    },
     /** vscode related colors */
     vscode: {
       dark: {
         sidebar: '#212121',
         bg: '#1f1f1f',
       },
-    },
-    /** for icons */
-    icon: {
-      dark: 'rgb(137,170,205)',
     },
   },
   styles: {
