@@ -194,7 +194,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
                 }
                 color="icon.dark"
                 fontSize="xl"
-                marginRight="0"
+                marginRight="0.5"
               />
               {renameItem.id === doc.id ? (
                 <Input

@@ -45,7 +45,7 @@ const AddDocItem = ({
         as={AiOutlineFileMarkdown}
         color="icon.dark"
         fontSize="xl"
-        marginRight="0"
+        marginRight="0.5"
       />
       <Input
         size="xxs"
