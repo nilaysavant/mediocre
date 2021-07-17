@@ -24,6 +24,7 @@ const Topbar = ({ ...rest }: TopbarProps) => {
       justifyContent="space-between"
       width="100%"
       alignItems="center"
+      bg="bg.dark.300"
       {...rest}
     >
       <Box display="flex" alignItems="center">
