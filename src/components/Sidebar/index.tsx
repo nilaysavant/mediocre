@@ -58,7 +58,7 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       // borderBottom="none"
       borderTop="none"
       fontSize="small"
-      bg="bg.dark.500"
+      bg="bg.dark.400"
       _focus={{
         boxShadow: 'none',
       }}

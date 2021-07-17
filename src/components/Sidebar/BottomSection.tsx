@@ -9,7 +9,7 @@ export type BottomSectionProps = {
 const BottomSection = ({ documentsCount = 0, ...rest }: BottomSectionProps) => {
   return (
     <Box
-      bg="bg.dark.400"
+      bg="bg.dark.350"
       px="1"
       py="1.5"
       display="flex"
