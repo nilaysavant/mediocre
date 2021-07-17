@@ -10,18 +10,16 @@ const BottomSection = ({ documentsCount = 0, ...rest }: BottomSectionProps) => {
   return (
     <Box
       bg="bg.dark.350"
-      px="1"
-      py="1.5"
+      p="1"
       display="flex"
       alignItems="center"
-      borderBottom="2px solid #ffffff1c"
       {...rest}
     >
-      <Box bg="#ffffff17" px="2.5" mr="1" fontSize="xs" borderRadius="md">
+      <Box bg="#ffffff17" px="2" mr="1" fontSize="xs" borderRadius="none">
         {documentsCount}
       </Box>
       <Text isTruncated color="#ababab">
-        documents
+        Documents
       </Text>
     </Box>
   )

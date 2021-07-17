@@ -169,10 +169,9 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       fontSize="md"
       overflowX="auto"
       placeholder="Type something..."
-      // onScroll={onScroll}
       background={colorMode === 'dark' ? '#1f1f1f' : 'white'}
       borderWidth="1px"
-      borderStyle="solid"
+      borderStyle="dotted"
       borderColor={colorMode === 'dark' ? 'border.dark.500' : '#e0e0e0'}
       borderLeft="none"
       borderY="none"

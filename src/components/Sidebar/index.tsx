@@ -51,11 +51,6 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
       flexDir="column"
       rounded="none"
       minHeight="0"
-      // borderStyle="solid"
-      // borderWidth="1px"
-      // borderColor={colorMode === 'dark' ? 'border.dark.500' : 'white'}
-      // borderLeft="none"
-      // borderBottom="none"
       borderTop="none"
       fontSize="small"
       bg="bg.dark.400"
