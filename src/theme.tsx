@@ -12,6 +12,7 @@ export const themeOverrides: ThemeOverride = {
       dark: {
         400: 'rgb(31, 40, 61)',
         500: 'rgb(24,28,45)',
+        600: 'rgb(30,31,32)'
       },
       editor: {
         /** Cannot be used inside monaco,

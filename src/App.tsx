@@ -109,6 +109,9 @@ const App = () => {
       fontSize={18}
       display="flex"
       flexDir="column"
+      borderWidth="1px"
+      borderStyle="solid"
+      borderColor="border.dark.600"
     >
       <Titlebar />
       <Topbar />
@@ -120,10 +123,9 @@ const App = () => {
           display="flex"
           rounded="none"
           minHeight="0"
-          // border={`1px solid ${colorMode === 'dark' ? '#404040' : '#d4d4d4'}`}
-          borderWidth="1px"
-          borderStyle="solid"
-          borderColor={colorMode === 'dark' ? 'border.dark.500' : 'white'}
+          // borderWidth="1px"
+          // borderStyle="solid"
+          // borderColor={colorMode === 'dark' ? 'border.dark.500' : 'white'}
         >
           <Editor editorRef={editorTextAreaRef} onScroll={handleEditorScroll} />
           <Render renderBoxRef={renderBoxRef} onScroll={handleViewScroll} />
