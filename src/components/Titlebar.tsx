@@ -4,7 +4,7 @@ import { useColorMode } from '@chakra-ui/color-mode'
 import { Box, BoxProps } from '@chakra-ui/layout'
 import { AiOutlineClose } from 'react-icons/ai'
 import { FiMaximize, FiMinimize2 } from 'react-icons/fi'
-import { ButtonGroup, Spacer } from '@chakra-ui/react'
+import { ButtonGroup, Spacer, Text } from '@chakra-ui/react'
 import { appWindow } from '@tauri-apps/api/window'
 
 export type TitlebarProps = BoxProps
@@ -17,14 +17,27 @@ const Titlebar = ({ ...rest }: TitlebarProps) => {
       /** enable tauri drag window */
       data-tauri-drag-region
       display="flex"
-      justifyContent="space-between"
+      justifyContent="center"
       width="full"
       alignItems="center"
       bg="bg.dark.600"
+      position="relative"
       {...rest}
     >
+      <Text
+        data-tauri-drag-region
+        position="absolute"
+        left="50%"
+        transform="translateX(-50%)"
+        userSelect="none"
+        cursor="default"
+        fontSize="sm"
+        px="5"
+      >
+        Mediocre Editor
+      </Text>
       <Spacer data-tauri-drag-region />
-      <ButtonGroup data-tauri-drag-region p="1" spacing="1">
+      <ButtonGroup data-tauri-drag-region p="1.5" spacing="1.5">
         <IconButton
           aria-label="app-window-minimize"
           icon={<FiMinimize2 />}
