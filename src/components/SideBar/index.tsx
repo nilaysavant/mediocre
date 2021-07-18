@@ -187,7 +187,7 @@ const SideBar = ({ ...rest }: SideBarProps) => {
                         ? AiOutlineFileMarkdown
                         : AiFillFileMarkdown
                     }
-                    color="icon.dark"
+                    color="icon.dark.500"
                     fontSize="xl"
                     marginRight="0.5"
                   />

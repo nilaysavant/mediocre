@@ -85,7 +85,7 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
             fontSize="xs"
             flex="1"
             minHeight="0"
-            spacing="0.5"
+            spacing="0"
             w="full"
           >
             {menuItems.map((item) => (
@@ -111,7 +111,7 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
               >
                 <ListIcon
                   as={item.icon}
-                  color="icon.dark"
+                  color="icon.dark.400"
                   fontSize="small"
                   marginRight="1.5"
                 />

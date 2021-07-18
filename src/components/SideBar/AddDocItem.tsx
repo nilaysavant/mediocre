@@ -43,7 +43,7 @@ const AddDocItem = ({
     >
       <ListIcon
         as={AiOutlineFileMarkdown}
-        color="icon.dark"
+        color="icon.dark.500"
         fontSize="xl"
         marginRight="0.5"
       />

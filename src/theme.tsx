@@ -29,7 +29,10 @@ export const themeOverrides: ThemeOverride = {
     },
     /** for icons */
     icon: {
-      dark: 'rgb(0,200,255)',
+      dark: {
+        400: 'rgb(135, 164, 198)',
+        500: 'rgb(168, 183, 235)',
+      },
     },
     /** vscode related colors */
     vscode: {
