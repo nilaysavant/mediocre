@@ -19,6 +19,7 @@ import {
   PopoverHeader,
   PopoverProps,
   PopoverTrigger,
+  Spacer,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -36,7 +37,7 @@ const menuItems: {
     id: 'duplicate',
     icon: CopyIcon,
     label: 'Duplicate',
-    command: '',
+    command: 'Ctrl+D',
     onClick: () => console.log('open clicked'),
   },
   {
@@ -79,24 +80,25 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
           boxShadow: 'none',
         }}
       >
-        <PopoverBody p="0" minWidth="36" maxWidth="72">
+        <PopoverBody p="0" minWidth="48" maxWidth="72">
           <List
             borderRadius="none"
-            fontSize="xs"
+            fontSize="small"
             flex="1"
             minHeight="0"
             spacing="0"
             w="full"
+            py="0.5"
           >
             {menuItems.map((item) => (
               <ListItem
                 key={item.id}
                 display="flex"
                 alignItems="center"
-                py="0.5"
-                px="2"
+                py="1"
+                px="6"
                 userSelect="none"
-                cursor="pointer"
+                cursor="default"
                 w="full"
                 _hover={{
                   bg: '#fafafa0d',
@@ -116,6 +118,8 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
                   marginRight="1.5"
                 />
                 <Text isTruncated>{item.label}</Text>
+                <Spacer />
+                {item.command ? <Text color="#ffffff87">{item.command}</Text> : null}
               </ListItem>
             ))}
           </List>
