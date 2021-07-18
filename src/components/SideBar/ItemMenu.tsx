@@ -86,7 +86,6 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
             flex="1"
             minHeight="0"
             spacing="0.5"
-            color="#e3e3e3"
             w="full"
           >
             {menuItems.map((item) => (
@@ -105,7 +104,10 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
                 _active={{
                   bg: '#fafafa1f',
                 }}
-                onClick={item.onClick}
+                onClick={() => {
+                  if (item.onClick) item.onClick()
+                  onClose()
+                }}
               >
                 <ListIcon
                   as={item.icon}
