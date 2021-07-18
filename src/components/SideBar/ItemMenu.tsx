@@ -68,7 +68,7 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
       onClose={onClose}
       placement="right-start"
       closeOnBlur={true}
-      offset={[0, 0]}
+      offset={[0, -5]}
       {...popoverProps}
     >
       <PopoverTrigger>{children({ isOpen, onOpen, onClose })}</PopoverTrigger>
