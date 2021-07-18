@@ -11,9 +11,9 @@ import {
   updateTheme,
 } from '../styles/markdown/markdownThemeSlice'
 
-export type TopbarProps = BoxProps
+export type TopBarProps = BoxProps
 
-const Topbar = ({ ...rest }: TopbarProps) => {
+const TopBar = ({ ...rest }: TopBarProps) => {
   const { colorMode, toggleColorMode } = useColorMode()
   const mdTheme = useReduxSelector((state) => state.markdownTheme.theme)
   const dispatch = useReduxDispatch()
@@ -115,4 +115,4 @@ const Topbar = ({ ...rest }: TopbarProps) => {
   )
 }
 
-export default React.memo(Topbar)
+export default React.memo(TopBar)

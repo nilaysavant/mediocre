@@ -7,9 +7,9 @@ import { FiMaximize, FiMinimize2 } from 'react-icons/fi'
 import { ButtonGroup, Spacer, Text } from '@chakra-ui/react'
 import { appWindow } from '@tauri-apps/api/window'
 
-export type TitlebarProps = BoxProps
+export type TitleBarProps = BoxProps
 
-const Titlebar = ({ ...rest }: TitlebarProps) => {
+const TitleBar = ({ ...rest }: TitleBarProps) => {
   const { colorMode } = useColorMode()
 
   return (
@@ -85,4 +85,4 @@ const Titlebar = ({ ...rest }: TitlebarProps) => {
   )
 }
 
-export default React.memo(Titlebar)
+export default React.memo(TitleBar)

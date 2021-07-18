@@ -3,8 +3,7 @@ import { Box, useColorMode } from '@chakra-ui/react'
 import './App.css'
 import Editor from './components/Editor'
 import Render from './components/Render'
-import Topbar from './components/Topbar'
-import Bottombar from './components/Bottombar'
+import TopBar from './components/TopBar'
 import CommandModal from './components/CommandModal'
 import { editor, IScrollEvent } from 'monaco-editor'
 import { useReduxDispatch, useReduxSelector } from './redux/hooks'
@@ -14,8 +13,8 @@ import {
 } from './components/CommandModal/commandModalSlice'
 import { shell } from '@tauri-apps/api'
 import isTauri from './utils/isTauri'
-import Sidebar from './components/Sidebar'
-import Titlebar from './components/Titlebar'
+import SideBar from './components/SideBar'
+import TitleBar from './components/TitleBar'
 
 const App = () => {
   const { colorMode } = useColorMode()
@@ -113,10 +112,10 @@ const App = () => {
       borderStyle="solid"
       borderColor="border.dark.600"
     >
-      {isTauri() ? <Titlebar /> : null}
-      <Topbar />
+      {isTauri() ? <TitleBar /> : null}
+      <TopBar />
       <Box flex="1" display="flex" rounded="none" minHeight="0">
-        <Sidebar width="15%" />
+        <SideBar width="15%" />
         <Box
           flex="1"
           minWidth="0"
@@ -131,7 +130,6 @@ const App = () => {
           <Render renderBoxRef={renderBoxRef} onScroll={handleViewScroll} />
         </Box>
       </Box>
-      {/* <Bottombar /> */}
       <CommandModal />
     </Box>
   )

@@ -8,7 +8,7 @@ import {
   globalRawTextUpdate,
 } from '../../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from '../CommandModal/commandModalSlice'
-import { globalDocumentSave } from '../Sidebar/documentsSlice'
+import { globalDocumentSave } from '../SideBar/documentsSlice'
 import Loading from './Loading'
 
 loader.config({

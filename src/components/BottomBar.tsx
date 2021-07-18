@@ -1,9 +1,9 @@
 import React from 'react'
 import { Box, BoxProps } from '@chakra-ui/layout'
 
-export type BottombarProps = BoxProps
+export type BottomBarProps = BoxProps
 
-function Bottombar({ ...rest }: BottombarProps) {
+function BottomBar({ ...rest }: BottomBarProps) {
   return (
     <Box
       fontSize="sm"
@@ -21,4 +21,4 @@ function Bottombar({ ...rest }: BottombarProps) {
   )
 }
 
-export default React.memo(Bottombar)
+export default React.memo(BottomBar)

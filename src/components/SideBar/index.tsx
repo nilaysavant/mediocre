@@ -18,9 +18,9 @@ import { getUniqueIdV4 } from '../../utils/idGenerator'
 import dayjs from 'dayjs'
 import AddDocItem from './AddDocItem'
 
-export type SidebarProps = BoxProps
+export type SideBarProps = BoxProps
 
-const Sidebar = ({ ...rest }: SidebarProps) => {
+const SideBar = ({ ...rest }: SideBarProps) => {
   const { colorMode } = useColorMode()
   const dispatch = useReduxDispatch()
   const documents = useReduxSelector(documentsSelectors.selectAll)
@@ -244,4 +244,4 @@ const Sidebar = ({ ...rest }: SidebarProps) => {
   )
 }
 
-export default React.memo(Sidebar)
+export default React.memo(SideBar)

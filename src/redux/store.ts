@@ -4,7 +4,7 @@ import commandModalSlice from '../components/CommandModal/commandModalSlice'
 import counterSlice from '../utils/counterSlice'
 import appSlice from '../appSlice'
 import markdownThemeSlice from '../styles/markdown/markdownThemeSlice'
-import documentsSlice from '../components/Sidebar/documentsSlice'
+import documentsSlice from '../components/SideBar/documentsSlice'
 import reduxLogger from 'redux-logger'
 
 export const store = configureStore({
