@@ -33,6 +33,7 @@ fn main() {
       cmd::parse_md_to_mu,
       cmd::get_env,
       cmd::save_file_to,
+      cmd::fetch_doc_info,
       cmd::fetch_all_docs_info,
       cmd::read_document,
       cmd::write_document

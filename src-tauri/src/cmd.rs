@@ -74,17 +74,33 @@ pub fn save_file_to(save_path: String, file_data: String) -> Result<SaveFileToRe
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct FetchDocsInfoResponse {
+pub struct FetchDocInfoResponse {
+  file_meta_info: fsutils::FileMetaInfo,
+}
+
+/// Fetch Document info from document relative path (ie. relative to app root dir)
+#[tauri::command]
+pub fn fetch_doc_info(relative_path: String) -> Result<FetchDocInfoResponse, String> {
+  let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
+  let file_path = app_dir_path.join(relative_path);
+  let file_meta_info =
+    fsutils::get_file_meta_from_path(file_path.as_path()).map_err(|e| e.to_string())?;
+  Ok(FetchDocInfoResponse { file_meta_info })
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FetchAllDocsInfoResponse {
   files_meta_info: Vec<fsutils::FileMetaInfo>,
 }
 
 /// Fetch Documents info from app root dir
 #[tauri::command]
-pub fn fetch_all_docs_info() -> Result<FetchDocsInfoResponse, String> {
+pub fn fetch_all_docs_info() -> Result<FetchAllDocsInfoResponse, String> {
   let path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
   let files_meta_info =
     fsutils::get_all_files_meta_from_path(path.as_path()).map_err(|e| e.to_string())?;
-  Ok(FetchDocsInfoResponse { files_meta_info })
+  Ok(FetchAllDocsInfoResponse { files_meta_info })
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -110,7 +126,10 @@ pub struct WriteDocumentResponse {
 
 /// Write Document to the specified relative path
 #[tauri::command]
-pub fn write_document(relative_path: String, content: String) -> Result<WriteDocumentResponse, String> {
+pub fn write_document(
+  relative_path: String,
+  content: String,
+) -> Result<WriteDocumentResponse, String> {
   let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
   let file_path = app_dir_path.join(relative_path);
   fsutils::write_to_path(file_path.as_path(), content).map_err(|e| e.to_string())?;
