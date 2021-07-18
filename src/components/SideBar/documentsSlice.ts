@@ -135,6 +135,8 @@ export const globalDocumentSave = createAsyncThunk<string, void>(
       relativePath,
       updatedContent
     )
+    /** dispatch for updating doc meta info into the store */
+    await dispatch(globalDocumentInfoFetch({ relativePath })).unwrap()
     if (!response?.status) throw new Error('Response status is invalid!')
     dispatch(updateRawText(updatedContent)) // Update the md raw text as well
     return updatedContent
