@@ -80,7 +80,7 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
           boxShadow: 'none',
         }}
       >
-        <PopoverBody p="0" minWidth="44" maxWidth="72">
+        <PopoverBody p="0" minWidth="44" maxWidth="72" boxShadow="dark-lg">
           <List
             borderRadius="none"
             fontSize="small"
