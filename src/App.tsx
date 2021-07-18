@@ -113,7 +113,7 @@ const App = () => {
       borderStyle="solid"
       borderColor="border.dark.600"
     >
-      <Titlebar />
+      {isTauri() ? <Titlebar /> : null}
       <Topbar />
       <Box flex="1" display="flex" rounded="none" minHeight="0">
         <Sidebar width="15%" />
