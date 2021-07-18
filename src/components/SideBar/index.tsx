@@ -2,7 +2,15 @@ import React, { useRef, useState, useEffect } from 'react'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { AiFillFileMarkdown, AiOutlineFileMarkdown } from 'react-icons/ai'
 import { Box, BoxProps } from '@chakra-ui/layout'
-import { Circle, Input, List, ListIcon, ListItem, Text } from '@chakra-ui/react'
+import {
+  Circle,
+  Input,
+  List,
+  ListIcon,
+  ListItem,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react'
 import BottomSection from './BottomSection'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import {
@@ -17,6 +25,7 @@ import TopSection from './TopSection'
 import { getUniqueIdV4 } from '../../utils/idGenerator'
 import dayjs from 'dayjs'
 import AddDocItem from './AddDocItem'
+import ItemMenu from './ItemMenu'
 
 export type SideBarProps = BoxProps
 
@@ -37,7 +46,6 @@ const SideBar = ({ ...rest }: SideBarProps) => {
     id: '',
     value: '',
   })
-
   useEffect(() => {
     const gdlfPromise = dispatch(globalAllDocumentsListFetch())
     return () => {
@@ -134,95 +142,106 @@ const SideBar = ({ ...rest }: SideBarProps) => {
             return nextMod - prevMod
           })
           .map((doc, idx) => (
-            <ListItem
-              key={doc.id}
-              display="flex"
-              alignItems="center"
-              width="full"
-              paddingX="0.5"
-              paddingTop={idx === 0 ? 0.5 : undefined}
-              userSelect="none"
-              cursor="pointer"
-              bg={doc.id === selectedDocument ? '#adadad21' : undefined}
-              _hover={{
-                bg: '#fafafa0d',
-              }}
-              _active={{
-                bg: '#fafafa1f',
-              }}
-              onDoubleClick={() => {
-                setRenameItem({ id: doc.id, value: doc.name })
-                setTimeout(() => {
-                  if (renameInputRef.current) {
-                    renameInputRef.current.focus()
-                    renameInputRef.current.setSelectionRange(
-                      0,
-                      renameInputRef.current.value.length - 3,
-                      'forward'
-                    )
-                  }
-                }, 0)
-              }}
-              onClick={() =>
-                dispatch(globalDocumentOpen({ documentId: doc.id }))
-              }
-            >
-              <ListIcon
-                as={
-                  doc.type === 'markdown'
-                    ? AiOutlineFileMarkdown
-                    : AiFillFileMarkdown
-                }
-                color="icon.dark"
-                fontSize="xl"
-                marginRight="0.5"
-              />
-              {renameItem.id === doc.id ? (
-                <Input
-                  size="xxs"
-                  _focus={{
-                    boxShadow: '0px 0px 0px 1px #51a3f0c9',
-                  }}
-                  placeholder="Rename Document"
-                  ref={renameInputRef}
-                  value={renameItem.value}
-                  onChange={(e) =>
-                    setRenameItem((old) => ({ ...old, value: e.target.value }))
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      /** Press Enter to save */
-                      dispatch(
-                        documentUpdate({
-                          id: doc.id,
-                          changes: {
-                            name: renameItem.value,
-                          },
-                        })
-                      )
-                      setRenameItem({ id: '', value: '' })
-                    } else if (e.key === 'Escape') {
-                      /** Press Esc to cancel */
-                      setRenameItem({ id: '', value: '' })
-                    }
-                  }}
-                />
-              ) : (
-                <Box
-                  flex="1"
-                  minW="0"
+            <ItemMenu>
+              {({ isOpen, onOpen, onClose }) => (
+                <ListItem
+                  key={doc.id}
                   display="flex"
                   alignItems="center"
-                  justifyContent="space-between"
-                  pr="0.5"
+                  width="full"
+                  paddingX="0.5"
+                  paddingTop={idx === 0 ? 0.5 : undefined}
+                  userSelect="none"
+                  cursor="pointer"
+                  bg={doc.id === selectedDocument ? '#adadad21' : undefined}
+                  _hover={{
+                    bg: '#fafafa0d',
+                  }}
+                  _active={{
+                    bg: '#fafafa1f',
+                  }}
+                  onDoubleClick={() => {
+                    setRenameItem({ id: doc.id, value: doc.name })
+                    setTimeout(() => {
+                      if (renameInputRef.current) {
+                        renameInputRef.current.focus()
+                        renameInputRef.current.setSelectionRange(
+                          0,
+                          renameInputRef.current.value.length - 3,
+                          'forward'
+                        )
+                      }
+                    }, 0)
+                  }}
+                  onClick={() =>
+                    dispatch(globalDocumentOpen({ documentId: doc.id }))
+                  }
+                  onContextMenu={(e) => {
+                    e.preventDefault()
+                    onOpen()
+                  }}
                 >
-                  <Text isTruncated>{doc.name}</Text>
-                  {!doc.saved ? (
-                    <Circle size="0.5rem" bg="whiteAlpha.400" />
-                  ) : null}
-                </Box>
+                  <ListIcon
+                    as={
+                      doc.type === 'markdown'
+                        ? AiOutlineFileMarkdown
+                        : AiFillFileMarkdown
+                    }
+                    color="icon.dark"
+                    fontSize="xl"
+                    marginRight="0.5"
+                  />
+                  {renameItem.id === doc.id ? (
+                    <Input
+                      size="xxs"
+                      _focus={{
+                        boxShadow: '0px 0px 0px 1px #51a3f0c9',
+                      }}
+                      placeholder="Rename Document"
+                      ref={renameInputRef}
+                      value={renameItem.value}
+                      onChange={(e) =>
+                        setRenameItem((old) => ({
+                          ...old,
+                          value: e.target.value,
+                        }))
+                      }
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          /** Press Enter to save */
+                          dispatch(
+                            documentUpdate({
+                              id: doc.id,
+                              changes: {
+                                name: renameItem.value,
+                              },
+                            })
+                          )
+                          setRenameItem({ id: '', value: '' })
+                        } else if (e.key === 'Escape') {
+                          /** Press Esc to cancel */
+                          setRenameItem({ id: '', value: '' })
+                        }
+                      }}
+                    />
+                  ) : (
+                    <Box
+                      flex="1"
+                      minW="0"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      pr="0.5"
+                    >
+                      <Text isTruncated>{doc.name}</Text>
+                      {!doc.saved ? (
+                        <Circle size="0.5rem" bg="whiteAlpha.400" />
+                      ) : null}
+                    </Box>
+                  )}
+                </ListItem>
               )}
-            </ListItem>
+            </ItemMenu>
           ))}
       </List>
       <BottomSection documentsCount={documents.length} />
