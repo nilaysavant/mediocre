@@ -162,7 +162,7 @@ export const globalDocumentAdd = createAsyncThunk<
   ).unwrap()
   if (!documentInfo) throw new Error(`documentInfo invalid!`)
   /** Open the newDocument with id being the filePath of it */
-  dispatch(globalDocumentOpen({ documentId: documentInfo.filePath }))
+  await dispatch(globalDocumentOpen({ documentId: documentInfo.filePath })).unwrap()
 })
 
 /** Mediocre DocumentSlice State */
