@@ -3,6 +3,8 @@ import { Box, BoxProps } from '@chakra-ui/layout'
 import {
   Button,
   ButtonGroup,
+  List,
+  ListItem,
   Menu,
   MenuButton,
   MenuItem,
@@ -39,33 +41,29 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
       returnFocusOnClose={false}
       isOpen={isOpen}
       onClose={onClose}
-      placement="right-end"
+      placement="right-start"
       closeOnBlur={true}
+      offset={[0, 0]}
       {...popoverProps}
     >
       <PopoverTrigger>{children({ isOpen, onOpen, onClose })}</PopoverTrigger>
-      <PopoverContent>
-        <PopoverHeader fontWeight="semibold">Confirmation</PopoverHeader>
-        <PopoverCloseButton />
+      <PopoverContent
+        w="36"
+        borderRadius="none"
+        _focus={{
+          boxShadow: 'none',
+        }}
+      >
         <PopoverBody>
-          Are you sure you want to continue with your action?
+          <List borderRadius="none" fontSize="xs" minWidth="36">
+            <ListItem>
+              <DeleteIcon />
+              Delete
+            </ListItem>
+          </List>
         </PopoverBody>
-        <PopoverFooter d="flex" justifyContent="flex-end">
-          <ButtonGroup size="sm">
-            <Button variant="outline">Cancel</Button>
-            <Button colorScheme="red">Apply</Button>
-          </ButtonGroup>
-        </PopoverFooter>
       </PopoverContent>
     </Popover>
-    // <Menu {...rest}>
-    //   <MenuButton as={CustomMenuButton} aria-label="Document menu" />
-    //   <Menu>
-    //     <MenuItem icon={<DeleteIcon />} command="Del">
-    //       Delete
-    //     </MenuItem>
-    //   </Menu>
-    // </Menu>
   )
 }
 
