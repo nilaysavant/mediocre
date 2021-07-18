@@ -103,7 +103,60 @@ pub struct FileMetaInfo {
   modified: Option<String>,
 }
 
-/// Get all files meta info for given path
+/// Get file meta info for given file path
+pub fn get_file_meta_from_path<P: AsRef<Path> + Copy>(
+  path: P,
+) -> Result<FileMetaInfo, ServerError> {
+  // There have been discussions wrt differences in file
+  // path serialization between various platforms namely win and unix
+  // Currently will assume valid and serialize(able) chars are used
+  // as file names and paths will be constructed using the app itself.
+  let path_ref = path.as_ref();
+  let file_name = path_ref
+    .file_name()
+    .ok_or_else(|| ServerError::UserError {
+      message: "file_name not available!".to_string(),
+    })?
+    .to_string_lossy()
+    .to_string();
+  let file_path = path_ref.to_string_lossy().to_string();
+  let file_dir = match path_ref.parent() {
+    Some(p) => match p.components().last() {
+      Some(c) => Some(c.as_os_str().to_string_lossy().to_string()),
+      None => None,
+    },
+    None => None,
+  };
+  let file_type = match path_ref.extension() {
+    Some(ext) => {
+      if ext.eq(Path::new("test.md").extension().unwrap()) {
+        Some("markdown".to_string())
+      } else {
+        None
+      }
+    }
+    None => None,
+  };
+  let modified = match path_ref.metadata() {
+    Ok(m) => match m.modified() {
+      Ok(t) => {
+        let system_time: DateTime<Utc> = t.into();
+        Some(system_time.to_rfc3339_opts(SecondsFormat::Millis, true))
+      }
+      Err(_) => None,
+    },
+    Err(_) => None,
+  };
+  Ok(FileMetaInfo {
+    file_name,
+    file_path,
+    file_dir,
+    file_type,
+    modified,
+  })
+}
+
+/// Get all files meta info in the given dir path
 pub fn get_all_files_meta_from_path<P: AsRef<Path> + Copy>(
   path: P,
 ) -> Result<Vec<FileMetaInfo>, ServerError> {
