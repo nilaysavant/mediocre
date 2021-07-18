@@ -67,6 +67,11 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
   const itemRefs = menuItems.map((_item) => React.createRef<HTMLLIElement>())
 
   useEffect(() => {
+    /** reset focused idx to 0 on Open */
+    if (isOpen) setFocusedIdx(0)
+  }, [isOpen])
+
+  useEffect(() => {
     const ref = itemRefs[focusedIdx].current
     if (ref) ref.focus()
   }, [focusedIdx, itemRefs])
