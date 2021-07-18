@@ -22,14 +22,16 @@ import {
 import { DeleteIcon } from '@chakra-ui/icons'
 
 export type ItemMenuProps = {
+  /** uses render props ref: https://reactjs.org/docs/render-props.html */
   children: (renderProps: {
     isOpen: boolean
     onOpen: () => void
     onClose: () => void
   }) => JSX.Element
+  popoverProps?: PopoverProps
 }
 
-const ItemMenu = ({ children }: ItemMenuProps) => {
+const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -39,6 +41,7 @@ const ItemMenu = ({ children }: ItemMenuProps) => {
       onClose={onClose}
       placement="right-end"
       closeOnBlur={true}
+      {...popoverProps}
     >
       <PopoverTrigger>{children({ isOpen, onOpen, onClose })}</PopoverTrigger>
       <PopoverContent>
