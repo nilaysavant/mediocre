@@ -1,22 +1,11 @@
-import React, { useState } from 'react'
-import { Box, BoxProps } from '@chakra-ui/layout'
+import React, { useState, useEffect } from 'react'
 import {
-  Button,
-  ButtonGroup,
   List,
   ListIcon,
   ListItem,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  MenuProps,
   Popover,
   PopoverBody,
-  PopoverCloseButton,
   PopoverContent,
-  PopoverFooter,
-  PopoverHeader,
   PopoverProps,
   PopoverTrigger,
   Spacer,
@@ -24,9 +13,6 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { CopyIcon, DeleteIcon } from '@chakra-ui/icons'
-import { IconType } from 'react-icons/lib'
-import { useRef } from 'react'
-import { useEffect } from 'react'
 
 const menuItems: {
   id: string
@@ -36,18 +22,32 @@ const menuItems: {
   onClick?: () => void
 }[] = [
   {
+    id: 'rename',
+    icon: CopyIcon,
+    label: 'Rename',
+    command: 'F2',
+    onClick: () => console.log('rename clicked'),
+  },
+  {
+    id: 'copy',
+    icon: CopyIcon,
+    label: 'Copy',
+    command: 'Ctrl+C',
+    onClick: () => console.log('copy clicked'),
+  },
+  {
     id: 'duplicate',
     icon: CopyIcon,
     label: 'Duplicate',
     command: 'Ctrl+D',
-    onClick: () => console.log('open clicked'),
+    onClick: () => console.log('duplicate clicked'),
   },
   {
     id: 'delete',
     icon: DeleteIcon,
     label: 'Delete',
     command: 'Del',
-    onClick: () => console.log('del clicked'),
+    onClick: () => console.log('delete clicked'),
   },
 ]
 
@@ -60,16 +60,16 @@ export type ItemMenuProps = {
   }) => JSX.Element
   popoverProps?: PopoverProps
 }
+const itemRefs = menuItems.map((_item) => React.createRef<HTMLLIElement>())
 
 const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [focusedIdx, setFocusedIdx] = useState(0)
-  const itemRefs = menuItems.map((_item) => React.createRef<HTMLLIElement>())
 
   useEffect(() => {
     const ref = itemRefs[focusedIdx].current
     if (ref) ref.focus()
-  }, [focusedIdx, itemRefs])
+  }, [focusedIdx])
 
   return (
     <Popover
@@ -131,6 +131,10 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
                 onClick={() => {
                   if (item.onClick) item.onClick()
                   onClose()
+                }}
+                onMouseOver={() => {
+                  const ref = itemRefs[idx].current
+                  if (ref) ref.focus()
                 }}
               >
                 <ListIcon
