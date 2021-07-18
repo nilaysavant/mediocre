@@ -94,7 +94,7 @@ const SideBar = ({ ...rest }: SideBarProps) => {
       <List
         flex="1"
         minHeight="0"
-        spacing="0.5"
+        spacing="0"
         color="#e3e3e3"
         width="full"
         overflow="auto"
@@ -149,7 +149,8 @@ const SideBar = ({ ...rest }: SideBarProps) => {
                   display="flex"
                   alignItems="center"
                   width="full"
-                  paddingX="0.5"
+                  paddingX="1"
+                  paddingY="0.07rem"
                   paddingTop={idx === 0 ? 0.5 : undefined}
                   userSelect="none"
                   cursor="pointer"
@@ -189,7 +190,7 @@ const SideBar = ({ ...rest }: SideBarProps) => {
                     }
                     color="icon.dark.500"
                     fontSize="xl"
-                    marginRight="0.5"
+                    marginRight="1"
                   />
                   {renameItem.id === doc.id ? (
                     <Input

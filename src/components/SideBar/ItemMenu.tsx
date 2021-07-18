@@ -80,7 +80,7 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
           boxShadow: 'none',
         }}
       >
-        <PopoverBody p="0" minWidth="48" maxWidth="72">
+        <PopoverBody p="0" minWidth="44" maxWidth="72">
           <List
             borderRadius="none"
             fontSize="small"
@@ -96,7 +96,7 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
                 display="flex"
                 alignItems="center"
                 py="1"
-                px="6"
+                px="5"
                 userSelect="none"
                 cursor="default"
                 w="full"
@@ -114,7 +114,7 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
                 <ListIcon
                   as={item.icon}
                   color="icon.dark.400"
-                  fontSize="small"
+                  fontSize="sm"
                   marginRight="1.5"
                 />
                 <Text isTruncated>{item.label}</Text>
