@@ -24,8 +24,8 @@ const SideBar = ({ ...rest }: SideBarProps) => {
   const { colorMode } = useColorMode()
   const dispatch = useReduxDispatch()
   const documents = useReduxSelector(documentsSelectors.selectAll)
-  const isDocumentsFetching = useReduxSelector(
-    (state) => state.documents.isDocumentsFetching
+  const isAllDocumentsFetching = useReduxSelector(
+    (state) => state.documents.isAllDocumentsFetching
   )
   const selectedDocument = useReduxSelector(
     (state) => state.documents.selectedDocument
@@ -68,7 +68,7 @@ const SideBar = ({ ...rest }: SideBarProps) => {
     >
       <TopSection
         dirName="My Projects"
-        isLoading={isDocumentsFetching}
+        isLoading={isAllDocumentsFetching}
         onAddClick={() => {
           setAddItemInputActive(true)
           setTimeout(() => {

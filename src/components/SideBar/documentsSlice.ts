@@ -169,7 +169,7 @@ export const globalDocumentAdd = createAsyncThunk<
 export type DocumentsState = {
   all: EntityState<MediocreDocument>
   selectedDocument: string
-  isDocumentsFetching: boolean
+  isAllDocumentsFetching: boolean
   isDocumentFetching: boolean
   isDocumentOpening: boolean
   isDocumentSaving: boolean
@@ -179,7 +179,7 @@ export type DocumentsState = {
 const initialState: DocumentsState = {
   all: documentsAdapter.getInitialState(),
   selectedDocument: '',
-  isDocumentsFetching: false,
+  isAllDocumentsFetching: false,
   isDocumentFetching: false,
   isDocumentOpening: false,
   isDocumentSaving: false,
@@ -210,7 +210,7 @@ export const documentsSlice = createSlice({
     builder
       // Add reducers for additional action types here, and handle loading state as needed
       .addCase(globalAllDocumentsListFetch.pending, (state, _action) => {
-        state.isDocumentsFetching = true
+        state.isAllDocumentsFetching = true
       })
       .addCase(globalAllDocumentsListFetch.fulfilled, (state, action) => {
         /** get all the validated documents from the async fn */
@@ -233,7 +233,7 @@ export const documentsSlice = createSlice({
           documentsAdapter.setAll(state.all, allDocuments)
         } else console.error('allDocuments is undefined!')
         /** reset fetching state */
-        state.isDocumentsFetching = false
+        state.isAllDocumentsFetching = false
       })
       .addCase(globalDocumentInfoFetch.pending, (state, _action) => {
         state.isDocumentFetching = true
