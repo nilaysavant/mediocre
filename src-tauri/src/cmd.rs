@@ -80,10 +80,10 @@ pub struct FetchDocsInfoResponse {
 
 /// Fetch Documents info from app root dir
 #[tauri::command]
-pub fn fetch_docs_info() -> Result<FetchDocsInfoResponse, String> {
+pub fn fetch_all_docs_info() -> Result<FetchDocsInfoResponse, String> {
   let path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
   let files_meta_info =
-    fsutils::get_files_meta_from_path(path.as_path()).map_err(|e| e.to_string())?;
+    fsutils::get_all_files_meta_from_path(path.as_path()).map_err(|e| e.to_string())?;
   Ok(FetchDocsInfoResponse { files_meta_info })
 }
 

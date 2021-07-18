@@ -104,7 +104,7 @@ pub struct FileMetaInfo {
 }
 
 /// Get all files meta info for given path
-pub fn get_files_meta_from_path<P: AsRef<Path> + Copy>(
+pub fn get_all_files_meta_from_path<P: AsRef<Path> + Copy>(
   path: P,
 ) -> Result<Vec<FileMetaInfo>, ServerError> {
   let meta_info = WalkDir::new(path)

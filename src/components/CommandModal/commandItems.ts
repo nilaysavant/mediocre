@@ -15,7 +15,7 @@ import { open } from '@tauri-apps/api/dialog'
 import { homeDir } from '@tauri-apps/api/path'
 import { store } from '../../redux/store'
 import {
-  fetchDocumentsMetadata,
+  fetchAllDocumentsMetadata,
   openFileSelectionDialog,
   readDocumentFromRelativePath,
   saveFileToCustomPath,
@@ -28,7 +28,7 @@ export type MediocreCommandId =
   | 'my_custom_command'
   | 'open_file'
   | 'save_file_to_path'
-  | 'fetch_docs_info'
+  | 'fetch_all_docs_info'
   | 'read_document'
   | 'write_document'
 
@@ -84,7 +84,7 @@ const allMediocreCommands: AllMediocreCommands = {
     'my_custom_command',
     'open_file',
     'save_file_to_path',
-    'fetch_docs_info',
+    'fetch_all_docs_info',
     'read_document',
     'write_document',
   ],
@@ -163,13 +163,13 @@ const allMediocreCommands: AllMediocreCommands = {
           throw new Error(`file path (res) is invalid or fileName is invalid!`)
       },
     },
-    fetch_docs_info: {
-      id: 'fetch_docs_info',
-      title: 'Fetch Documents Info',
-      subtitle: 'Fetch documents meta data from file system',
+    fetch_all_docs_info: {
+      id: 'fetch_all_docs_info',
+      title: 'Fetch All Documents Info',
+      subtitle: 'Fetch all documents meta data from file system',
       icon: GoFileDirectory,
       onSelect: async (_data) => {
-        const res = await fetchDocumentsMetadata()
+        const res = await fetchAllDocumentsMetadata()
         console.log(
           '🚀 ~ file: commandItems.ts ~ line 153 ~ onSelect: ~ res',
           res

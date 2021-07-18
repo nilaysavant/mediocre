@@ -8,7 +8,7 @@ import {
   Update,
 } from '@reduxjs/toolkit'
 import {
-  fetchDocumentsMetadata,
+  fetchAllDocumentsMetadata,
   readDocumentFromRelativePath,
   writeDocumentToRelativePath,
 } from '../../functions/fileSystem'
@@ -55,7 +55,7 @@ const documentsAdapter = createEntityAdapter<MediocreDocument>({
 export const globalDocumentsListFetch = createAsyncThunk(
   'documents/globalDocumentsListFetch',
   async (_arg, thunkAPI) => {
-    const response = await fetchDocumentsMetadata()
+    const response = await fetchAllDocumentsMetadata()
     return response
   }
 )

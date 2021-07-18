@@ -102,7 +102,7 @@ const CommandModal = () => {
             await command.onSelect({ commandId, fileName: inputText })
             break
           }
-          case 'fetch_docs_info': {
+          case 'fetch_all_docs_info': {
             await command.onSelect()
             break
           }

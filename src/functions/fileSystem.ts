@@ -60,9 +60,9 @@ export const saveFileToCustomPath = async (
 }
 
 /**
- * fetch Documents Meta data fom FS
+ * fetch All Documents Meta data fom FS
  */
-export const fetchDocumentsMetadata = async () => {
+export const fetchAllDocumentsMetadata = async () => {
   if (isTauri()) {
     const invokeRes: {
       filesMetaInfo: {
@@ -72,7 +72,7 @@ export const fetchDocumentsMetadata = async () => {
         fileType?: 'markdown'
         modified?: IsoDatetime
       }[]
-    } = await tauri.invoke('fetch_docs_info', {})
+    } = await tauri.invoke('fetch_all_docs_info', {})
     const homeDirPath = await homeDir()
     if (!homeDirPath) throw new Error('Path to home dir invalid!')
     const appRootDirPath = path.join(homeDirPath, appDirName)
