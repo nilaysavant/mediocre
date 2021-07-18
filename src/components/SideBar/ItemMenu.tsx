@@ -21,14 +21,12 @@ import {
 } from '@chakra-ui/react'
 import { DeleteIcon } from '@chakra-ui/icons'
 
-type ItemMenuChildrenProps = {
-  isOpen: boolean
-  onOpen: () => void
-  onClose: () => void
-}
-
 export type ItemMenuProps = {
-  children: (props: ItemMenuChildrenProps) => JSX.Element
+  children: (renderProps: {
+    isOpen: boolean
+    onOpen: () => void
+    onClose: () => void
+  }) => JSX.Element
 }
 
 const ItemMenu = ({ children }: ItemMenuProps) => {

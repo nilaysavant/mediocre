@@ -142,10 +142,10 @@ const SideBar = ({ ...rest }: SideBarProps) => {
             return nextMod - prevMod
           })
           .map((doc, idx) => (
-            <ItemMenu>
+            <ItemMenu key={doc.id}>
               {({ isOpen, onOpen, onClose }) => (
                 <ListItem
-                  key={doc.id}
+                  // key={doc.id}
                   display="flex"
                   alignItems="center"
                   width="full"
