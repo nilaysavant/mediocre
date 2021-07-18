@@ -53,8 +53,8 @@ const documentsAdapter = createEntityAdapter<MediocreDocument>({
  * Async thunk action to fetch documents list from
  * file system. Uses Tauri command.
  */
-export const globalDocumentsListFetch = createAsyncThunk(
-  'documents/globalDocumentsListFetch',
+export const globalAllDocumentsListFetch = createAsyncThunk(
+  'documents/globalAllDocumentsListFetch',
   async (_arg, thunkAPI) => {
     const response = await fetchAllDocumentsMetadata()
     return response
@@ -135,7 +135,7 @@ export const globalDocumentAdd = createAsyncThunk<
   const response = await writeDocumentToRelativePath(relativePath, '')
   if (!response?.status) throw new Error(`Response status is invalid!`)
   /** Refetch all docs info */
-  const result = await dispatch(globalDocumentsListFetch()).unwrap()
+  const result = await dispatch(globalAllDocumentsListFetch()).unwrap()
   if (!result) throw new Error(`Result invalid!`)
   const newDocument = result?.find(
     (doc) => doc.fileRelativePath === relativePath
@@ -187,10 +187,10 @@ export const documentsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Add reducers for additional action types here, and handle loading state as needed
-      .addCase(globalDocumentsListFetch.pending, (state, _action) => {
+      .addCase(globalAllDocumentsListFetch.pending, (state, _action) => {
         state.isDocumentsFetching = true
       })
-      .addCase(globalDocumentsListFetch.fulfilled, (state, action) => {
+      .addCase(globalAllDocumentsListFetch.fulfilled, (state, action) => {
         /** get all the validated documents from the async fn */
         const allDocuments: MediocreDocument[] | undefined =
           action.payload?.map((docMeta) => ({

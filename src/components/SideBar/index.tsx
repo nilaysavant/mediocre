@@ -7,7 +7,7 @@ import BottomSection from './BottomSection'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import {
   globalDocumentOpen,
-  globalDocumentsListFetch,
+  globalAllDocumentsListFetch,
   documentsSelectors,
   documentUpdate,
   documentAdd,
@@ -39,7 +39,7 @@ const SideBar = ({ ...rest }: SideBarProps) => {
   })
 
   useEffect(() => {
-    const gdlfPromise = dispatch(globalDocumentsListFetch())
+    const gdlfPromise = dispatch(globalAllDocumentsListFetch())
     return () => {
       gdlfPromise.abort('Sidebar unmounted')
     }
