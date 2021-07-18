@@ -60,16 +60,16 @@ export type ItemMenuProps = {
   }) => JSX.Element
   popoverProps?: PopoverProps
 }
-const itemRefs = menuItems.map((_item) => React.createRef<HTMLLIElement>())
 
 const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [focusedIdx, setFocusedIdx] = useState(0)
+  const itemRefs = menuItems.map((_item) => React.createRef<HTMLLIElement>())
 
   useEffect(() => {
     const ref = itemRefs[focusedIdx].current
     if (ref) ref.focus()
-  }, [focusedIdx])
+  }, [focusedIdx, itemRefs])
 
   return (
     <Popover
