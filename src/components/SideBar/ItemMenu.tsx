@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, BoxProps } from '@chakra-ui/layout'
 import {
   Button,
@@ -26,6 +26,7 @@ import {
 import { CopyIcon, DeleteIcon } from '@chakra-ui/icons'
 import { IconType } from 'react-icons/lib'
 import { useRef } from 'react'
+import { useEffect } from 'react'
 
 const menuItems: {
   id: string
@@ -62,7 +63,13 @@ export type ItemMenuProps = {
 
 const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const focusRef = useRef<HTMLLIElement>(null)
+  const [focusedIdx, setFocusedIdx] = useState(0)
+  const itemRefs = menuItems.map((_item) => React.createRef<HTMLLIElement>())
+
+  useEffect(() => {
+    const ref = itemRefs[focusedIdx].current
+    if (ref) ref.focus()
+  }, [focusedIdx, itemRefs])
 
   return (
     <Popover
@@ -72,7 +79,7 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
       placement="right-start"
       closeOnBlur={true}
       offset={[0, -5]}
-      initialFocusRef={focusRef}
+      initialFocusRef={itemRefs[focusedIdx]}
       {...popoverProps}
     >
       <PopoverTrigger>{children({ isOpen, onOpen, onClose })}</PopoverTrigger>
@@ -81,6 +88,13 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
         borderRadius="none"
         _focus={{
           boxShadow: 'none',
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown') {
+            setFocusedIdx((old) => (old >= menuItems.length - 1 ? 0 : old + 1))
+          } else if (e.key === 'ArrowUp') {
+            setFocusedIdx((old) => (old <= 0 ? menuItems.length - 1 : old - 1))
+          }
         }}
       >
         <PopoverBody p="0" minWidth="44" maxWidth="72" boxShadow="dark-lg">
@@ -96,7 +110,7 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
             {menuItems.map((item, idx) => (
               <ListItem
                 key={item.id}
-                ref={idx === 0 ? focusRef : undefined}
+                ref={itemRefs[idx]}
                 tabIndex={0}
                 display="flex"
                 alignItems="center"
@@ -127,7 +141,9 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
                 />
                 <Text isTruncated>{item.label}</Text>
                 <Spacer />
-                {item.command ? <Text color="#ffffff87">{item.command}</Text> : null}
+                {item.command ? (
+                  <Text color="#ffffff87">{item.command}</Text>
+                ) : null}
               </ListItem>
             ))}
           </List>
