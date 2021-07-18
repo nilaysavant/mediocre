@@ -25,6 +25,7 @@ import {
 } from '@chakra-ui/react'
 import { CopyIcon, DeleteIcon } from '@chakra-ui/icons'
 import { IconType } from 'react-icons/lib'
+import { useRef } from 'react'
 
 const menuItems: {
   id: string
@@ -61,6 +62,7 @@ export type ItemMenuProps = {
 
 const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const focusRef = useRef<HTMLLIElement>(null)
 
   return (
     <Popover
@@ -70,6 +72,7 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
       placement="right-start"
       closeOnBlur={true}
       offset={[0, -5]}
+      initialFocusRef={focusRef}
       {...popoverProps}
     >
       <PopoverTrigger>{children({ isOpen, onOpen, onClose })}</PopoverTrigger>
@@ -90,9 +93,11 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
             w="full"
             py="0.5"
           >
-            {menuItems.map((item) => (
+            {menuItems.map((item, idx) => (
               <ListItem
                 key={item.id}
+                ref={idx === 0 ? focusRef : undefined}
+                tabIndex={0}
                 display="flex"
                 alignItems="center"
                 py="1"
@@ -101,6 +106,9 @@ const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
                 cursor="default"
                 w="full"
                 _hover={{
+                  bg: '#fafafa0d',
+                }}
+                _focus={{
                   bg: '#fafafa0d',
                 }}
                 _active={{
