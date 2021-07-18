@@ -50,7 +50,7 @@ const documentsAdapter = createEntityAdapter<MediocreDocument>({
 })
 
 /**
- * Async thunk action to fetch documents list from
+ * Async thunk action that fetches documents list from
  * file system. Uses Tauri command.
  */
 export const globalAllDocumentsListFetch = createAsyncThunk(
@@ -60,6 +60,26 @@ export const globalAllDocumentsListFetch = createAsyncThunk(
     return response
   }
 )
+
+/**
+ * Async thunk action that fetches single document info(given the relative path) from
+ * file system. Uses Tauri command.
+ */
+export const globalDocumentInfoFetch = createAsyncThunk<
+  | {
+      fileRelativePath: string
+      fileName: string
+      filePath: string
+      fileDir?: string | undefined
+      fileType?: 'markdown' | undefined
+      modified?: string | undefined
+    }
+  | undefined,
+  { relativePath: string }
+>('documents/globalDocumentInfoFetch', async ({ relativePath }, {}) => {
+  const response = await fetchDocumentMetaData(relativePath)
+  return response
+})
 
 /**
  * Async thunk action to open and read document
@@ -150,6 +170,7 @@ export type DocumentsState = {
   all: EntityState<MediocreDocument>
   selectedDocument: string
   isDocumentsFetching: boolean
+  isDocumentFetching: boolean
   isDocumentOpening: boolean
   isDocumentSaving: boolean
   isDocumentAdding: boolean
@@ -159,6 +180,7 @@ const initialState: DocumentsState = {
   all: documentsAdapter.getInitialState(),
   selectedDocument: '',
   isDocumentsFetching: false,
+  isDocumentFetching: false,
   isDocumentOpening: false,
   isDocumentSaving: false,
   isDocumentAdding: false,
@@ -212,6 +234,30 @@ export const documentsSlice = createSlice({
         } else console.error('allDocuments is undefined!')
         /** reset fetching state */
         state.isDocumentsFetching = false
+      })
+      .addCase(globalDocumentInfoFetch.pending, (state, _action) => {
+        state.isDocumentFetching = true
+      })
+      .addCase(globalDocumentInfoFetch.fulfilled, (state, action) => {
+        const docMeta = action.payload
+        if (docMeta) {
+          const document: MediocreDocument = {
+            id: docMeta.filePath,
+            name: docMeta.fileName,
+            path: docMeta.filePath,
+            relativePath: docMeta.fileRelativePath,
+            dir: docMeta.fileDir || '',
+            type: docMeta.fileType || 'markdown',
+            content: '',
+            synced: false,
+            saved: true,
+            modified: docMeta.modified || '',
+          }
+          /** using upsert as the document may or may not exist */
+          documentsAdapter.upsertOne(state.all, document)
+        } else console.error(`docMeta invalid!`)
+        /** reset fetching state */
+        state.isDocumentFetching = false
       })
       .addCase(globalDocumentOpen.pending, (state, _action) => {
         state.isDocumentOpening = true
