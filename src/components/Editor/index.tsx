@@ -4,9 +4,7 @@ import MonacoEditor, { loader, useMonaco } from '@monaco-editor/react'
 import { Box } from '@chakra-ui/layout'
 import { editor, IScrollEvent } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
-import {
-  globalRawTextUpdate,
-} from '../../utils/markdownParser/markdownParserSlice'
+import { globalRawTextUpdate } from '../../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from '../CommandModal/commandModalSlice'
 import { globalDocumentSave } from '../SideBar/documentsSlice'
 import Loading from './Loading'
@@ -27,9 +25,8 @@ const Editor = ({ editorRef, onScroll }: Props) => {
     (state) => state.commandModal.isOpen
   )
   const rawText = useReduxSelector((state) => state.markdownParser.rawText)
-  const { isDocumentOpening, isDocumentSaving } = useReduxSelector(
-    (state) => state.documents
-  )
+  const { isDocumentOpening, isDocumentSaving, isDocumentFetching } =
+    useReduxSelector((state) => state.documents)
   const dispatch = useReduxDispatch()
   const { colorMode } = useColorMode()
   const monaco = useMonaco()
@@ -180,6 +177,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       position="relative"
     >
       <Box position="absolute" zIndex="toast" bottom="0.5" right="1.5">
+        {isDocumentFetching ? <Loading message="Fetching..." /> : null}
         {isDocumentOpening ? <Loading message="Opening..." /> : null}
         {isDocumentSaving ? <Loading message="Saving..." /> : null}
       </Box>

@@ -154,15 +154,13 @@ export const globalDocumentAdd = createAsyncThunk<
   const relativePath = documentFileName
   const response = await writeDocumentToRelativePath(relativePath, '')
   if (!response?.status) throw new Error(`Response status is invalid!`)
-  /** Refetch all docs info */
-  const result = await dispatch(globalAllDocumentsListFetch()).unwrap()
-  if (!result) throw new Error(`Result invalid!`)
-  const newDocument = result?.find(
-    (doc) => doc.fileRelativePath === relativePath
-  )
-  if (!newDocument) throw new Error(`newDocument invalid`)
+  /** fetch the doc info */
+  const documentInfo = await dispatch(
+    globalDocumentInfoFetch({ relativePath })
+  ).unwrap()
+  if (!documentInfo) throw new Error(`documentInfo invalid!`)
   /** Open the newDocument with id being the filePath of it */
-  dispatch(globalDocumentOpen({ documentId: newDocument.filePath }))
+  dispatch(globalDocumentOpen({ documentId: documentInfo.filePath }))
 })
 
 /** Mediocre DocumentSlice State */
