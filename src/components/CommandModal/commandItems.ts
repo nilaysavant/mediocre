@@ -16,6 +16,7 @@ import { homeDir } from '@tauri-apps/api/path'
 import { store } from '../../redux/store'
 import {
   fetchAllDocumentsMetadata,
+  fetchDocumentMetaData,
   openFileSelectionDialog,
   readDocumentFromRelativePath,
   saveFileToCustomPath,
@@ -28,6 +29,7 @@ export type MediocreCommandId =
   | 'my_custom_command'
   | 'open_file'
   | 'save_file_to_path'
+  | 'fetch_doc_info'
   | 'fetch_all_docs_info'
   | 'read_document'
   | 'write_document'
@@ -42,6 +44,10 @@ export type OnSelectData = {
   | {
       commandId: 'save_file_to_path'
       fileName: string
+    }
+  | {
+      commandId: 'fetch_doc_info'
+      relativePath: string
     }
   | {
       commandId: 'read_document'
@@ -84,6 +90,7 @@ const allMediocreCommands: AllMediocreCommands = {
     'my_custom_command',
     'open_file',
     'save_file_to_path',
+    'fetch_doc_info',
     'fetch_all_docs_info',
     'read_document',
     'write_document',
@@ -163,6 +170,21 @@ const allMediocreCommands: AllMediocreCommands = {
           throw new Error(`file path (res) is invalid or fileName is invalid!`)
       },
     },
+    fetch_doc_info: {
+      id: 'fetch_doc_info',
+      title: 'Fetch Document Info',
+      subtitle: 'Fetch document info from specified document relative path',
+      icon: GoFileDirectory,
+      onSelect: async (data) => {
+        if (data?.commandId === 'fetch_doc_info' && data.relativePath) {
+          const res = await fetchDocumentMetaData(data.relativePath)
+          console.log(
+            '🚀 ~ file: commandItems.ts ~ line 180 ~ onSelect: ~ res',
+            res
+          )
+        } else throw new Error('Relative path is invalid')
+      },
+    },
     fetch_all_docs_info: {
       id: 'fetch_all_docs_info',
       title: 'Fetch All Documents Info',
@@ -198,8 +220,14 @@ const allMediocreCommands: AllMediocreCommands = {
       icon: GoFileDirectory,
       onSelect: async (data) => {
         if (data?.commandId === 'write_document' && data.relativePath) {
-          const res = await writeDocumentToRelativePath(data.relativePath, '# Hello World!')
-          console.log("🚀 ~ file: commandItems.ts ~ line 201 ~ onSelect: ~ res", res)
+          const res = await writeDocumentToRelativePath(
+            data.relativePath,
+            '# Hello World!'
+          )
+          console.log(
+            '🚀 ~ file: commandItems.ts ~ line 201 ~ onSelect: ~ res',
+            res
+          )
         } else throw new Error('Relative path is invalid')
       },
     },

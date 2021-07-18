@@ -60,6 +60,36 @@ export const saveFileToCustomPath = async (
 }
 
 /**
+ * Fetch document meta data from the specified relative file path
+ */
+export const fetchDocumentMetaData = async (relativePath: string) => {
+  if (isTauri()) {
+    const invokeRes: {
+      fileMetaInfo: {
+        fileName: string
+        filePath: string
+        fileDir?: string
+        fileType?: 'markdown'
+        modified?: IsoDatetime
+      }
+    } = await tauri.invoke('fetch_doc_info', { relativePath })
+    const homeDirPath = await homeDir()
+    if (!homeDirPath) throw new Error('Path to home dir invalid!')
+    const appRootDirPath = path.join(homeDirPath, appDirName)
+    if (!invokeRes.fileMetaInfo)
+      throw new Error(`invokeRes.fileMetaInfo invalid!`)
+    const fileMetaInfo = {
+      ...invokeRes.fileMetaInfo,
+      fileRelativePath: path.relative(
+        appRootDirPath,
+        invokeRes.fileMetaInfo.filePath
+      ),
+    }
+    return fileMetaInfo
+  }
+}
+
+/**
  * fetch All Documents Meta data fom FS
  */
 export const fetchAllDocumentsMetadata = async () => {

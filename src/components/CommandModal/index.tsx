@@ -102,6 +102,10 @@ const CommandModal = () => {
             await command.onSelect({ commandId, fileName: inputText })
             break
           }
+          case 'fetch_doc_info': {
+            await command.onSelect({ commandId, relativePath: inputText })
+            break
+          }
           case 'fetch_all_docs_info': {
             await command.onSelect()
             break
