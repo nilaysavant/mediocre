@@ -120,20 +120,6 @@ const SideBar = ({ ...rest }: SideBarProps) => {
             }}
             inputRef={addInputRef}
             onAdd={(fileName) => {
-              // dispatch(
-              //   documentAdd({
-              //     id: getUniqueIdV4(),
-              //     name: fileName,
-              //     type: 'markdown',
-              //     content: '',
-              //     dir: '',
-              //     path: '',
-              //     relativePath: fileName,
-              //     modified: new Date().toISOString(),
-              //     synced: false,
-              //     saved: true,
-              //   })
-              // )
               dispatch(globalDocumentAdd({ documentFileName: fileName }))
               setAddItemInputActive(false)
             }}
