@@ -9,6 +9,7 @@ import {
 } from '@reduxjs/toolkit'
 import {
   fetchAllDocumentsMetadata,
+  fetchDocumentMetaData,
   readDocumentFromRelativePath,
   writeDocumentToRelativePath,
 } from '../../functions/fileSystem'
@@ -129,14 +130,15 @@ export const globalDocumentAdd = createAsyncThunk<
   { documentFileName: string }
 >('documents/globalDocumentAdd', async (arg, { getState, dispatch }) => {
   const { documentFileName } = arg // get documentFileName
-  /** write to fs, using fileName as relative oath atm as we're creating docs at the top level */
-  const response = await writeDocumentToRelativePath(documentFileName, '')
+  /** write to fs, using fileName as relative path(temporary) atm as we're creating docs at the top level */
+  const relativePath = documentFileName
+  const response = await writeDocumentToRelativePath(relativePath, '')
   if (!response?.status) throw new Error(`Response status is invalid!`)
   /** Refetch all docs info */
   const result = await dispatch(globalDocumentsListFetch()).unwrap()
   if (!result) throw new Error(`Result invalid!`)
   const newDocument = result?.find(
-    (doc) => doc.fileRelativePath === documentFileName
+    (doc) => doc.fileRelativePath === relativePath
   )
   if (!newDocument) throw new Error(`newDocument invalid`)
   /** Open the newDocument with id being the filePath of it */
