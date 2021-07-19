@@ -7,6 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  ButtonGroup,
   List,
   ListIcon,
   ListItem,
@@ -194,32 +195,54 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
             isOpen={alertIsOpen}
             leastDestructiveRef={alertCancelBtnRef}
             onClose={alertOnClose}
+            size="sm"
           >
-            <AlertDialogOverlay>
-              <AlertDialogContent>
-                <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                  Delete Document
-                </AlertDialogHeader>
-                <AlertDialogBody>
-                  Are you sure? You can't undo this action afterwards.
-                </AlertDialogBody>
-                <AlertDialogFooter>
-                  <Button ref={alertCancelBtnRef} onClick={alertOnClose}>
+            {/* <AlertDialogOverlay> */}
+            <AlertDialogContent borderRadius="0" marginTop="15%" p="2">
+              <AlertDialogHeader
+                px="4"
+                py="1"
+                fontSize="md"
+                fontWeight="normal"
+              >
+                Delete Document
+              </AlertDialogHeader>
+              <AlertDialogBody px="4" py="1" fontSize="sm">
+                Are you sure? You can't undo this action afterwards.
+              </AlertDialogBody>
+              <AlertDialogFooter px="4" py="1">
+                <ButtonGroup>
+                  <Button
+                    size="sm"
+                    borderRadius="0"
+                    fontWeight="normal"
+                    borderWidth="thin"
+                    borderColor="transparent"
+                    _focus={{
+                      boxShadow: 'none',
+                      borderColor: 'border.focus.500',
+                    }}
+                    ref={alertCancelBtnRef}
+                    onClick={alertOnClose}
+                  >
                     Cancel
                   </Button>
                   <Button
+                    size="sm"
+                    borderRadius="0"
                     colorScheme="red"
+                    fontWeight="normal"
                     onClick={() => {
-                      dispatch(globalDocumentDelete({ documentId: itemId }))
+                      // dispatch(globalDocumentDelete({ documentId: itemId }))
                       alertOnClose()
                     }}
-                    ml={3}
                   >
                     Delete
                   </Button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialogOverlay>
+                </ButtonGroup>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+            {/* </AlertDialogOverlay> */}
           </AlertDialog>
         </PopoverBody>
       </PopoverContent>
