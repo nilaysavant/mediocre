@@ -26,6 +26,9 @@ export const themeOverrides: ThemeOverride = {
       dark: {
         500: 'rgb(69, 76, 82)',
       },
+      focus: {
+        500: 'rgba(81, 163, 240, 0.7)',
+      },
     },
     /** for icons */
     icon: {

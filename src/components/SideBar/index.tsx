@@ -143,7 +143,11 @@ const SideBar = ({ ...rest }: SideBarProps) => {
           })
           .map((doc, idx) => (
             <ItemMenu key={doc.id}>
-              {({ isOpen, onOpen, onClose }) => (
+              {({
+                isOpen: menuIsOpen,
+                onOpen: menuOnOpen,
+                onClose: menuOnClose,
+              }) => (
                 <ListItem
                   // key={doc.id}
                   display="flex"
@@ -155,6 +159,11 @@ const SideBar = ({ ...rest }: SideBarProps) => {
                   userSelect="none"
                   cursor="pointer"
                   bg={doc.id === selectedDocument ? '#adadad21' : undefined}
+                  borderWidth="1px"
+                  borderStyle="solid"
+                  /** This adds border without changing the overall size,
+                   * thus preventing displacement when border is shown */
+                  borderColor={menuIsOpen ? 'border.focus.500' : 'transparent'}
                   _hover={{
                     bg: '#fafafa0d',
                   }}
@@ -179,7 +188,7 @@ const SideBar = ({ ...rest }: SideBarProps) => {
                   }
                   onContextMenu={(e) => {
                     e.preventDefault()
-                    onOpen()
+                    menuOnOpen()
                   }}
                 >
                   <ListIcon
