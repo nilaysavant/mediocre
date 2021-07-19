@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
   List,
   ListIcon,
   ListItem,
@@ -15,6 +22,7 @@ import {
 import { CopyIcon, DeleteIcon } from '@chakra-ui/icons'
 import { useReduxDispatch } from '../../redux/hooks'
 import { globalDocumentDelete } from './documentsSlice'
+import { useRef } from 'react'
 
 export type ItemMenuProps = {
   /** ID of the Item, currently the `documentId` as used in context of the sidebar */
@@ -30,8 +38,18 @@ export type ItemMenuProps = {
 
 const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
   const dispatch = useReduxDispatch()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: menuIsOpen,
+    onOpen: menuOnOpen,
+    onClose: menuOnClose,
+  } = useDisclosure()
+  const {
+    isOpen: alertIsOpen,
+    onOpen: alertOnOpen,
+    onClose: alertOnClose,
+  } = useDisclosure()
   const [focusedIdx, setFocusedIdx] = useState(0)
+  const alertCancelBtnRef = useRef<HTMLButtonElement>(null)
   /** menu item definitions */
   const menuItems = useMemo<
     {
@@ -69,17 +87,17 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
         icon: DeleteIcon,
         label: 'Delete',
         command: 'Del',
-        onClick: () => dispatch(globalDocumentDelete({ documentId: itemId })),
+        onClick: () => alertOnOpen(),
       },
     ],
-    [dispatch, itemId]
+    [alertOnOpen]
   )
   const itemRefs = menuItems.map((_item) => React.createRef<HTMLLIElement>())
 
   useEffect(() => {
     /** reset focused idx to 0 on Open */
-    if (isOpen) setFocusedIdx(0)
-  }, [isOpen])
+    if (menuIsOpen) setFocusedIdx(0)
+  }, [menuIsOpen])
 
   useEffect(() => {
     const ref = itemRefs[focusedIdx].current
@@ -89,15 +107,21 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
   return (
     <Popover
       returnFocusOnClose={false}
-      isOpen={isOpen}
-      onClose={onClose}
+      isOpen={menuIsOpen}
+      onClose={menuOnClose}
       placement="right-start"
       closeOnBlur={true}
       offset={[0, -5]}
       initialFocusRef={itemRefs[focusedIdx]}
       {...popoverProps}
     >
-      <PopoverTrigger>{children({ isOpen, onOpen, onClose })}</PopoverTrigger>
+      <PopoverTrigger>
+        {children({
+          isOpen: menuIsOpen,
+          onOpen: menuOnOpen,
+          onClose: menuOnClose,
+        })}
+      </PopoverTrigger>
       <PopoverContent
         w="full"
         borderRadius="none"
@@ -145,7 +169,7 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
                 }}
                 onClick={() => {
                   if (item.onClick) item.onClick()
-                  onClose()
+                  menuOnClose()
                 }}
                 onMouseOver={() => {
                   const ref = itemRefs[idx].current
@@ -166,6 +190,37 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
               </ListItem>
             ))}
           </List>
+          <AlertDialog
+            isOpen={alertIsOpen}
+            leastDestructiveRef={alertCancelBtnRef}
+            onClose={alertOnClose}
+          >
+            <AlertDialogOverlay>
+              <AlertDialogContent>
+                <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                  Delete Document
+                </AlertDialogHeader>
+                <AlertDialogBody>
+                  Are you sure? You can't undo this action afterwards.
+                </AlertDialogBody>
+                <AlertDialogFooter>
+                  <Button ref={alertCancelBtnRef} onClick={alertOnClose}>
+                    Cancel
+                  </Button>
+                  <Button
+                    colorScheme="red"
+                    onClick={() => {
+                      dispatch(globalDocumentDelete({ documentId: itemId }))
+                      alertOnClose()
+                    }}
+                    ml={3}
+                  >
+                    Delete
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialogOverlay>
+          </AlertDialog>
         </PopoverBody>
       </PopoverContent>
     </Popover>
