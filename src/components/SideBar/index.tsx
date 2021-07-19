@@ -142,7 +142,7 @@ const SideBar = ({ ...rest }: SideBarProps) => {
             return nextMod - prevMod
           })
           .map((doc, idx) => (
-            <ItemMenu key={doc.id}>
+            <ItemMenu key={doc.id} itemId={doc.id}>
               {({
                 isOpen: menuIsOpen,
                 onOpen: menuOnOpen,

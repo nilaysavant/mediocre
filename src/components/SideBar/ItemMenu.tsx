@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
   List,
   ListIcon,
@@ -13,45 +13,12 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { CopyIcon, DeleteIcon } from '@chakra-ui/icons'
-
-const menuItems: {
-  id: string
-  icon: any
-  label: string
-  command?: string
-  onClick?: () => void
-}[] = [
-  {
-    id: 'rename',
-    icon: CopyIcon,
-    label: 'Rename',
-    command: 'F2',
-    onClick: () => console.log('rename clicked'),
-  },
-  {
-    id: 'copy',
-    icon: CopyIcon,
-    label: 'Copy',
-    command: 'Ctrl+C',
-    onClick: () => console.log('copy clicked'),
-  },
-  {
-    id: 'duplicate',
-    icon: CopyIcon,
-    label: 'Duplicate',
-    command: 'Ctrl+D',
-    onClick: () => console.log('duplicate clicked'),
-  },
-  {
-    id: 'delete',
-    icon: DeleteIcon,
-    label: 'Delete',
-    command: 'Del',
-    onClick: () => console.log('delete clicked'),
-  },
-]
+import { useReduxDispatch } from '../../redux/hooks'
+import { globalDocumentDelete } from './documentsSlice'
 
 export type ItemMenuProps = {
+  /** ID of the Item, currently the `documentId` as used in context of the sidebar */
+  itemId: string
   /** uses render props ref: https://reactjs.org/docs/render-props.html */
   children: (renderProps: {
     isOpen: boolean
@@ -61,9 +28,52 @@ export type ItemMenuProps = {
   popoverProps?: PopoverProps
 }
 
-const ItemMenu = ({ children, popoverProps }: ItemMenuProps) => {
+const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
+  const dispatch = useReduxDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [focusedIdx, setFocusedIdx] = useState(0)
+  /** menu item definitions */
+  const menuItems = useMemo<
+    {
+      id: string
+      icon: any
+      label: string
+      command?: string
+      onClick?: () => void
+    }[]
+  >(
+    () => [
+      {
+        id: 'rename',
+        icon: CopyIcon,
+        label: 'Rename',
+        command: 'F2',
+        onClick: () => console.log('rename clicked'),
+      },
+      {
+        id: 'copy',
+        icon: CopyIcon,
+        label: 'Copy',
+        command: 'Ctrl+C',
+        onClick: () => console.log('copy clicked'),
+      },
+      {
+        id: 'duplicate',
+        icon: CopyIcon,
+        label: 'Duplicate',
+        command: 'Ctrl+D',
+        onClick: () => console.log('duplicate clicked'),
+      },
+      {
+        id: 'delete',
+        icon: DeleteIcon,
+        label: 'Delete',
+        command: 'Del',
+        onClick: () => dispatch(globalDocumentDelete({ documentId: itemId })),
+      },
+    ],
+    [dispatch, itemId]
+  )
   const itemRefs = menuItems.map((_item) => React.createRef<HTMLLIElement>())
 
   useEffect(() => {

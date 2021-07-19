@@ -11,6 +11,7 @@ import {
   fetchAllDocumentsMetadata,
   fetchDocumentMetaData,
   readDocumentFromRelativePath,
+  removeDocumentFromRelativePath,
   writeDocumentToRelativePath,
 } from '../../functions/fileSystem'
 import { RootState } from '../../redux/store'
@@ -162,7 +163,29 @@ export const globalDocumentAdd = createAsyncThunk<
   ).unwrap()
   if (!documentInfo) throw new Error(`documentInfo invalid!`)
   /** Open the newDocument with id being the filePath of it */
-  await dispatch(globalDocumentOpen({ documentId: documentInfo.filePath })).unwrap()
+  await dispatch(
+    globalDocumentOpen({ documentId: documentInfo.filePath })
+  ).unwrap()
+})
+
+/**
+ * Async thunk action to delete/remove a document
+ * from file system. Uses Tauri command.
+ */
+export const globalDocumentDelete = createAsyncThunk<
+  void,
+  { documentId: string }
+>('documents/globalDocumentDelete', async (arg, { getState, dispatch }) => {
+  const { documentId } = arg
+  const document = (getState() as RootState).documents.all.entities[documentId]
+  if (!document)
+    throw new Error(`document invalid! document with documentId not available`)
+  const { relativePath } = document
+  if (!relativePath) throw new Error(`relativePath invalid!`)
+  const result = await removeDocumentFromRelativePath(relativePath)
+  if (!result?.status) throw new Error(`delete failed due to some reason`)
+  /** Reset editor text */
+  dispatch(updateRawText(''))
 })
 
 /** Mediocre DocumentSlice State */
@@ -174,6 +197,7 @@ export type DocumentsState = {
   isDocumentOpening: boolean
   isDocumentSaving: boolean
   isDocumentAdding: boolean
+  isDocumentDeleting: boolean
 }
 
 const initialState: DocumentsState = {
@@ -184,6 +208,7 @@ const initialState: DocumentsState = {
   isDocumentOpening: false,
   isDocumentSaving: false,
   isDocumentAdding: false,
+  isDocumentDeleting: false,
 }
 
 export const documentsSlice = createSlice({
@@ -293,6 +318,13 @@ export const documentsSlice = createSlice({
       })
       .addCase(globalDocumentAdd.fulfilled, (state, action) => {
         state.isDocumentAdding = false
+      })
+      .addCase(globalDocumentDelete.pending, (state, _action) => {
+        state.isDocumentDeleting = true
+      })
+      .addCase(globalDocumentDelete.fulfilled, (state, action) => {
+        documentsAdapter.removeOne(state.all, action.meta.arg.documentId)
+        state.isDocumentDeleting = false
       })
   },
 })
