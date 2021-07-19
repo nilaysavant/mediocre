@@ -202,7 +202,6 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
             <AlertDialogContent
               borderRadius="0"
               marginTop="15%"
-              px="0.5"
               py="2.5"
             >
               <AlertDialogHeader py="1.5" fontSize="md" fontWeight="normal">
@@ -212,7 +211,7 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
                 Are you sure? You can't undo this action afterwards.
               </AlertDialogBody>
               <AlertDialogFooter py="2">
-                <ButtonGroup>
+                <ButtonGroup spacing="4">
                   <AlertButton
                     buttonRef={alertCancelBtnRef}
                     onClick={alertOnClose}
