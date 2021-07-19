@@ -324,6 +324,7 @@ export const documentsSlice = createSlice({
       })
       .addCase(globalDocumentDelete.fulfilled, (state, action) => {
         documentsAdapter.removeOne(state.all, action.meta.arg.documentId)
+        state.selectedDocument = '' // clear selected doc
         state.isDocumentDeleting = false
       })
   },
