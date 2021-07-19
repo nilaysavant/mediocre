@@ -24,6 +24,7 @@ import { CopyIcon, DeleteIcon } from '@chakra-ui/icons'
 import { useReduxDispatch } from '../../redux/hooks'
 import { globalDocumentDelete } from './documentsSlice'
 import { useRef } from 'react'
+import AlertButton from './AlertButton'
 
 export type ItemMenuProps = {
   /** ID of the Item, currently the `documentId` as used in context of the sidebar */
@@ -198,47 +199,34 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
             size="sm"
           >
             {/* <AlertDialogOverlay> */}
-            <AlertDialogContent borderRadius="0" marginTop="15%" p="2">
+            <AlertDialogContent borderRadius="0" marginTop="15%" px="1" py="2.5">
               <AlertDialogHeader
-                px="4"
                 py="1"
                 fontSize="md"
                 fontWeight="normal"
               >
                 Delete Document
               </AlertDialogHeader>
-              <AlertDialogBody px="4" py="1" fontSize="sm">
+              <AlertDialogBody py="1" fontSize="sm">
                 Are you sure? You can't undo this action afterwards.
               </AlertDialogBody>
-              <AlertDialogFooter px="4" py="1">
+              <AlertDialogFooter py="1">
                 <ButtonGroup>
-                  <Button
-                    size="sm"
-                    borderRadius="0"
-                    fontWeight="normal"
-                    borderWidth="thin"
-                    borderColor="transparent"
-                    _focus={{
-                      boxShadow: 'none',
-                      borderColor: 'border.focus.500',
-                    }}
-                    ref={alertCancelBtnRef}
+                  <AlertButton
+                    buttonRef={alertCancelBtnRef}
                     onClick={alertOnClose}
                   >
                     Cancel
-                  </Button>
-                  <Button
-                    size="sm"
-                    borderRadius="0"
+                  </AlertButton>
+                  <AlertButton
                     colorScheme="red"
-                    fontWeight="normal"
                     onClick={() => {
                       // dispatch(globalDocumentDelete({ documentId: itemId }))
                       alertOnClose()
                     }}
                   >
                     Delete
-                  </Button>
+                  </AlertButton>
                 </ButtonGroup>
               </AlertDialogFooter>
             </AlertDialogContent>
