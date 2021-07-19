@@ -199,18 +199,19 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
             size="sm"
           >
             {/* <AlertDialogOverlay> */}
-            <AlertDialogContent borderRadius="0" marginTop="15%" px="1" py="2.5">
-              <AlertDialogHeader
-                py="1"
-                fontSize="md"
-                fontWeight="normal"
-              >
+            <AlertDialogContent
+              borderRadius="0"
+              marginTop="15%"
+              px="0.5"
+              py="2.5"
+            >
+              <AlertDialogHeader py="1.5" fontSize="md" fontWeight="normal">
                 Delete Document
               </AlertDialogHeader>
               <AlertDialogBody py="1" fontSize="sm">
                 Are you sure? You can't undo this action afterwards.
               </AlertDialogBody>
-              <AlertDialogFooter py="1">
+              <AlertDialogFooter py="2">
                 <ButtonGroup>
                   <AlertButton
                     buttonRef={alertCancelBtnRef}
@@ -219,7 +220,13 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
                     Cancel
                   </AlertButton>
                   <AlertButton
-                    colorScheme="red"
+                    bg="rgb(161, 55, 55)"
+                    _hover={{
+                      bg: 'rgb(161, 72, 72)',
+                    }}
+                    _active={{
+                      bg: 'rgb(161, 91, 91)',
+                    }}
                     onClick={() => {
                       // dispatch(globalDocumentDelete({ documentId: itemId }))
                       alertOnClose()
