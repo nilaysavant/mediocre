@@ -141,4 +141,16 @@ export const writeDocumentToRelativePath = async (
   }
 }
 
+/**
+ * Remove document on a specified relative path
+ */
+export const removeDocumentFromRelativePath = async (relativePath: string) => {
+  if (isTauri()) {
+    const invokeRes: {
+      status: boolean
+    } = await tauri.invoke('remove_document', { relativePath })
+    return invokeRes
+  }
+}
+
 export default null

@@ -19,6 +19,7 @@ import {
   fetchDocumentMetaData,
   openFileSelectionDialog,
   readDocumentFromRelativePath,
+  removeDocumentFromRelativePath,
   saveFileToCustomPath,
   writeDocumentToRelativePath,
 } from '../../functions/fileSystem'
@@ -33,6 +34,7 @@ export type MediocreCommandId =
   | 'fetch_all_docs_info'
   | 'read_document'
   | 'write_document'
+  | 'remove_document'
 
 export type OnSelectData = {
   commandId: MediocreCommandId
@@ -55,6 +57,10 @@ export type OnSelectData = {
     }
   | {
       commandId: 'write_document'
+      relativePath: string
+    }
+  | {
+      commandId: 'remove_document'
       relativePath: string
     }
 )
@@ -94,6 +100,7 @@ const allMediocreCommands: AllMediocreCommands = {
     'fetch_all_docs_info',
     'read_document',
     'write_document',
+    'remove_document',
   ],
   byId: {
     get_env: {
@@ -226,6 +233,21 @@ const allMediocreCommands: AllMediocreCommands = {
           )
           console.log(
             '🚀 ~ file: commandItems.ts ~ line 201 ~ onSelect: ~ res',
+            res
+          )
+        } else throw new Error('Relative path is invalid')
+      },
+    },
+    remove_document: {
+      id: 'remove_document',
+      title: 'Remove document',
+      subtitle: 'Remove document from specified relative path',
+      icon: GoFileDirectory,
+      onSelect: async (data) => {
+        if (data?.commandId === 'remove_document' && data.relativePath) {
+          const res = await removeDocumentFromRelativePath(data.relativePath)
+          console.log(
+            '🚀 ~ file: commandItems.ts ~ line 180 ~ onSelect: ~ res',
             res
           )
         } else throw new Error('Relative path is invalid')

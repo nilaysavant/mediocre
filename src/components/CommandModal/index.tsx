@@ -118,6 +118,10 @@ const CommandModal = () => {
             await command.onSelect({ commandId, relativePath: inputText })
             break
           }
+          case 'remove_document': {
+            await command.onSelect({ commandId, relativePath: inputText })
+            break
+          }
           default:
             break
         }
