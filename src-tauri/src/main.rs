@@ -36,7 +36,8 @@ fn main() {
       cmd::fetch_doc_info,
       cmd::fetch_all_docs_info,
       cmd::read_document,
-      cmd::write_document
+      cmd::write_document,
+      cmd::remove_document
     ])
     .run(tauri::generate_context!())
     .expect("failed to run app");
