@@ -25,8 +25,12 @@ const Editor = ({ editorRef, onScroll }: Props) => {
     (state) => state.commandModal.isOpen
   )
   const rawText = useReduxSelector((state) => state.markdownParser.rawText)
-  const { isDocumentOpening, isDocumentSaving, isDocumentFetching } =
-    useReduxSelector((state) => state.documents)
+  const {
+    isDocumentOpening,
+    isDocumentSaving,
+    isDocumentFetching,
+    isDocumentDeleting,
+  } = useReduxSelector((state) => state.documents)
   const dispatch = useReduxDispatch()
   const { colorMode } = useColorMode()
   const monaco = useMonaco()
@@ -180,6 +184,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
         {isDocumentFetching ? <Loading message="Fetching..." /> : null}
         {isDocumentOpening ? <Loading message="Opening..." /> : null}
         {isDocumentSaving ? <Loading message="Saving..." /> : null}
+        {isDocumentDeleting ? <Loading message="Deleting..." /> : null}
       </Box>
       <MonacoEditor
         defaultLanguage="markdown"
