@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import 'github-markdown-css/github-markdown.css'
-import Prism from 'prismjs'
-import 'prismjs/themes/prism-tomorrow.css'
+// import Prism from 'prismjs'
+// import 'prismjs/themes/prism-tomorrow.css'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github-dark-dimmed.css'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Box } from '@chakra-ui/layout'
 import clsx from 'clsx'
@@ -28,12 +30,17 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
     /**
      * This is to trigger codeblock highlight function
      * every time the markup is updated, this is what makes
-     * PrismJs do its magic after each md render. It is supposed
-     * to only apply highlighting to the children of the `renderBoxWrapperRef`
+     * HighlightJs do its magic after each md render. It is supposed
+     * to only apply highlighting to the children of the cssSelected classes configured`
      */
-    if (renderBoxWrapperRef?.current)
-      Prism.highlightAllUnder(renderBoxWrapperRef.current as ParentNode)
-  }, [mdText, renderBoxWrapperRef])
+    hljs.configure({
+      cssSelector:
+        mdTheme === 'github2'
+          ? '.markdown-body pre code'
+          : `.markdown pre code`,
+    })
+    hljs.highlightAll()
+  }, [mdText, mdTheme])
 
   useEffect(() => {
     const handleTextChange = async () => {

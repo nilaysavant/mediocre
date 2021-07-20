@@ -47,3 +47,14 @@
 .markdown > *:first-child {
   margin-top: 0 !important;
 }
+
+.markdown pre {
+  padding: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0) !important;
+}
+
+.markdown code {
+  margin: 0 !important;
+  padding: 0.5em !important;
+  font-weight: normal !important;
+}
