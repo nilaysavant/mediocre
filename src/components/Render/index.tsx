@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react'
 import 'github-markdown-css/github-markdown.css'
-// import Prism from 'prismjs'
-// import 'prismjs/themes/prism-tomorrow.css'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github-dark-dimmed.css'
 import { useColorMode } from '@chakra-ui/color-mode'
