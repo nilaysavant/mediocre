@@ -164,7 +164,7 @@ const Editor = ({ editorRef, onScroll }: Props) => {
 
   return (
     <Box
-      flex={1.1}
+      flex={1}
       height="full"
       borderRadius={0}
       fontSize="md"

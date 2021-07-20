@@ -31,6 +31,7 @@ pub fn parse_md_to_mu(md_string: String) -> MdResponse {
   comrak_options.extension.tasklist = true; // Detect Checklist
   comrak_options.extension.front_matter_delimiter = Some("---".to_owned()); // Ignore front-mater starting with '---'
   comrak_options.render.unsafe_ = true;
+  comrak_options.render.hardbreaks = true;
   let unsafe_mu_string = markdown_to_html(&md_string, &comrak_options);
   let safe_mu_string = ammonia::Builder::new()
     .add_tag_attributes("code", &["class"]) // Allow class on <code> tag (needed for code syntax highlighting)

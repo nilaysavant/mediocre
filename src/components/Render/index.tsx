@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import 'github-markdown-css/github-markdown.css'
-import Prism from 'prismjs';
-import "prismjs/themes/prism-tomorrow.css"
+import Prism from 'prismjs'
+import 'prismjs/themes/prism-tomorrow.css'
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Box } from '@chakra-ui/layout'
 import clsx from 'clsx'
@@ -17,6 +17,7 @@ export interface Props {
 }
 
 const Render = ({ renderBoxRef, onScroll }: Props) => {
+  const renderBoxWrapperRef = useRef<HTMLDivElement>(null)
   const { colorMode } = useColorMode()
   const mdTheme = useReduxSelector((state) => state.markdownTheme.theme)
   const { mdText, rawText } = useReduxSelector((state) => state.markdownParser)
@@ -27,10 +28,12 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
     /**
      * This is to trigger codeblock highlight function
      * every time the markup is updated, this is what makes
-     * PrismJs do its magic after each md render
+     * PrismJs do its magic after each md render. It is supposed
+     * to only apply highlighting to the children of the `renderBoxWrapperRef`
      */
-    Prism.highlightAll()
-  }, [mdText])
+    if (renderBoxWrapperRef?.current)
+      Prism.highlightAllUnder(renderBoxWrapperRef.current as ParentNode)
+  }, [mdText, renderBoxWrapperRef])
 
   useEffect(() => {
     const handleTextChange = async () => {
@@ -45,28 +48,30 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
   }, [debouncedRawText, dispatch])
 
   return (
-    <Box
-      className={clsx(
-        mdTheme === 'github2' ? 'markdown-body' : `markdown ${mdTheme}`
-      )}
-      ref={renderBoxRef}
-      flex={1}
-      fontFamily={`"Droid Sans Mono", monospace, monospace, "Droid Sans Fallback"`}
-      fontWeight="normal"
-      marginLeft={0}
-      padding="10px"
-      textAlign="left"
-      height="full"
-      overflowY="auto"
-      fontSize="13px"
-      background={colorMode === 'dark' ? 'bg.editor.dark' : 'white'}
-      color={colorMode === 'dark' ? '#d4d4d4' : '#1f1f1f'}
-      outline="none"
-      onScroll={onScroll}
-      dangerouslySetInnerHTML={{
-        __html: mdText || '<i>Type something...</i>',
-      }}
-    ></Box>
+    <Box ref={renderBoxWrapperRef} flex={1} minWidth="0">
+      <Box
+        className={clsx(
+          mdTheme === 'github2' ? 'markdown-body' : `markdown ${mdTheme}`
+        )}
+        ref={renderBoxRef}
+        // flex={1}
+        fontFamily={`"Droid Sans Mono", monospace, monospace, "Droid Sans Fallback"`}
+        fontWeight="normal"
+        marginLeft={0}
+        padding="10px"
+        textAlign="left"
+        height="full"
+        overflowY="auto"
+        fontSize="13px"
+        background={colorMode === 'dark' ? 'bg.editor.dark' : 'white'}
+        color={colorMode === 'dark' ? '#d4d4d4' : '#1f1f1f'}
+        outline="none"
+        onScroll={onScroll}
+        dangerouslySetInnerHTML={{
+          __html: mdText || '<i>Type something...</i>',
+        }}
+      ></Box>
+    </Box>
   )
 }
 
