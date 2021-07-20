@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import 'github-markdown-css/github-markdown.css'
+import Prism from 'prismjs';
+import "prismjs/themes/prism-tomorrow.css"
 import { useColorMode } from '@chakra-ui/color-mode'
 import { Box } from '@chakra-ui/layout'
 import clsx from 'clsx'
@@ -27,8 +29,7 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
      * every time the markup is updated, this is what makes
      * PrismJs do its magic after each md render
      */
-    // @ts-expect-error PrismJS
-    window.Prism.highlightAll()
+    Prism.highlightAll()
   }, [mdText])
 
   useEffect(() => {
