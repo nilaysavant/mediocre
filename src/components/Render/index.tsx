@@ -71,6 +71,11 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
         background={colorMode === 'dark' ? 'bg.editor.dark' : 'white'}
         color={colorMode === 'dark' ? '#d4d4d4' : '#1f1f1f'}
         outline="none"
+        css={{
+          '*::selection': {
+            background: 'rgba(87, 169, 255, 0.4)',
+          },
+        }}
         onScroll={onScroll}
         dangerouslySetInnerHTML={{
           __html: mdText || '<i>Type something...</i>',
