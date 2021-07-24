@@ -68,6 +68,7 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
         height="full"
         overflowY="auto"
         fontSize="13px"
+        lineHeight="20px"
         background={colorMode === 'dark' ? 'bg.editor.dark' : 'white'}
         color={colorMode === 'dark' ? '#d4d4d4' : '#1f1f1f'}
         outline="none"
