@@ -4,8 +4,9 @@ import { useColorMode } from '@chakra-ui/color-mode'
 import { Box, BoxProps } from '@chakra-ui/layout'
 import { AiOutlineClose } from 'react-icons/ai'
 import { FiMaximize, FiMinimize2 } from 'react-icons/fi'
-import { ButtonGroup, Spacer, Text } from '@chakra-ui/react'
+import { ButtonGroup, Icon, Spacer, Text } from '@chakra-ui/react'
 import { appWindow } from '@tauri-apps/api/window'
+import AppLogoIcon from '../icons/AppLogoIcon'
 
 export type TitleBarProps = BoxProps
 
@@ -24,18 +25,25 @@ const TitleBar = ({ ...rest }: TitleBarProps) => {
       position="relative"
       {...rest}
     >
-      <Text
+      <Box
         data-tauri-drag-region
         position="absolute"
         left="50%"
         transform="translateX(-50%)"
-        userSelect="none"
-        cursor="default"
-        fontSize="sm"
+        display="flex"
+        alignItems="center"
         px="5"
       >
-        Mediocre Editor
-      </Text>
+        <Icon isTauriDragRegion as={AppLogoIcon} fontSize="1.9rem" mr="1" />
+        <Text
+          data-tauri-drag-region
+          userSelect="none"
+          cursor="default"
+          fontSize="sm"
+        >
+          Mediocre Editor
+        </Text>
+      </Box>
       <Spacer data-tauri-drag-region />
       <ButtonGroup data-tauri-drag-region p="1.5" spacing="1.5">
         <IconButton
