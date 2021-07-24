@@ -78,7 +78,9 @@ const Render = ({ renderBoxRef, onScroll }: Props) => {
         }}
         onScroll={onScroll}
         dangerouslySetInnerHTML={{
-          __html: mdText || '<i>Type something...</i>',
+          __html:
+            (mdText || '<i>Type something...</i>') +
+            `<div style="height: 100%"></div>`, // adds the extra height `monaco` editor has to match it
         }}
       ></Box>
     </Box>
