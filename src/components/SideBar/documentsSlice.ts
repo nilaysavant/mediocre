@@ -7,6 +7,7 @@ import {
   PayloadAction,
   Update,
 } from '@reduxjs/toolkit'
+import { History } from 'history'
 import {
   fetchAllDocumentsMetadata,
   fetchDocumentMetaData,
@@ -88,9 +89,9 @@ export const globalDocumentInfoFetch = createAsyncThunk<
  */
 export const globalDocumentOpen = createAsyncThunk<
   string | undefined,
-  { documentId: string }
+  { documentId: string; history: History }
 >('documents/globalDocumentOpen', async (arg, { getState, dispatch }) => {
-  const { documentId } = arg
+  const { documentId, history } = arg
   const document = (getState() as RootState).documents.all.entities[documentId]
   if (!document)
     throw new Error(`document invalid! document with documentId not available`)
@@ -103,6 +104,7 @@ export const globalDocumentOpen = createAsyncThunk<
   else updatedContent = await readDocumentFromRelativePath(relativePath)
   /** Update editor text */
   dispatch(updateRawText(updatedContent || ''))
+  history.push('/app/md-editor')
   return updatedContent
 })
 
@@ -150,9 +152,9 @@ export const globalDocumentSave = createAsyncThunk<string, void>(
  */
 export const globalDocumentAdd = createAsyncThunk<
   void,
-  { documentFileName: string }
+  { documentFileName: string; history: History }
 >('documents/globalDocumentAdd', async (arg, { getState, dispatch }) => {
-  const { documentFileName } = arg // get documentFileName
+  const { documentFileName, history } = arg // get documentFileName
   /** write to fs, using fileName as relative path(temporary) atm as we're creating docs at the top level */
   const relativePath = documentFileName
   const response = await writeDocumentToRelativePath(relativePath, '')
@@ -164,7 +166,7 @@ export const globalDocumentAdd = createAsyncThunk<
   if (!documentInfo) throw new Error(`documentInfo invalid!`)
   /** Open the newDocument with id being the filePath of it */
   await dispatch(
-    globalDocumentOpen({ documentId: documentInfo.filePath })
+    globalDocumentOpen({ documentId: documentInfo.filePath, history })
   ).unwrap()
 })
 
@@ -174,9 +176,9 @@ export const globalDocumentAdd = createAsyncThunk<
  */
 export const globalDocumentDelete = createAsyncThunk<
   void,
-  { documentId: string }
+  { documentId: string; history: History }
 >('documents/globalDocumentDelete', async (arg, { getState, dispatch }) => {
-  const { documentId } = arg
+  const { documentId, history } = arg
   const document = (getState() as RootState).documents.all.entities[documentId]
   if (!document)
     throw new Error(`document invalid! document with documentId not available`)
@@ -186,6 +188,7 @@ export const globalDocumentDelete = createAsyncThunk<
   if (!result?.status) throw new Error(`delete failed due to some reason`)
   /** Reset editor text */
   dispatch(updateRawText(''))
+  history.push('/app')
 })
 
 /** Mediocre DocumentSlice State */

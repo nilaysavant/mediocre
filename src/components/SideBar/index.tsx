@@ -26,11 +26,13 @@ import { getUniqueIdV4 } from '../../utils/idGenerator'
 import dayjs from 'dayjs'
 import AddDocItem from './AddDocItem'
 import ItemMenu from './ItemMenu'
+import { useHistory } from 'react-router-dom'
 
 export type SideBarProps = BoxProps
 
 const SideBar = ({ ...rest }: SideBarProps) => {
   const { colorMode } = useColorMode()
+  const history = useHistory()
   const dispatch = useReduxDispatch()
   const documents = useReduxSelector(documentsSelectors.selectAll)
   const isAllDocumentsFetching = useReduxSelector(
@@ -128,7 +130,9 @@ const SideBar = ({ ...rest }: SideBarProps) => {
             }}
             inputRef={addInputRef}
             onAdd={(fileName) => {
-              dispatch(globalDocumentAdd({ documentFileName: fileName }))
+              dispatch(
+                globalDocumentAdd({ documentFileName: fileName, history })
+              )
               setAddItemInputActive(false)
             }}
             onCancel={() => setAddItemInputActive(false)}
@@ -184,7 +188,9 @@ const SideBar = ({ ...rest }: SideBarProps) => {
                     }, 0)
                   }}
                   onClick={() =>
-                    dispatch(globalDocumentOpen({ documentId: doc.id }))
+                    dispatch(
+                      globalDocumentOpen({ documentId: doc.id, history: history })
+                    )
                   }
                   onContextMenu={(e) => {
                     e.preventDefault()

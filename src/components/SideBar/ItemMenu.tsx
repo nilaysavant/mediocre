@@ -25,6 +25,7 @@ import { useReduxDispatch } from '../../redux/hooks'
 import { globalDocumentDelete } from './documentsSlice'
 import { useRef } from 'react'
 import AlertButton from './AlertButton'
+import { useHistory } from 'react-router-dom'
 
 export type ItemMenuProps = {
   /** ID of the Item, currently the `documentId` as used in context of the sidebar */
@@ -39,6 +40,7 @@ export type ItemMenuProps = {
 }
 
 const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
+  const history = useHistory()
   const dispatch = useReduxDispatch()
   const {
     isOpen: menuIsOpen,
@@ -199,11 +201,7 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
             size="sm"
           >
             {/* <AlertDialogOverlay> */}
-            <AlertDialogContent
-              borderRadius="0"
-              marginTop="15%"
-              py="2.5"
-            >
+            <AlertDialogContent borderRadius="0" marginTop="15%" py="2.5">
               <AlertDialogHeader py="1.5" fontSize="md" fontWeight="normal">
                 Delete Document
               </AlertDialogHeader>
@@ -227,7 +225,9 @@ const ItemMenu = ({ itemId, children, popoverProps }: ItemMenuProps) => {
                       bg: 'rgb(161, 91, 91)',
                     }}
                     onClick={() => {
-                      dispatch(globalDocumentDelete({ documentId: itemId }))
+                      dispatch(
+                        globalDocumentDelete({ documentId: itemId, history })
+                      )
                       alertOnClose()
                     }}
                   >
