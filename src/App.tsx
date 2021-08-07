@@ -6,21 +6,11 @@ import CommandModal from './components/CommandModal'
 import isTauri from './utils/isTauri'
 import TitleBar from './components/TitleBar'
 import ScrollReset from './utils/ScrollReset'
-import { useLocation } from 'react-router-dom'
 import { renderRoutes } from 'react-router-config'
 import routes from './routes'
-import { useEffect } from 'react'
 
 const App = () => {
   const { colorMode } = useColorMode()
-  const location = useLocation()
-
-  useEffect(() => {
-    console.log(
-      '🚀 ~ file: App.tsx ~ line 21 ~ useEffect ~ location.pathname',
-      location.pathname
-    )
-  }, [location.pathname])
 
   return (
     <Box
