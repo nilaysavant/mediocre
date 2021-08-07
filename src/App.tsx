@@ -1,11 +1,10 @@
 import { Suspense } from 'react'
-import { Box, CircularProgress, useColorMode } from '@chakra-ui/react'
+import { Box, Progress, useColorMode } from '@chakra-ui/react'
 import './App.css'
 import TopBar from './components/TopBar'
 import CommandModal from './components/CommandModal'
 import isTauri from './utils/isTauri'
 import TitleBar from './components/TitleBar'
-import Main from './layouts/Main'
 import ScrollReset from './utils/ScrollReset'
 import { Router } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
@@ -32,10 +31,9 @@ const App = () => {
         {isTauri() ? <TitleBar /> : null}
         <TopBar />
         <ScrollReset />
-        <Suspense fallback={<CircularProgress />}>
+        <Suspense fallback={<Progress isIndeterminate size="xs" w="full" />}>
           {renderRoutes(routes)}
         </Suspense>
-        <Main />
         <CommandModal />
       </Box>
     </Router>

@@ -11,20 +11,20 @@ const routes: RouteConfig[] = [
   {
     path: '/main',
     component: lazy(() => import('src/layouts/Main')),
-    // routes: [
-    //   {
-    //     path: '/main/startup',
-    //     exact: true,
-    //     // component: lazy(() => import('src/views/Login')),
-    //   },
-    //   {
-    //     component: () => <Redirect to="/main/startup" />,
-    //   },
-    // ],
+    routes: [
+      {
+        path: '/main/startup',
+        exact: true,
+        component: lazy(() => import('src/views/Startup')),
+      },
+      {
+        component: () => <Redirect to="/main/startup" />,
+      },
+    ],
   },
   {
     route: '*',
-    component: () => <Redirect to="/main/startup" />,
+    component: () => <Redirect to="/main" />,
   },
 ]
 
