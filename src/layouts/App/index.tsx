@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import { renderRoutes, RouteConfigComponentProps } from 'react-router-config'
 import SideBar from 'src/components/SideBar'
 
-const Main = ({ route }: RouteConfigComponentProps) => {
+const AppLayout = ({ route }: RouteConfigComponentProps) => {
   return (
     <Box flex="1" display="flex" rounded="none" minHeight="0">
       <SideBar width="15%" />
@@ -14,4 +14,4 @@ const Main = ({ route }: RouteConfigComponentProps) => {
   )
 }
 
-export default Main
+export default AppLayout

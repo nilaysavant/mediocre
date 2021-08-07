@@ -6,30 +6,30 @@ const routes: RouteConfig[] = [
   {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/main" />,
+    component: () => <Redirect to="/app" />,
   },
   {
-    path: '/main',
-    component: lazy(() => import('src/layouts/Main')),
+    path: '/app',
+    component: lazy(() => import('src/layouts/App')),
     routes: [
       {
-        path: '/main/startup',
+        path: '/app/startup',
         exact: true,
         component: lazy(() => import('src/views/Startup')),
       },
       {
-        path: '/main/settings',
+        path: '/app/settings',
         exact: true,
         component: lazy(() => import('src/views/Settings')),
       },
       {
-        component: () => <Redirect to="/main/startup" />,
+        component: () => <Redirect to="/app/startup" />,
       },
     ],
   },
   {
     route: '*',
-    component: () => <Redirect to="/main" />,
+    component: () => <Redirect to="/app" />,
   },
 ]
 

@@ -59,10 +59,10 @@ const TopBar = ({ ...rest }: TopBarProps) => {
               Save
             </MenuItem>
             <MenuItem>Duplicate</MenuItem>
-            <Link to="/main/settings">
+            <Link to="/app/settings">
               <MenuItem>Settings</MenuItem>
             </Link>
-            <Link to="/main">
+            <Link to="/app">
               <MenuItem>Startup</MenuItem>
             </Link>
             <MenuItem>Quit</MenuItem>
