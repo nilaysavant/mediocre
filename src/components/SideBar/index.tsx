@@ -189,7 +189,10 @@ const SideBar = ({ ...rest }: SideBarProps) => {
                   }}
                   onClick={() =>
                     dispatch(
-                      globalDocumentOpen({ documentId: doc.id, history: history })
+                      globalDocumentOpen({
+                        documentId: doc.id,
+                        history: history,
+                      })
                     )
                   }
                   onContextMenu={(e) => {
@@ -238,6 +241,10 @@ const SideBar = ({ ...rest }: SideBarProps) => {
                           /** Press Esc to cancel */
                           setRenameItem({ id: '', value: '' })
                         }
+                      }}
+                      onBlur={() => {
+                        /** Cancel rename on Blur */
+                        setRenameItem({ id: '', value: '' })
                       }}
                     />
                   ) : (
