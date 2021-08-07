@@ -12,6 +12,7 @@ import {
 } from '../styles/markdown/markdownThemeSlice'
 import { Link } from 'react-router-dom'
 import { globalDocumentSave } from './SideBar/documentsSlice'
+import { appWindow } from '@tauri-apps/api/window'
 
 export type TopBarProps = BoxProps
 
@@ -45,13 +46,13 @@ const TopBar = ({ ...rest }: TopBarProps) => {
             File
           </MenuButton>
           <MenuList borderRadius="none" fontSize="xs" minWidth="36">
-            <MenuItem
+            {/* <MenuItem
               display="flex"
               justifyContent="space-between"
               command="Ctrl+N"
             >
               New
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem
               display="flex"
               justifyContent="space-between"
@@ -60,14 +61,16 @@ const TopBar = ({ ...rest }: TopBarProps) => {
             >
               Save
             </MenuItem>
-            <MenuItem>Duplicate</MenuItem>
+            {/* <MenuItem>Duplicate</MenuItem> */}
             <Link to="/app/settings">
               <MenuItem>Settings</MenuItem>
             </Link>
             <Link to="/app">
               <MenuItem>Startup</MenuItem>
             </Link>
-            <MenuItem>Quit</MenuItem>
+            <MenuItem onClick={async () => await appWindow.close()}>
+              Quit
+            </MenuItem>
           </MenuList>
         </Menu>
       </Box>
