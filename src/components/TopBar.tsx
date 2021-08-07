@@ -11,6 +11,7 @@ import {
   updateTheme,
 } from '../styles/markdown/markdownThemeSlice'
 import { Link } from 'react-router-dom'
+import { globalDocumentSave } from './SideBar/documentsSlice'
 
 export type TopBarProps = BoxProps
 
@@ -55,6 +56,7 @@ const TopBar = ({ ...rest }: TopBarProps) => {
               display="flex"
               justifyContent="space-between"
               command="Ctrl+S"
+              onClick={() => dispatch(globalDocumentSave())}
             >
               Save
             </MenuItem>
