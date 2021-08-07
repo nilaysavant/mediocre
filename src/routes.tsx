@@ -18,6 +18,11 @@ const routes: RouteConfig[] = [
         component: lazy(() => import('src/views/Startup')),
       },
       {
+        path: '/app/md-editor',
+        exact: true,
+        component: lazy(() => import('src/views/MdEditor')),
+      },
+      {
         path: '/app/settings',
         exact: true,
         component: lazy(() => import('src/views/Settings')),
