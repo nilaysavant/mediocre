@@ -1,3 +1,7 @@
+*::selection {
+  background: rgba(87, 169, 255, 0.4);
+}
+
 .markdown {
   /* box-sizing: border-box;
   min-width: 200px;
