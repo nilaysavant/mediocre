@@ -6,7 +6,7 @@ const routes: RouteConfig[] = [
   {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/main/startup" />,
+    component: () => <Redirect to="/main" />,
   },
   {
     path: '/main',
@@ -29,7 +29,7 @@ const routes: RouteConfig[] = [
   },
   {
     route: '*',
-    component: () => <Redirect to="/main/startup" />,
+    component: () => <Redirect to="/main" />,
   },
 ]
 
