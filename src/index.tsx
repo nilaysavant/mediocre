@@ -8,19 +8,25 @@ import theme from './theme'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
+import { Router } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
 // import "@fontsource/nunito"
 // import "@fontsource/exo"
 // import "@fontsource/montserrat"
-import "@fontsource/roboto"
-import "@fontsource/roboto-mono"
+import '@fontsource/roboto'
+import '@fontsource/roboto-mono'
 // import "@fontsource/fira-code"
+
+const history = createBrowserHistory()
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <ChakraProvider theme={theme}>
-        <App />
+        <Router history={history}>
+          <App />
+        </Router>
       </ChakraProvider>
     </Provider>
   </React.StrictMode>,

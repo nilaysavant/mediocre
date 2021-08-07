@@ -10,6 +10,7 @@ import {
   MdThemeTypes,
   updateTheme,
 } from '../styles/markdown/markdownThemeSlice'
+import { useHistory } from 'react-router-dom'
 
 export type TopBarProps = BoxProps
 
@@ -17,6 +18,7 @@ const TopBar = ({ ...rest }: TopBarProps) => {
   const { colorMode, toggleColorMode } = useColorMode()
   const mdTheme = useReduxSelector((state) => state.markdownTheme.theme)
   const dispatch = useReduxDispatch()
+  const history = useHistory()
 
   return (
     <Box
@@ -58,6 +60,10 @@ const TopBar = ({ ...rest }: TopBarProps) => {
               Save
             </MenuItem>
             <MenuItem>Duplicate</MenuItem>
+            <MenuItem onClick={()=> {
+              history.replace('/main/settings')
+              }}>Settings</MenuItem>
+            <MenuItem onClick={()=> history.push('/main/startup')}>Startup</MenuItem>
             <MenuItem>Quit</MenuItem>
           </MenuList>
         </Menu>

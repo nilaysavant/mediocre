@@ -6,7 +6,7 @@ const routes: RouteConfig[] = [
   {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/main" />,
+    component: () => <Redirect to="/main/startup" />,
   },
   {
     path: '/main',
@@ -18,13 +18,18 @@ const routes: RouteConfig[] = [
         component: lazy(() => import('src/views/Startup')),
       },
       {
+        path: '/main/settings',
+        exact: true,
+        component: lazy(() => import('src/views/Settings')),
+      },
+      {
         component: () => <Redirect to="/main/startup" />,
       },
     ],
   },
   {
     route: '*',
-    component: () => <Redirect to="/main" />,
+    component: () => <Redirect to="/main/startup" />,
   },
 ]
 
