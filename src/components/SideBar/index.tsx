@@ -77,7 +77,7 @@ const SideBar = ({ ...rest }: SideBarProps) => {
       {...rest}
     >
       <TopSection
-        dirName="My Projects"
+        dirName="Documents"
         isLoading={isAllDocumentsFetching}
         onAddClick={() => {
           setAddItemInputActive(true)
