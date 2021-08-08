@@ -36,7 +36,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
-          releaseName: 'App v__VERSION__'
+          releaseName: 'Mediocre Editor v__VERSION__'
           body: 'See the assets to download this version and install.'
           draft: true
           prerelease: false
+          includeDebug: true # whether to include a debug build or not
