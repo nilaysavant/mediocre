@@ -1628,6 +1628,7 @@ dependencies = [
  "derive_more",
  "env_logger",
  "log",
+ "relative-path",
  "serde",
  "serde_json",
  "tauri",
@@ -2477,6 +2478,12 @@ name = "regex-syntax"
 version = "0.6.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f497285884f3fcff424ffc933e56d7cbca511def0c9831a7f9b5f6153e3cc89b"
+
+[[package]]
+name = "relative-path"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9629de8974fd69c97684736786b807edd3da456d3e3f95341dd9d4cbd8f5ad6"
 
 [[package]]
 name = "remove_dir_all"
