@@ -1620,7 +1620,7 @@ checksum = "60302e4db3a61da70c0cb7991976248362f30319e88850c487b9b95bbf059e00"
 
 [[package]]
 name = "mediocre-editor"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "ammonia",
  "chrono",
