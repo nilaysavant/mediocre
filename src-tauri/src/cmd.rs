@@ -2,6 +2,7 @@ use std::path::{Path, PathBuf};
 
 use crate::utils::fsutils;
 use comrak::{markdown_to_html, ComrakOptions};
+use relative_path::RelativePath;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -65,8 +66,13 @@ pub struct SaveFileToResponse {
 /// Save File to Command
 #[tauri::command]
 pub fn save_file_to(save_path: String, file_data: String) -> Result<SaveFileToResponse, String> {
-  let save_path = Path::new(save_path.as_str());
-  fsutils::write_to_path(save_path, file_data).map_err(|e| e.to_string())?;
+  let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
+  // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
+  let save_path = RelativePath::new(save_path.as_str())
+    .normalize()
+    .to_path(app_dir_path)
+    .to_owned();
+  fsutils::write_to_path(save_path.as_path(), file_data).map_err(|e| e.to_string())?;
   Ok(SaveFileToResponse {
     status: true,
     message: "Success".to_string(),
@@ -83,7 +89,11 @@ pub struct FetchDocInfoResponse {
 #[tauri::command]
 pub fn fetch_doc_info(relative_path: String) -> Result<FetchDocInfoResponse, String> {
   let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
-  let file_path = app_dir_path.join(relative_path);
+  // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
+  let file_path = RelativePath::new(relative_path.as_str())
+    .normalize()
+    .to_path(app_dir_path)
+    .to_owned();
   let file_meta_info =
     fsutils::get_file_meta_from_path(file_path.as_path()).map_err(|e| e.to_string())?;
   Ok(FetchDocInfoResponse { file_meta_info })
@@ -114,7 +124,11 @@ pub struct ReadDocumentResponse {
 #[tauri::command]
 pub fn read_document(relative_path: String) -> Result<ReadDocumentResponse, String> {
   let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
-  let file_path = app_dir_path.join(relative_path);
+  // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
+  let file_path = RelativePath::new(relative_path.as_str())
+    .normalize()
+    .to_path(app_dir_path)
+    .to_owned();
   let content = fsutils::read_from_path(file_path).map_err(|e| e.to_string())?;
   Ok(ReadDocumentResponse { content })
 }
@@ -132,7 +146,11 @@ pub fn write_document(
   content: String,
 ) -> Result<WriteDocumentResponse, String> {
   let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
-  let file_path = app_dir_path.join(relative_path);
+  // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
+  let file_path = RelativePath::new(relative_path.as_str())
+    .normalize()
+    .to_path(app_dir_path)
+    .to_owned();
   fsutils::write_to_path(file_path.as_path(), content).map_err(|e| e.to_string())?;
   Ok(WriteDocumentResponse { status: true })
 }
@@ -147,7 +165,11 @@ pub struct RemoveDocumentResponse {
 #[tauri::command]
 pub fn remove_document(relative_path: String) -> Result<RemoveDocumentResponse, String> {
   let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
-  let file_path = app_dir_path.join(relative_path);
+  // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
+  let file_path = RelativePath::new(relative_path.as_str())
+    .normalize()
+    .to_path(app_dir_path)
+    .to_owned();
   fsutils::remove_from_path(file_path.as_path()).map_err(|e| e.to_string())?;
   Ok(RemoveDocumentResponse { status: true })
 }

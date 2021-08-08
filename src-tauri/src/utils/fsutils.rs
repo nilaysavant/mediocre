@@ -97,6 +97,7 @@ pub fn get_file_meta_from_path<P: AsRef<Path> + Copy>(
   // path serialization between various platforms namely win and unix
   // Currently will assume valid and serialize(able) chars are used
   // as file names and paths will be constructed using the app itself.
+  // Update: Trying to use RelativePath crate to solve this
   let path_ref = path.as_ref();
   let file_name = path_ref
     .file_name()
@@ -164,6 +165,7 @@ pub fn get_all_files_meta_from_path<P: AsRef<Path> + Copy>(
       // path serialization between various platforms namely win and unix
       // Currently will assume valid and serialize(able) chars are used
       // as file names and paths will be constructed using the app itself.
+      // Update: Trying to use RelativePath crate to solve this
       let file_name = e.file_name().to_string_lossy().to_string();
       let file_path = e.path().to_string_lossy().to_string();
       let file_dir = match e.path().parent() {
