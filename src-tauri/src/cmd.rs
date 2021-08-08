@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use crate::utils::fsutils;
 use comrak::{markdown_to_html, ComrakOptions};
