@@ -1,6 +1,6 @@
 [package]
 name = "mediocre-editor"
-version = "0.1.2"
+version = "0.1.3"
 description = "A simple markdown edior"
 authors = ["Nilay Savant"]
 license = ""
