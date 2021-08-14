@@ -2,6 +2,7 @@ use std::path::PathBuf;
 
 use crate::utils::fsutils;
 use comrak::{markdown_to_html, ComrakOptions};
+use log::info;
 use relative_path::RelativePath;
 use serde::{Deserialize, Serialize};
 
@@ -88,6 +89,7 @@ pub struct FetchDocInfoResponse {
 /// Fetch Document info from document relative path (ie. relative to app root dir)
 #[tauri::command]
 pub fn fetch_doc_info(relative_path: String) -> Result<FetchDocInfoResponse, String> {
+  info!("fetch_doc_info() -> relative_path: {}", relative_path);
   let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
   // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
   let file_path = RelativePath::new(relative_path.as_str())
@@ -123,6 +125,7 @@ pub struct ReadDocumentResponse {
 /// Read Document on the specified relative path
 #[tauri::command]
 pub fn read_document(relative_path: String) -> Result<ReadDocumentResponse, String> {
+  info!("read_document() -> relative_path: {}", relative_path);
   let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
   // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
   let file_path = RelativePath::new(relative_path.as_str())
@@ -145,6 +148,7 @@ pub fn write_document(
   relative_path: String,
   content: String,
 ) -> Result<WriteDocumentResponse, String> {
+  info!("write_document() -> relative_path: {}", relative_path);
   let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
   // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
   let file_path = RelativePath::new(relative_path.as_str())
@@ -164,6 +168,7 @@ pub struct RemoveDocumentResponse {
 /// Remove/Delete Document on the specified relative path
 #[tauri::command]
 pub fn remove_document(relative_path: String) -> Result<RemoveDocumentResponse, String> {
+  info!("remove_document() -> relative_path: {}", relative_path);
   let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
   // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
   let file_path = RelativePath::new(relative_path.as_str())
