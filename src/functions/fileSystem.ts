@@ -7,7 +7,6 @@ import { open } from '@tauri-apps/api/dialog'
 import { homeDir } from '@tauri-apps/api/path'
 import { IsoDatetime } from '../commonTypes'
 import isTauri from '../utils/isTauri'
-import path from 'path'
 
 const appDirName =
   process.env.NODE_ENV === 'production' ? '.mediocre' : '.mediocredev'
@@ -68,6 +67,7 @@ export const fetchDocumentMetaData = async (relativePath: string) => {
       fileMetaInfo: {
         fileName: string
         filePath: string
+        fileRelativePath?: string
         fileDir?: string
         fileType?: 'markdown'
         modified?: IsoDatetime
@@ -75,15 +75,10 @@ export const fetchDocumentMetaData = async (relativePath: string) => {
     } = await tauri.invoke('fetch_doc_info', { relativePath })
     const homeDirPath = await homeDir()
     if (!homeDirPath) throw new Error('Path to home dir invalid!')
-    const appRootDirPath = path.join(homeDirPath, appDirName)
     if (!invokeRes.fileMetaInfo)
       throw new Error(`invokeRes.fileMetaInfo invalid!`)
     const fileMetaInfo = {
       ...invokeRes.fileMetaInfo,
-      fileRelativePath: path.relative(
-        appRootDirPath,
-        invokeRes.fileMetaInfo.filePath
-      ),
     }
     return fileMetaInfo
   }
@@ -98,6 +93,7 @@ export const fetchAllDocumentsMetadata = async () => {
       filesMetaInfo: {
         fileName: string
         filePath: string
+        fileRelativePath?: string
         fileDir?: string
         fileType?: 'markdown'
         modified?: IsoDatetime
@@ -105,10 +101,8 @@ export const fetchAllDocumentsMetadata = async () => {
     } = await tauri.invoke('fetch_all_docs_info', {})
     const homeDirPath = await homeDir()
     if (!homeDirPath) throw new Error('Path to home dir invalid!')
-    const appRootDirPath = path.join(homeDirPath, appDirName)
     const filesMetaInfo = invokeRes.filesMetaInfo.map((docMeta) => ({
       ...docMeta,
-      fileRelativePath: path.relative(appRootDirPath, docMeta.filePath),
     }))
     return filesMetaInfo
   }

@@ -84,6 +84,7 @@ pub fn remove_from_path<P: AsRef<Path> + Copy>(path: P) -> Result<(), ServerErro
 pub struct FileMetaInfo {
   file_name: String,
   file_path: String,
+  file_relative_path: Option<String>,
   file_dir: Option<String>,
   file_type: Option<String>,
   modified: Option<String>,
@@ -99,6 +100,7 @@ pub fn get_file_meta_from_path<P: AsRef<Path> + Copy>(
   // as file names and paths will be constructed using the app itself.
   // Update: Trying to use RelativePath crate to solve this
   let path_ref = path.as_ref();
+  let base_path = get_app_root_dir_path()?;
   let file_name = path_ref
     .file_name()
     .ok_or_else(|| ServerError::UserError {
@@ -107,6 +109,14 @@ pub fn get_file_meta_from_path<P: AsRef<Path> + Copy>(
     .to_string_lossy()
     .to_string();
   let file_path = path_ref.to_string_lossy().to_string();
+    let file_relative_path = match path_ref.strip_prefix(base_path) {
+      Ok(p) => Some(p.to_string_lossy().to_string()),
+      Err(err) => {
+        error!("{}", err.to_string());
+        None
+      },
+    };
+
   let file_dir = match path_ref.parent() {
     Some(p) => match p.components().last() {
       Some(c) => Some(c.as_os_str().to_string_lossy().to_string()),
@@ -137,6 +147,7 @@ pub fn get_file_meta_from_path<P: AsRef<Path> + Copy>(
   Ok(FileMetaInfo {
     file_name,
     file_path,
+    file_relative_path,
     file_dir,
     file_type,
     modified,
@@ -147,6 +158,7 @@ pub fn get_file_meta_from_path<P: AsRef<Path> + Copy>(
 pub fn get_all_files_meta_from_path<P: AsRef<Path> + Copy>(
   path: P,
 ) -> Result<Vec<FileMetaInfo>, ServerError> {
+  let base_path = get_app_root_dir_path()?;
   let meta_info = WalkDir::new(path)
     .into_iter()
     .filter_map(|e| e.ok())
@@ -168,6 +180,10 @@ pub fn get_all_files_meta_from_path<P: AsRef<Path> + Copy>(
       // Update: Trying to use RelativePath crate to solve this
       let file_name = e.file_name().to_string_lossy().to_string();
       let file_path = e.path().to_string_lossy().to_string();
+      let file_relative_path = match e.path().strip_prefix(base_path.clone()) {
+        Ok(p) => Some(p.to_string_lossy().to_string()),
+        Err(_) => None,
+      };
       let file_dir = match e.path().parent() {
         Some(p) => match p.components().last() {
           Some(c) => Some(c.as_os_str().to_string_lossy().to_string()),
@@ -198,6 +214,7 @@ pub fn get_all_files_meta_from_path<P: AsRef<Path> + Copy>(
       Some(FileMetaInfo {
         file_name,
         file_path,
+        file_relative_path,
         file_dir,
         file_type,
         modified,

@@ -31,7 +31,7 @@ export type MediocreDocument = {
   content: string
   dir: string
   path: string
-  relativePath: string
+  relativePath?: string
   type: 'markdown'
   modified: string
   /** If current store content is synced with fs (represents fs data sync) */
@@ -69,9 +69,9 @@ export const globalAllDocumentsListFetch = createAsyncThunk(
  */
 export const globalDocumentInfoFetch = createAsyncThunk<
   | {
-      fileRelativePath: string
       fileName: string
       filePath: string
+      fileRelativePath?: string
       fileDir?: string | undefined
       fileType?: 'markdown' | undefined
       modified?: string | undefined
