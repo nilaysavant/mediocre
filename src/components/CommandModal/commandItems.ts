@@ -20,6 +20,7 @@ import {
   openFileSelectionDialog,
   readDocumentFromRelativePath,
   removeDocumentFromRelativePath,
+  renameDocumentAtRelativePath,
   saveFileToCustomPath,
   writeDocumentToRelativePath,
 } from '../../functions/fileSystem'
@@ -35,6 +36,7 @@ export type MediocreCommandId =
   | 'read_document'
   | 'write_document'
   | 'remove_document'
+  | 'rename_document'
 
 export type OnSelectData = {
   commandId: MediocreCommandId
@@ -61,6 +63,10 @@ export type OnSelectData = {
     }
   | {
       commandId: 'remove_document'
+      relativePath: string
+    }
+  | {
+      commandId: 'rename_document'
       relativePath: string
     }
 )
@@ -101,6 +107,7 @@ const allMediocreCommands: AllMediocreCommands = {
     'read_document',
     'write_document',
     'remove_document',
+    'rename_document',
   ],
   byId: {
     get_env: {
@@ -246,6 +253,24 @@ const allMediocreCommands: AllMediocreCommands = {
       onSelect: async (data) => {
         if (data?.commandId === 'remove_document' && data.relativePath) {
           const res = await removeDocumentFromRelativePath(data.relativePath)
+          console.log(
+            '🚀 ~ file: commandItems.ts ~ line 180 ~ onSelect: ~ res',
+            res
+          )
+        } else throw new Error('Relative path is invalid')
+      },
+    },
+    rename_document: {
+      id: 'rename_document',
+      title: 'Rename document',
+      subtitle: 'Rename document from specified relative path',
+      icon: GoFileDirectory,
+      onSelect: async (data) => {
+        if (data?.commandId === 'rename_document' && data.relativePath) {
+          const res = await renameDocumentAtRelativePath(
+            data.relativePath,
+            'MyRenamedDoc'
+          )
           console.log(
             '🚀 ~ file: commandItems.ts ~ line 180 ~ onSelect: ~ res',
             res

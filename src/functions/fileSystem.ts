@@ -147,4 +147,19 @@ export const removeDocumentFromRelativePath = async (relativePath: string) => {
   }
 }
 
+/**
+ * Rename document on a specified relative path to `newDocumentName`
+ */
+export const renameDocumentAtRelativePath = async (
+  relativePath: string,
+  newDocumentName: string
+) => {
+  if (isTauri()) {
+    const invokeRes: {
+      status: boolean
+    } = await tauri.invoke('rename_document', { relativePath, newDocumentName })
+    return invokeRes
+  }
+}
+
 export default null

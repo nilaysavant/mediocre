@@ -122,6 +122,10 @@ const CommandModal = () => {
             await command.onSelect({ commandId, relativePath: inputText })
             break
           }
+          case 'rename_document': {
+            await command.onSelect({ commandId, relativePath: inputText })
+            break
+          }
           default:
             break
         }

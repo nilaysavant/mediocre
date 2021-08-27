@@ -189,11 +189,11 @@ pub struct RenameDocumentResponse {
 #[tauri::command]
 pub fn rename_document(
   relative_path: String,
-  new_file_name: String,
+  new_document_name: String,
 ) -> Result<RenameDocumentResponse, String> {
   info!(
-    "rename_document() -> relative_path: {}, new_file_name: {}",
-    relative_path, new_file_name
+    "rename_document() -> relative_path: {}, new_document_name: {}",
+    relative_path, new_document_name
   );
   let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
   // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
@@ -201,6 +201,6 @@ pub fn rename_document(
     .normalize()
     .to_path(app_dir_path)
     .to_owned();
-  fsutils::rename_file(file_path.as_path(), new_file_name).map_err(|e| e.to_string())?;
+  fsutils::rename_file(file_path.as_path(), new_document_name).map_err(|e| e.to_string())?;
   Ok(RenameDocumentResponse { status: true })
 }
