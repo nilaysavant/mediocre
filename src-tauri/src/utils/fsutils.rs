@@ -79,6 +79,19 @@ pub fn remove_from_path<P: AsRef<Path> + Copy>(path: P) -> Result<(), ServerErro
   Ok(())
 }
 
+/// Rename file at the specified path to `new_file_name`
+pub fn rename_file<P: AsRef<Path> + Copy>(
+  path: P,
+  new_file_name: String,
+) -> Result<(), ServerError> {
+  let parent_path = path.as_ref().parent().ok_or(ServerError::UserError {
+    message: "parent_path invalid!".to_string(),
+  })?;
+  let new_path = parent_path.join(new_file_name);
+  fs::rename(path, new_path).map_err(map_to_server_error)?;
+  Ok(())
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FileMetaInfo {
@@ -109,13 +122,13 @@ pub fn get_file_meta_from_path<P: AsRef<Path> + Copy>(
     .to_string_lossy()
     .to_string();
   let file_path = path_ref.to_string_lossy().to_string();
-    let file_relative_path = match path_ref.strip_prefix(base_path) {
-      Ok(p) => Some(p.to_string_lossy().to_string()),
-      Err(err) => {
-        error!("{}", err.to_string());
-        None
-      },
-    };
+  let file_relative_path = match path_ref.strip_prefix(base_path) {
+    Ok(p) => Some(p.to_string_lossy().to_string()),
+    Err(err) => {
+      error!("{}", err.to_string());
+      None
+    }
+  };
 
   let file_dir = match path_ref.parent() {
     Some(p) => match p.components().last() {
@@ -221,6 +234,5 @@ pub fn get_all_files_meta_from_path<P: AsRef<Path> + Copy>(
       })
     })
     .collect::<Vec<FileMetaInfo>>();
-
   Ok(meta_info)
 }

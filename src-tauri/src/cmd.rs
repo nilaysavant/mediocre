@@ -178,3 +178,29 @@ pub fn remove_document(relative_path: String) -> Result<RemoveDocumentResponse, 
   fsutils::remove_from_path(file_path.as_path()).map_err(|e| e.to_string())?;
   Ok(RemoveDocumentResponse { status: true })
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RenameDocumentResponse {
+  status: bool,
+}
+
+/// Remove/Delete Document on the specified relative path
+#[tauri::command]
+pub fn rename_document(
+  relative_path: String,
+  new_file_name: String,
+) -> Result<RenameDocumentResponse, String> {
+  info!(
+    "rename_document() -> relative_path: {}, new_file_name: {}",
+    relative_path, new_file_name
+  );
+  let app_dir_path = fsutils::get_app_root_dir_path().map_err(|e| e.to_string())?;
+  // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
+  let file_path = RelativePath::new(relative_path.as_str())
+    .normalize()
+    .to_path(app_dir_path)
+    .to_owned();
+  fsutils::rename_file(file_path.as_path(), new_file_name).map_err(|e| e.to_string())?;
+  Ok(RenameDocumentResponse { status: true })
+}
