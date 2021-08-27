@@ -4,8 +4,10 @@
 import { extendTheme, ThemeOverride } from '@chakra-ui/react'
 
 export const themeOverrides: ThemeOverride = {
-  initialColorMode: 'dark',
-  useSystemColorMode: false,
+  config: {
+    initialColorMode: 'dark',
+    useSystemColorMode: false,
+  },
   colors: {
     /** for backgrounds */
     bg: {
