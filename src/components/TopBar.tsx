@@ -110,7 +110,7 @@ const TopBar = ({ ...rest }: TopBarProps) => {
             ))}
           </MenuList>
         </Menu>
-        <IconButton
+        {/* <IconButton
           size="xs"
           borderRadius="none"
           _focus={{
@@ -121,7 +121,7 @@ const TopBar = ({ ...rest }: TopBarProps) => {
           aria-label="Toggle theme"
           onClick={toggleColorMode}
           icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
-        />
+        /> */}
       </Box>
     </Box>
   )
