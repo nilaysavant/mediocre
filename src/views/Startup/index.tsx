@@ -34,7 +34,7 @@ const Startup = () => {
             whiteSpace="nowrap"
             isTruncated
           >
-            Click on{' '}
+            Click{' '}
             <Kbd py="0.5" mx="1.5">
               <AddIcon fontSize="xs" />
             </Kbd>{' '}
