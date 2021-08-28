@@ -13,6 +13,7 @@ import {
   fetchDocumentMetaData,
   readDocumentFromRelativePath,
   removeDocumentFromRelativePath,
+  renameDocumentAtRelativePath,
   writeDocumentToRelativePath,
 } from '../../functions/fileSystem'
 import { RootState } from '../../redux/store'
@@ -191,6 +192,30 @@ export const globalDocumentDelete = createAsyncThunk<
   history.push('/app')
 })
 
+/**
+ * Async thunk action to rename existing document.
+ * Uses Tauri command.
+ */
+export const globalDocumentRename = createAsyncThunk<
+  void,
+  { documentId: string; newDocumentName: string; history: History }
+>('documents/globalDocumentRename', async (arg, { getState, dispatch }) => {
+  const { documentId, newDocumentName, history } = arg // get documentFileName
+  if (!newDocumentName) throw new Error(`newDocumentName invalid!`)
+  const document = (getState() as RootState).documents.all.entities[documentId]
+  if (!document)
+    throw new Error(`document invalid! document with documentId not available`)
+  const { relativePath } = document
+  if (!relativePath) throw new Error(`relativePath invalid!`)
+  const response = await renameDocumentAtRelativePath(
+    relativePath,
+    newDocumentName
+  )
+  if (!response?.status) throw new Error(`Response status is invalid!`)
+  /** fetch the doc info */
+  await dispatch(globalAllDocumentsListFetch()).unwrap()
+})
+
 /** Mediocre DocumentSlice State */
 export type DocumentsState = {
   all: EntityState<MediocreDocument>
@@ -201,6 +226,7 @@ export type DocumentsState = {
   isDocumentSaving: boolean
   isDocumentAdding: boolean
   isDocumentDeleting: boolean
+  isDocumentRenaming: boolean
 }
 
 const initialState: DocumentsState = {
@@ -212,6 +238,7 @@ const initialState: DocumentsState = {
   isDocumentSaving: false,
   isDocumentAdding: false,
   isDocumentDeleting: false,
+  isDocumentRenaming: false,
 }
 
 export const documentsSlice = createSlice({
@@ -329,6 +356,12 @@ export const documentsSlice = createSlice({
         documentsAdapter.removeOne(state.all, action.meta.arg.documentId)
         state.selectedDocument = '' // clear selected doc
         state.isDocumentDeleting = false
+      })
+      .addCase(globalDocumentRename.pending, (state, _action) => {
+        state.isDocumentRenaming = true
+      })
+      .addCase(globalDocumentRename.fulfilled, (state, action) => {
+        state.isDocumentRenaming = false
       })
   },
 })

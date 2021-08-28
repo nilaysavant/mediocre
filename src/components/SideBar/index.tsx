@@ -20,6 +20,7 @@ import {
   documentUpdate,
   documentAdd,
   globalDocumentAdd,
+  globalDocumentRename,
 } from './documentsSlice'
 import TopSection from './TopSection'
 import { getUniqueIdV4 } from '../../utils/idGenerator'
@@ -229,11 +230,10 @@ const SideBar = ({ ...rest }: SideBarProps) => {
                         if (e.key === 'Enter') {
                           /** Press Enter to save */
                           dispatch(
-                            documentUpdate({
-                              id: doc.id,
-                              changes: {
-                                name: renameItem.value,
-                              },
+                            globalDocumentRename({
+                              documentId: doc.id,
+                              newDocumentName: renameItem.value,
+                              history,
                             })
                           )
                           setRenameItem({ id: '', value: '' })
