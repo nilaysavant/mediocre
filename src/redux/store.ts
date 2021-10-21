@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import markdownParserSlice from '../utils/markdownParser/markdownParserSlice'
 import commandModalSlice from '../components/CommandModal/commandModalSlice'
 import counterSlice from '../utils/counterSlice'
+import themeSlice from 'src/themeSlice'
 import appSlice from '../appSlice'
 import markdownThemeSlice from '../styles/markdown/markdownThemeSlice'
 import documentsSlice from '../components/SideBar/documentsSlice'
@@ -15,6 +16,7 @@ export const store = configureStore({
     commandModal: commandModalSlice,
     markdownTheme: markdownThemeSlice,
     counter: counterSlice,
+    theme: themeSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(reduxLogger),
