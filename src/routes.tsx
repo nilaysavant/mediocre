@@ -24,8 +24,22 @@ const routes: RouteConfig[] = [
       },
       {
         path: '/app/settings',
-        exact: true,
         component: lazy(() => import('src/views/Settings')),
+        routes: [
+          {
+            path: '/app/settings/general',
+            exact: true,
+            component: lazy(() => import('src/views/Settings/General')),
+          },
+          {
+            path: '/app/settings/customization',
+            exact: true,
+            component: lazy(() => import('src/views/Settings/Customization')),
+          },
+          {
+            component: () => <Redirect to="/app/settings/general" />,
+          },
+        ],
       },
       {
         component: () => <Redirect to="/app/startup" />,

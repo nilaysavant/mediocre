@@ -1,32 +1,14 @@
 import { SettingsIcon } from '@chakra-ui/icons'
-import { Box, Button, HStack, Text } from '@chakra-ui/react'
-import { folder, Leva, useControls } from 'leva'
-import { useEffect } from 'react'
-import { useReduxDispatch, useReduxSelector } from 'src/redux/hooks'
-import { updateBgDark } from 'src/themeSlice'
+import { Box, Text } from '@chakra-ui/react'
+import { renderRoutes, RouteConfigComponentProps } from 'react-router-config'
 import TabBar from './TabBar'
 
-const Settings = () => {
-  const dispatch = useReduxDispatch()
-  const themeBackgroundColors = useReduxSelector(
-    (state) => state.theme.colors.bg.dark
-  )
-  const themeBackgroundSettings = useControls({
-    'Theme Settings': folder({
-      Background: folder({
-        ...themeBackgroundColors,
-      }),
-    }),
-  })
-
-  useEffect(() => {
-    dispatch(
-      updateBgDark({
-        ...themeBackgroundSettings,
-      })
-    )
-  }, [dispatch, themeBackgroundSettings])
-
+/**
+ * Application Settings
+ * @param param0
+ * @returns
+ */
+const Settings = ({ route }: RouteConfigComponentProps) => {
   return (
     <Box
       flex="1"
@@ -45,16 +27,9 @@ const Settings = () => {
       </Box>
       <hr />
       <Box py="2">
-        <Leva
-          fill
-          flat
-          titleBar={false}
-          theme={{
-            colors: {
-              elevation2: 'transparent',
-            },
-          }}
-        />
+        {renderRoutes(route?.routes, {
+          someProp: 'these extra props are optional',
+        })}
       </Box>
     </Box>
   )
