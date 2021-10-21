@@ -10,7 +10,7 @@ import {
   MdThemeTypes,
   updateTheme,
 } from '../styles/markdown/markdownThemeSlice'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { globalDocumentSave } from './SideBar/documentsSlice'
 import { appWindow } from '@tauri-apps/api/window'
 
@@ -18,6 +18,7 @@ export type TopBarProps = BoxProps
 
 const TopBar = ({ ...rest }: TopBarProps) => {
   const { colorMode, toggleColorMode } = useColorMode()
+  const routerLocation = useLocation()
   const mdTheme = useReduxSelector((state) => state.markdownTheme.theme)
   const dispatch = useReduxDispatch()
 
@@ -76,21 +77,23 @@ const TopBar = ({ ...rest }: TopBarProps) => {
       </Box>
       <Box display="flex" alignItems="center">
         <Menu gutter={0}>
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            size="xs"
-            borderRadius="none"
-            _focus={{
-              outline: 'none',
-              borderBottom: '1px solid #616161',
-            }}
-            fontWeight="hairline"
-            value={mdTheme}
-            onSelect={(e) => console.log(e)}
-          >
-            {mdThemes.byId[mdTheme].label}
-          </MenuButton>
+          {routerLocation.pathname === '/app/md-editor' ? (
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              size="xs"
+              borderRadius="none"
+              _focus={{
+                outline: 'none',
+                borderBottom: '1px solid #616161',
+              }}
+              fontWeight="hairline"
+              value={mdTheme}
+              onSelect={(e) => console.log(e)}
+            >
+              {mdThemes.byId[mdTheme].label}
+            </MenuButton>
+          ) : null}
           <MenuList borderRadius="none" fontSize="xs" minWidth="36">
             {mdThemes.list.map((theme) => (
               <MenuItem
