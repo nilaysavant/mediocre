@@ -1,6 +1,8 @@
 import { Button, ButtonProps } from '@chakra-ui/button'
 import { Box, HStack, StackProps, Text } from '@chakra-ui/layout'
 import { ReactNode } from 'react'
+import { useLocation } from 'react-router'
+import history from 'src/browserHistory'
 
 export type TabButtonProps = {
   children: ReactNode
@@ -53,11 +55,27 @@ const TabButton = ({
 
 export type TabBarProps = StackProps
 
+/**
+ * Settings Tab bar
+ * @param param0
+ * @returns
+ */
 const TabBar = ({ ...rest }: TabBarProps) => {
+  const location = useLocation()
   return (
     <HStack spacing="0" {...rest}>
-      <TabButton active>General</TabButton>
-      <TabButton>Customization</TabButton>
+      <TabButton
+        active={location.pathname.endsWith('general')}
+        onClick={() => history.push('/app/settings/general')}
+      >
+        General
+      </TabButton>
+      <TabButton
+        active={location.pathname.endsWith('customization')}
+        onClick={() => history.push('/app/settings/customization')}
+      >
+        Customization
+      </TabButton>
     </HStack>
   )
 }

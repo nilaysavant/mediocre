@@ -30,7 +30,7 @@ const Customization = () => {
   }, [dispatch, themeBackgroundSettings])
 
   return (
-    <Box py="2">
+    <Box>
       <Leva
         fill
         flat
