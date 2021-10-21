@@ -54,14 +54,16 @@ const TopBar = ({ ...rest }: TopBarProps) => {
             >
               New
             </MenuItem> */}
-            <MenuItem
-              display="flex"
-              justifyContent="space-between"
-              command="Ctrl+S"
-              onClick={() => dispatch(globalDocumentSave())}
-            >
-              Save
-            </MenuItem>
+            {routerLocation.pathname === '/app/md-editor' ? (
+              <MenuItem
+                display="flex"
+                justifyContent="space-between"
+                command="Ctrl+S"
+                onClick={() => dispatch(globalDocumentSave())}
+              >
+                Save
+              </MenuItem>
+            ) : null}
             {/* <MenuItem>Duplicate</MenuItem> */}
             <Link to="/app/settings">
               <MenuItem>Settings</MenuItem>
