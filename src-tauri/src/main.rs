@@ -5,6 +5,8 @@
 
 use log::{error, info};
 
+use crate::models::{app_dir_paths::AppDirPaths, app_state::AppState};
+
 mod cmd;
 mod constants;
 mod models;
@@ -27,6 +29,13 @@ fn main() {
 
   // Start Tauri
   tauri::Builder::default()
+    .manage(AppState {
+      dir_paths: AppDirPaths {
+        data_root: todo!(),
+        documents: todo!(),
+        db: todo!(),
+      },
+    })
     // This is where you pass in your commands
     .invoke_handler(tauri::generate_handler![
       cmd::my_custom_command,
