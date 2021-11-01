@@ -37,7 +37,7 @@ fn main() {
 
   // Setup
   match utils::fsutils::create_app_default_dirs(&app_dir_paths) {
-    Ok(_) => info!("create app default dir success!"),
+    Ok(_) => info!("create app default dirs success!"),
     Err(e) => {
       error!("failed to create default app dir: {}", e);
       exit(0)
