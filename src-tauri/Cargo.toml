@@ -2,21 +2,19 @@
 name = "mediocre-editor"
 version = "0.1.3"
 description = "A simple markdown edior"
-authors = ["Nilay Savant"]
+authors = [ "Nilay Savant" ]
 license = ""
 repository = ""
 default-run = "mediocre-editor"
 edition = "2018"
 build = "src/build.rs"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [build-dependencies]
-tauri-build = { version="1.0.0-beta.3" }
+tauri-build = { version = "1.0.0-beta.3" }
 
 [dependencies]
 serde_json = "1.0"
-serde = { version="1.0", features= ["derive"] }
+serde = { version = "1.0", features = [ "derive" ] }
 comrak = "0.10"
 ammonia = "3"
 derive_more = "0.99.14"
@@ -25,13 +23,11 @@ walkdir = "2"
 env_logger = "0.8.4"
 chrono = "0.4"
 relative-path = "1.5.0"
-tauri = { version = "1.0.0-beta.5", features = ["api-all"] }
-# tauri = { git="https://github.com/tauri-apps/tauri", branch="dev", features= ["api-all"] }
-# once_cell = "1.8.0"
 
-# [patch.crates-io]
-# tao = { git="https://github.com/tauri-apps/tao", rev="6ca00629c914890969e7c793b00bfc319de188b7" }
+  [dependencies.tauri]
+  version = "1.0.0-beta"
+features = ["api-all"]
 
 [features]
-default = ["custom-protocol"]
-custom-protocol = ["tauri/custom-protocol"]
+default = [ "custom-protocol" ]
+custom-protocol = [ "tauri/custom-protocol" ]
