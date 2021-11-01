@@ -11,10 +11,7 @@ use serde::{Deserialize, Serialize};
 use tauri::api::path::home_dir;
 use walkdir::WalkDir;
 
-use crate::{
-  constants::paths::APP_DATA_DIR_NAME,
-  models::server_error::{map_to_server_error, ServerError},
-};
+use crate::{constants::paths::APP_DATA_DIR_NAME, models::{app_dir_paths::AppDirPaths, server_error::{map_to_server_error, ServerError}}};
 
 pub fn get_app_root_dir_path() -> Result<PathBuf, ServerError> {
   let debug_level = env::var("RUST_DEBUG").unwrap_or("0".to_string());
@@ -42,10 +39,11 @@ pub fn get_app_root_dir_path() -> Result<PathBuf, ServerError> {
   }
 }
 
-/// Create default dir for the application user files
-pub fn create_app_default_dir() -> Result<(), ServerError> {
-  let app_path = get_app_root_dir_path().map_err(map_to_server_error)?;
-  fs::create_dir_all(app_path).map_err(map_to_server_error)?;
+/// Create default dirs for the application config/db/documents etc files
+pub fn create_app_default_dirs(app_dir_paths: &AppDirPaths) -> Result<(), ServerError> {
+  fs::create_dir_all(&app_dir_paths.root).map_err(map_to_server_error)?;
+  fs::create_dir_all(&app_dir_paths.db).map_err(map_to_server_error)?;
+  fs::create_dir_all(&app_dir_paths.documents).map_err(map_to_server_error)?;
   Ok(())
 }
 

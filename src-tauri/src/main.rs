@@ -26,25 +26,28 @@ fn main() {
   env_logger::init(); // init logger
   info!("Starting Mediocre...");
 
+  // assign app root dir path
+  let app_root_dir_path = get_app_root_dir_path().expect("get_app_root_dir_path failed");
+  // Set all the required application paths based on the root dir path
+  let app_dir_paths = AppDirPaths {
+    root: app_root_dir_path.clone(),
+    documents: app_root_dir_path.join("documents"),
+    db: app_root_dir_path.join("db"),
+  };
+
   // Setup
-  match utils::fsutils::create_app_default_dir() {
+  match utils::fsutils::create_app_default_dirs(&app_dir_paths) {
     Ok(_) => info!("create app default dir success!"),
     Err(e) => {
       error!("failed to create default app dir: {}", e);
       exit(0)
     }
   }
-  // assign app root dir path
-  let app_root_dir_path = get_app_root_dir_path().expect("get_app_root_dir_path failed");
 
   // Start Tauri
   tauri::Builder::default()
     .manage(AppState {
-      dir_paths: AppDirPaths {
-        root: app_root_dir_path.clone(),
-        documents: app_root_dir_path.join("documents"),
-        db: app_root_dir_path.join("db"),
-      },
+      dir_paths: app_dir_paths.clone(),
     })
     // This is where you pass in your commands
     .invoke_handler(tauri::generate_handler![
