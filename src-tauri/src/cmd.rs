@@ -185,7 +185,7 @@ pub struct RenameDocumentResponse {
   status: bool,
 }
 
-/// Remove/Delete Document on the specified relative path
+/// Rename Document on the specified relative path
 #[tauri::command]
 pub fn rename_document(
   relative_path: String,
