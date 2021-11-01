@@ -3,9 +3,14 @@
   windows_subsystem = "windows"
 )]
 
+use std::process::exit;
+
 use log::{error, info};
 
-use crate::models::{app_dir_paths::AppDirPaths, app_state::AppState};
+use crate::{
+  models::{app_dir_paths::AppDirPaths, app_state::AppState},
+  utils::fsutils::get_app_root_dir_path,
+};
 
 mod cmd;
 mod constants;
@@ -24,16 +29,21 @@ fn main() {
   // Setup
   match utils::fsutils::create_app_default_dir() {
     Ok(_) => info!("create app default dir success!"),
-    Err(e) => error!("failed to create default app dir: {}", e),
+    Err(e) => {
+      error!("failed to create default app dir: {}", e);
+      exit(0)
+    }
   }
+  // assign app root dir path
+  let app_root_dir_path = get_app_root_dir_path().expect("get_app_root_dir_path failed");
 
   // Start Tauri
   tauri::Builder::default()
     .manage(AppState {
       dir_paths: AppDirPaths {
-        data_root: todo!(),
-        documents: todo!(),
-        db: todo!(),
+        root: app_root_dir_path.clone(),
+        documents: app_root_dir_path.join("documents"),
+        db: app_root_dir_path.join("db"),
       },
     })
     // This is where you pass in your commands

@@ -4,5 +4,5 @@ use super::app_dir_paths::AppDirPaths;
 #[derive(Debug, Clone)]
 pub struct AppState {
   /// File System Paths pointing to app specific dirs
-  pub dir_paths: AppDirPaths
+  pub dir_paths: AppDirPaths,
 }
