@@ -11,7 +11,13 @@ use serde::{Deserialize, Serialize};
 use tauri::api::path::home_dir;
 use walkdir::WalkDir;
 
-use crate::{constants::paths::APP_DATA_DIR_NAME, models::{app_dir_paths::AppDirPaths, server_error::{map_to_server_error, ServerError}}};
+use crate::{
+  constants::paths::APP_DATA_DIR_NAME,
+  models::{
+    app_dir_paths::AppDirPaths,
+    server_error::{map_to_server_error, ServerError},
+  },
+};
 
 pub fn get_app_root_dir_path() -> Result<PathBuf, ServerError> {
   let debug_level = env::var("RUST_DEBUG").unwrap_or("0".to_string());
@@ -101,17 +107,19 @@ pub struct FileMetaInfo {
   modified: Option<String>,
 }
 
-/// Get file meta info for given file path
+/// Get file meta info for given file path.
+/// - `base_path`: path that is stripped from absolute path to get the relative path
+/// - `file_path`: path of the file (for which meta info is needed)
 pub fn get_file_meta_from_path<P: AsRef<Path> + Copy>(
-  path: P,
+  base_path: P,
+  file_path: P,
 ) -> Result<FileMetaInfo, ServerError> {
   // There have been discussions wrt differences in file
   // path serialization between various platforms namely win and unix
   // Currently will assume valid and serialize(able) chars are used
   // as file names and paths will be constructed using the app itself.
   // Update: Trying to use RelativePath crate to solve this
-  let path_ref = path.as_ref();
-  let base_path = get_app_root_dir_path()?;
+  let path_ref = file_path.as_ref();
   let file_name = path_ref
     .file_name()
     .ok_or_else(|| ServerError::UserError {
@@ -167,10 +175,9 @@ pub fn get_file_meta_from_path<P: AsRef<Path> + Copy>(
 
 /// Get all files meta info in the given dir path
 pub fn get_all_files_meta_from_path<P: AsRef<Path> + Copy>(
-  path: P,
+  dir_path: P,
 ) -> Result<Vec<FileMetaInfo>, ServerError> {
-  let base_path = get_app_root_dir_path()?;
-  let meta_info = WalkDir::new(path)
+  let meta_info = WalkDir::new(dir_path)
     .into_iter()
     .filter_map(|e| e.ok())
     .filter_map(|e| match e.metadata() {
@@ -191,7 +198,7 @@ pub fn get_all_files_meta_from_path<P: AsRef<Path> + Copy>(
       // Update: Trying to use RelativePath crate to solve this
       let file_name = e.file_name().to_string_lossy().to_string();
       let file_path = e.path().to_string_lossy().to_string();
-      let file_relative_path = match e.path().strip_prefix(base_path.clone()) {
+      let file_relative_path = match e.path().strip_prefix(dir_path.clone()) {
         Ok(p) => Some(p.to_string_lossy().to_string()),
         Err(_) => None,
       };
