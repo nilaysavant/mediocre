@@ -1,8 +1,6 @@
 use std::error::Error;
 
 use derive_more::{Display, Error};
-use log::error;
-use serde_json::json;
 
 #[derive(Debug, Display, Error)]
 pub enum ServerError {

@@ -7,13 +7,7 @@ use std::process::exit;
 
 use log::{error, info};
 
-use crate::{
-  models::{
-    app_dir_paths::AppDirPaths,
-    app_state::{AppDbState, AppState},
-  },
-  utils::fsutils::get_app_root_dir_path,
-};
+use crate::{models::{app_db_state::AppDbState, app_dir_paths::AppDirPaths, app_state::AppState}, utils::fsutils::get_app_root_dir_path};
 
 mod cmd;
 mod constants;

@@ -6,7 +6,7 @@ use std::{
 };
 
 use chrono::{DateTime, SecondsFormat, Utc};
-use log::{error, info};
+use log::error;
 use serde::{Deserialize, Serialize};
 use tauri::api::path::home_dir;
 use walkdir::WalkDir;
