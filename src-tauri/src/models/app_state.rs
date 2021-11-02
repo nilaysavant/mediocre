@@ -18,22 +18,22 @@ pub struct AppDbState {
 }
 
 impl AppDbState {
-  /// Create a db instance
-  fn create_db(&self, db_path: &PathBuf) {
+  /// Init a new db instance (ie. create + load)
+  /// and return a new db state struct
+  pub fn new(db_path: &PathBuf) -> Self {
+    // create
     PickleDb::new(
       db_path,
       PickleDbDumpPolicy::AutoDump,
       SerializationMethod::Bin,
     );
-  }
-  /// Init a db instance (ie. create + load)
-  pub fn init(&mut self, db_path: &PathBuf) -> Result<(), pickledb::error::Error> {
-    self.create_db(db_path);
-    self.db = PickleDb::load(
-      db_path,
-      PickleDbDumpPolicy::AutoDump,
-      SerializationMethod::Bin,
-    )?;
-    Ok(())
+    AppDbState {
+      db: PickleDb::load(
+        db_path,
+        PickleDbDumpPolicy::AutoDump,
+        SerializationMethod::Bin,
+      )
+      .expect("failed to load db!"),
+    }
   }
 }

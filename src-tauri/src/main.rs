@@ -6,10 +6,12 @@
 use std::process::exit;
 
 use log::{error, info};
-use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
 use crate::{
-  models::{app_dir_paths::AppDirPaths, app_state::AppState},
+  models::{
+    app_dir_paths::AppDirPaths,
+    app_state::{AppDbState, AppState},
+  },
   utils::fsutils::get_app_root_dir_path,
 };
 
@@ -50,6 +52,7 @@ fn main() {
     .manage(AppState {
       dir_paths: app_dir_paths.clone(),
     })
+    .manage(AppDbState::new(&app_dir_paths.db.join("store.db.json")))
     // This is where you pass in your commands
     .invoke_handler(tauri::generate_handler![
       cmd::my_custom_command,
