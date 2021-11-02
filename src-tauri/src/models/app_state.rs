@@ -29,14 +29,14 @@ impl AppDbState {
     PickleDb::new(
       db_path,
       PickleDbDumpPolicy::AutoDump,
-      SerializationMethod::Bin,
+      SerializationMethod::Json,
     );
     AppDbState {
       db: Arc::new(Mutex::new(
         PickleDb::load(
           db_path,
           PickleDbDumpPolicy::AutoDump,
-          SerializationMethod::Bin,
+          SerializationMethod::Json,
         )
         .expect("failed to load db!"),
       )),
