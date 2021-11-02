@@ -3,7 +3,7 @@ use std::{
   sync::{Arc, Mutex},
 };
 
-use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
+use pickledb::{error::ErrorType, PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
 use super::app_dir_paths::AppDirPaths;
 
@@ -22,24 +22,34 @@ pub struct AppDbState {
 }
 
 impl AppDbState {
-  /// Init a new db instance (ie. create + load)
+  /// Init a new db instance (ie. create/load)
   /// and return a new db state struct
   pub fn new(db_path: &PathBuf) -> Self {
-    // create
-    PickleDb::new(
+    match PickleDb::load(
       db_path,
       PickleDbDumpPolicy::AutoDump,
       SerializationMethod::Json,
-    );
-    AppDbState {
-      db: Arc::new(Mutex::new(
-        PickleDb::load(
-          db_path,
-          PickleDbDumpPolicy::AutoDump,
-          SerializationMethod::Json,
-        )
-        .expect("failed to load db!"),
-      )),
+    ) {
+      Ok(db) => AppDbState {
+        db: Arc::new(Mutex::new(db)),
+      },
+      Err(e) => {
+        match e.get_type() {
+          ErrorType::Io => {
+            // for io error we assume that db is not found
+            // thus we create a new db instance instead
+            let db = PickleDb::new(
+              db_path,
+              PickleDbDumpPolicy::AutoDump,
+              SerializationMethod::Json,
+            );
+            AppDbState {
+              db: Arc::new(Mutex::new(db)),
+            }
+          }
+          ErrorType::Serialization => panic!("db serialization error!"),
+        }
+      }
     }
   }
 }
