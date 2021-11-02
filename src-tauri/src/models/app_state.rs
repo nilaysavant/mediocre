@@ -1,4 +1,7 @@
-use std::path::PathBuf;
+use std::{
+  path::PathBuf,
+  sync::{Arc, Mutex},
+};
 
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
@@ -12,9 +15,10 @@ pub struct AppState {
 }
 
 /// Database state of the Application
+/// #[derive(Clone)]
 pub struct AppDbState {
   /// PickleDB instance
-  pub db: PickleDb,
+  pub db: Arc<Mutex<PickleDb>>,
 }
 
 impl AppDbState {
@@ -28,12 +32,14 @@ impl AppDbState {
       SerializationMethod::Bin,
     );
     AppDbState {
-      db: PickleDb::load(
-        db_path,
-        PickleDbDumpPolicy::AutoDump,
-        SerializationMethod::Bin,
-      )
-      .expect("failed to load db!"),
+      db: Arc::new(Mutex::new(
+        PickleDb::load(
+          db_path,
+          PickleDbDumpPolicy::AutoDump,
+          SerializationMethod::Bin,
+        )
+        .expect("failed to load db!"),
+      )),
     }
   }
 }

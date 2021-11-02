@@ -1,6 +1,9 @@
 use std::path::PathBuf;
 
-use crate::{models::app_state::AppState, utils::fsutils};
+use crate::{
+  models::app_state::{AppDbState, AppState},
+  utils::fsutils,
+};
 use comrak::{markdown_to_html, ComrakOptions};
 use log::info;
 use relative_path::RelativePath;
@@ -13,9 +16,18 @@ pub struct Response {
 }
 
 #[tauri::command]
-pub fn my_custom_command(message: String, state: tauri::State<'_, AppState>) -> Response {
+pub fn my_custom_command(
+  message: String,
+  state: tauri::State<'_, AppState>,
+  db_state: tauri::State<'_, AppDbState>,
+) -> Response {
   println!("I was invoked from JS! Message: {}", message);
   println!("State: {:?}", state.dir_paths);
+  let mut db = db_state.db.lock().unwrap();
+  if message.len() > 0 {
+    db.set("message", &message).unwrap();
+  }
+  println!("Database: {:?}", db.get::<String>("message").unwrap());
   Response { message }
 }
 
