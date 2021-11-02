@@ -6,6 +6,7 @@
 use std::process::exit;
 
 use log::{error, info};
+use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
 use crate::{
   models::{app_dir_paths::AppDirPaths, app_state::AppState},
