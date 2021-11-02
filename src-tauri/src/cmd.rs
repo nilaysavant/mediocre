@@ -5,7 +5,7 @@ use crate::{
   utils::fsutils,
 };
 use comrak::{markdown_to_html, ComrakOptions};
-use log::info;
+use log::{debug, info};
 use relative_path::RelativePath;
 use serde::{Deserialize, Serialize};
 
@@ -21,13 +21,13 @@ pub fn my_custom_command(
   state: tauri::State<'_, AppState>,
   db_state: tauri::State<'_, AppDbState>,
 ) -> Response {
-  println!("I was invoked from JS! Message: {}", message);
-  println!("State: {:?}", state.dir_paths);
+  debug!("I was invoked from JS! Message: {}", message);
+  debug!("State: {:?}", state.dir_paths);
   let mut db = db_state.db.lock().unwrap();
   if message.len() > 0 {
     db.set("message", &message).unwrap();
   }
-  println!("Database: {:?}", db.get::<String>("message").unwrap());
+  debug!("Database: {:?}", db.get::<String>("message").unwrap());
   Response { message }
 }
 
