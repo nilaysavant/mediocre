@@ -36,18 +36,21 @@ impl AppDbState {
       Err(e) => {
         match e.get_type() {
           ErrorType::Io => {
-            // for io error we assume that db is not found
-            // thus we create a new db instance instead
-            let db = PickleDb::new(
-              db_path,
-              PickleDbDumpPolicy::AutoDump,
-              SerializationMethod::Json,
-            );
-            AppDbState {
-              db: Arc::new(Mutex::new(db)),
+            if e.to_string() == "No such file or directory (os error 2)" {
+              // if the db is not found we create a new db instance
+              let db = PickleDb::new(
+                db_path,
+                PickleDbDumpPolicy::AutoDump,
+                SerializationMethod::Json,
+              );
+              AppDbState {
+                db: Arc::new(Mutex::new(db)),
+              }
+            } else {
+              panic!("db io error: {}", e)
             }
           }
-          ErrorType::Serialization => panic!("db serialization error!"),
+          ErrorType::Serialization => panic!("db serialization error: {}", e),
         }
       }
     }
