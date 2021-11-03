@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use crate::{models::{app_db_state::AppDbState, app_state::AppState}, utils::fsutils};
+use crate::{models::{app_db_state::AppDbState, app_state::AppState, cloud_sync::CloudSync}, utils::fsutils};
 use comrak::{markdown_to_html, ComrakOptions};
 use log::{debug, info};
 use relative_path::RelativePath;
@@ -25,6 +25,9 @@ pub fn my_custom_command(
     db.set("message", &message).unwrap();
   }
   debug!("Database: {:?}", db.get::<String>("message").unwrap());
+  debug!("Git clone ssh...");
+  CloudSync::test_git_clone_ssh();
+  debug!("Git clone ssh: Done!");
   Response { message }
 }
 
