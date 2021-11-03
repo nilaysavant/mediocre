@@ -2,7 +2,6 @@
 
 // 1. import `extendTheme` function
 import { extendTheme, ThemeOverride } from '@chakra-ui/react'
-import { store } from './redux/store'
 
 export const themeOverrides: ThemeOverride = {
   config: {
@@ -66,16 +65,5 @@ export const themeOverrides: ThemeOverride = {
 
 // 3. extend the theme
 const theme = extendTheme(themeOverrides)
-
-/** this sets the theme on change of redux state */
-store.subscribe(() => {
-  const bgColors = store.getState().theme.colors.bg.dark
-  Object.entries(bgColors).map(([key, value]) => {
-    document.documentElement.style.setProperty(
-      `--chakra-colors-bg-dark-${key}`,
-      value
-    )
-  })
-})
 
 export default theme

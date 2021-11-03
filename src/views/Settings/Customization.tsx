@@ -3,6 +3,7 @@ import { folder, Leva, useControls } from 'leva'
 import { useEffect } from 'react'
 import { useReduxDispatch, useReduxSelector } from 'src/redux/hooks'
 import { updateBgDark } from 'src/themeSlice'
+import ThemeChangeListener from './ThemeChangeListener'
 
 /**
  * Customization Settings
@@ -41,6 +42,7 @@ const Customization = () => {
           },
         }}
       />
+      <ThemeChangeListener />
     </Box>
   )
 }
