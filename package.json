@@ -32,6 +32,7 @@
     "@types/uuid": "^8.3.0",
     "clsx": "^1.1.1",
     "dayjs": "^1.10.6",
+    "formik": "^2.2.9",
     "framer-motion": "^4",
     "github-markdown-css": "^4.0.0",
     "highlight.js": "^11.1.0",
