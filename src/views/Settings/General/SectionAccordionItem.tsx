@@ -54,6 +54,7 @@ const SectionAccordionItem = ({
         fontSize="sm"
         bg="bg.dark.400"
         color="whiteAlpha.800"
+        pt="3"
         {...accordionPanelProps}
       >
         {sectionContent}
