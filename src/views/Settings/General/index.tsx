@@ -36,13 +36,28 @@ const SectionAccordionItem = ({
 }: SectionAccordionItemProps) => {
   return (
     <AccordionItem {...accordionItemProps}>
-      <AccordionButton {...accordionButtonProps}>
+      <AccordionButton
+        fontSize="sm"
+        bg="bg.dark.350"
+        _hover={{
+          filter: 'brightness(120%)',
+        }}
+        _focus={{
+          boxShadow: `0px 0px 0px 1px var(--chakra-colors-border-focus-500)`,
+        }}
+        {...accordionButtonProps}
+      >
         <Box flex="1" textAlign="left">
           {sectionTitle}
         </Box>
         <AccordionIcon />
       </AccordionButton>
-      <AccordionPanel fontSize="sm" {...accordionPanelProps}>
+      <AccordionPanel
+        fontSize="sm"
+        bg="bg.dark.400"
+        color="whiteAlpha.800"
+        {...accordionPanelProps}
+      >
         {sectionContent}
       </AccordionPanel>
     </AccordionItem>
