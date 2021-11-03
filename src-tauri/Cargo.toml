@@ -24,6 +24,7 @@ env_logger = "0.8.4"
 chrono = "0.4"
 relative-path = "1.5.0"
 pickledb = "0.4.1"
+git2 = "0.13"
 
 [dependencies.tauri]
 version = "1.0.0-beta.8"
