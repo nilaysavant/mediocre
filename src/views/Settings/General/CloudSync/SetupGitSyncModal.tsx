@@ -63,7 +63,7 @@ const SetupGitSyncModal = ({
         <Heading size="md" fontWeight="normal">
           Setup Git Sync
         </Heading>
-        <hr />
+        <hr style={{ marginTop: '0.3rem' }} />
         <GitSyncForm
           formStyle={{
             paddingTop: '0.5rem',
