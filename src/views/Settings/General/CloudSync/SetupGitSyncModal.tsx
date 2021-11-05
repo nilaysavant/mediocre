@@ -41,6 +41,7 @@ const SetupGitSyncModal = ({
       finalFocusRef={finalFocusRef}
       isOpen={isOpen}
       onClose={onClose}
+      isCentered
     >
       <ModalOverlay />
       <ModalContent
