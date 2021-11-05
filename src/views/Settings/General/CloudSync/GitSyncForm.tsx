@@ -4,17 +4,20 @@ import {
   FormLabel,
 } from '@chakra-ui/form-control'
 import { Input } from '@chakra-ui/input'
+import { Spacer } from '@chakra-ui/layout'
 import { Formik, Form } from 'formik'
+import { CSSProperties } from 'react'
 import StepperBottomBar from './StepperBottomBar'
 
 export type GitSyncFormProps = {
+  formStyle?: CSSProperties
   children?: React.ReactNode
 }
 
-const GitSyncForm = ({ children }: GitSyncFormProps) => {
+const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
   return (
     <Formik
-      initialValues={{ sshKeyLocation: 'Sasuke' }}
+      initialValues={{ sshKeyLocation: '' }}
       validate={(values) => {
         if (!values.sshKeyLocation)
           return {
@@ -37,7 +40,9 @@ const GitSyncForm = ({ children }: GitSyncFormProps) => {
         handleSubmit,
         isSubmitting,
       }) => (
-        <Form>
+        <Form
+          style={{ display: 'flex', flexDirection: 'column', ...formStyle }}
+        >
           <FormControl
             isInvalid={!!errors.sshKeyLocation && touched.sshKeyLocation}
           >
@@ -50,6 +55,7 @@ const GitSyncForm = ({ children }: GitSyncFormProps) => {
             />
             <FormErrorMessage>{errors.sshKeyLocation}</FormErrorMessage>
           </FormControl>
+          <Spacer />
           <StepperBottomBar
             onNext={handleSubmit}
             onBack={() => null}

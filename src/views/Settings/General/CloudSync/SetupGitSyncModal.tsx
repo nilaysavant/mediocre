@@ -43,7 +43,13 @@ const SetupGitSyncModal = ({
       onClose={onClose}
     >
       <ModalOverlay />
-      <ModalContent p="3" borderRadius="sm">
+      <ModalContent
+        p="3"
+        borderRadius="sm"
+        minHeight="sm"
+        display="flex"
+        flexDirection="column"
+      >
         <ModalCloseButton
           top="2.5"
           right="2.5"
@@ -57,9 +63,13 @@ const SetupGitSyncModal = ({
           Setup Git Sync
         </Heading>
         <hr />
-        <Box pt="2">
-          <GitSyncForm />
-        </Box>
+        <GitSyncForm
+          formStyle={{
+            paddingTop: '0.5rem',
+            flex: '1',
+            minHeight: 0,
+          }}
+        />
       </ModalContent>
     </Modal>
   )
