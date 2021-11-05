@@ -56,6 +56,7 @@ const GitSyncForm = ({ children }: GitSyncFormProps) => {
             onNext={handleSubmit}
             onBack={() => null}
             nextButtonIsLoading={isSubmitting}
+            currentStepIndex={1}
             maxSteps={4}
             containerProps={{
               mt: '4',
