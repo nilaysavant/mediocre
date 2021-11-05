@@ -7,6 +7,7 @@ import { Input } from '@chakra-ui/input'
 import { Circle, Flex, Stack } from '@chakra-ui/layout'
 import { Formik, Form } from 'formik'
 import SettingsButton from '../../SettingsButton'
+import StepperBottomBar from './StepperBottomBar'
 
 export type GitSyncFormProps = {
   children?: React.ReactNode
@@ -51,21 +52,15 @@ const GitSyncForm = ({ children }: GitSyncFormProps) => {
             />
             <FormErrorMessage>{errors.sshKeyLocation}</FormErrorMessage>
           </FormControl>
-          <Flex alignItems="center" justifyContent="space-between" mt={4}>
-            <Stack direction="row" p="2">
-              <Circle bg="icon.dark.400" size="10px" />
-              <Circle bg="gray.600" size="10px" />
-              <Circle bg="gray.600" size="10px" />
-            </Stack>
-            <Stack direction="row">
-              <SettingsButton colorScheme="gray">
-                Back
-              </SettingsButton>
-              <SettingsButton isLoading={isSubmitting} type="submit">
-                Next
-              </SettingsButton>
-            </Stack>
-          </Flex>
+          <StepperBottomBar
+            onNext={handleSubmit}
+            onBack={() => null}
+            nextButtonIsLoading={isSubmitting}
+            maxSteps={4}
+            containerProps={{
+              mt: '4',
+            }}
+          />
         </Form>
       )}
     </Formik>
