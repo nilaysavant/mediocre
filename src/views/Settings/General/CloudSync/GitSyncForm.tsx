@@ -4,7 +4,7 @@ import {
   FormLabel,
 } from '@chakra-ui/form-control'
 import { Input } from '@chakra-ui/input'
-import { Spacer } from '@chakra-ui/layout'
+import { Spacer, Text } from '@chakra-ui/layout'
 import { Formik, Form } from 'formik'
 import { CSSProperties } from 'react'
 import StepperBottomBar from './StepperBottomBar'
@@ -17,7 +17,7 @@ export type GitSyncFormProps = {
 const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
   return (
     <Formik
-      initialValues={{ sshKeyLocation: '' }}
+      initialValues={{ sshKeyLocation: '', name: '' }}
       validate={(values) => {
         if (!values.sshKeyLocation)
           return {
@@ -46,14 +46,49 @@ const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
           <FormControl
             isInvalid={!!errors.sshKeyLocation && touched.sshKeyLocation}
           >
-            <FormLabel htmlFor="sshKeyLocation">SSH key location</FormLabel>
+            <FormLabel>
+              <Text>SSH key location</Text>
+            </FormLabel>
+            <FormLabel
+              htmlFor="sshKeyLocation"
+              borderStyle="solid"
+              borderColor="gray.600"
+              borderWidth="thin"
+              borderRadius="md"
+              w="full"
+              py="2"
+              px="4"
+              cursor="pointer"
+            >
+              {values.sshKeyLocation ? (
+                <Text>{values.sshKeyLocation}</Text>
+              ) : (
+                <Text color="gray.500">SSH key location</Text>
+              )}
+            </FormLabel>
             <Input
               onChange={handleChange}
               onBlur={handleBlur}
               id="sshKeyLocation"
+              type="file"
+              display="none"
               placeholder="SSH key location"
             />
             <FormErrorMessage>{errors.sshKeyLocation}</FormErrorMessage>
+          </FormControl>
+          <FormControl
+            isInvalid={!!errors.sshKeyLocation && touched.sshKeyLocation}
+          >
+            <FormLabel htmlFor="name" w="full">
+              <Text>Name</Text>
+            </FormLabel>
+            <Input
+              onChange={handleChange}
+              onBlur={handleBlur}
+              id="name"
+              placeholder="Name"
+            />
+            <FormErrorMessage>{errors.name}</FormErrorMessage>
           </FormControl>
           <Spacer />
           <StepperBottomBar
