@@ -1,4 +1,5 @@
 import { Button } from '@chakra-ui/button'
+import { Stack } from '@chakra-ui/layout'
 import {
   Modal,
   ModalBody,
@@ -9,6 +10,8 @@ import {
   ModalOverlay,
   ModalProps,
 } from '@chakra-ui/modal'
+import SettingsButton from '../../SettingsButton'
+import GitSyncForm from './GitSyncForm'
 
 export type SetupGitSyncModalProps = {
   isOpen: boolean
@@ -39,16 +42,14 @@ const SetupGitSyncModal = ({
       onClose={onClose}
     >
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create your account</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody pb={6}></ModalBody>
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3}>
-            Save
-          </Button>
-          <Button onClick={onClose}>Cancel</Button>
-        </ModalFooter>
+      <ModalContent p="3" borderRadius="sm">
+        <ModalHeader p="0" >
+          Setup Git Sync
+        </ModalHeader>
+        <ModalCloseButton top="2" right="2" borderRadius="sm" />
+        <ModalBody p="0">
+          <GitSyncForm />
+        </ModalBody>
       </ModalContent>
     </Modal>
   )

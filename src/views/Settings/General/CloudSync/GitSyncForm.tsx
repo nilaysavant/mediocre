@@ -6,13 +6,14 @@ import {
 } from '@chakra-ui/form-control'
 import { Input } from '@chakra-ui/input'
 import { Formik, Form } from 'formik'
+import SettingsButton from '../../SettingsButton'
 
 const GitSyncForm = () => {
   return (
     <Formik
-      initialValues={{ name: 'Sasuke' }}
+      initialValues={{ sshKeyLocation: 'Sasuke' }}
       validate={(values) => {
-        if (!values.name)
+        if (!values.sshKeyLocation)
           return {
             name: 'Required',
           }
@@ -34,24 +35,21 @@ const GitSyncForm = () => {
         isSubmitting,
       }) => (
         <Form>
-          <FormControl isInvalid={!!errors.name && touched.name}>
-            <FormLabel htmlFor="name">First name</FormLabel>
+          <FormControl
+            isInvalid={!!errors.sshKeyLocation && touched.sshKeyLocation}
+          >
+            <FormLabel htmlFor="sshKeyLocation">SSH key location</FormLabel>
             <Input
               onChange={handleChange}
               onBlur={handleBlur}
-              id="name"
-              placeholder="name"
+              id="sshKeyLocation"
+              placeholder="SSH key location"
             />
-            <FormErrorMessage>{errors.name}</FormErrorMessage>
+            <FormErrorMessage>{errors.sshKeyLocation}</FormErrorMessage>
           </FormControl>
-          <Button
-            mt={4}
-            colorScheme="teal"
-            isLoading={isSubmitting}
-            type="submit"
-          >
+          <SettingsButton mt={4} isLoading={isSubmitting} type="submit">
             Submit
-          </Button>
+          </SettingsButton>
         </Form>
       )}
     </Formik>
