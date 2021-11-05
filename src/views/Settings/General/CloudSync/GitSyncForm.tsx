@@ -1,12 +1,15 @@
 import {
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
 } from '@chakra-ui/form-control'
 import { Input } from '@chakra-ui/input'
 import { Spacer, Text } from '@chakra-ui/layout'
+import { dialog } from '@tauri-apps/api'
 import { Formik, Form } from 'formik'
 import { CSSProperties } from 'react'
+import isTauri from 'src/utils/isTauri'
 import StepperBottomBar from './StepperBottomBar'
 
 /**
@@ -60,7 +63,7 @@ const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
       validate={(values) => {
         if (!values.sshKeyLocation)
           return {
-            name: 'Required',
+            sshKeyLocation: 'Required',
           }
       }}
       onSubmit={(values, actions) => {
@@ -78,6 +81,7 @@ const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
         handleBlur,
         handleSubmit,
         isSubmitting,
+        setValues,
       }) => (
         <Form
           style={{ display: 'flex', flexDirection: 'column', ...formStyle }}
@@ -89,12 +93,29 @@ const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
               <Text>SSH key Location</Text>
             </FormLabel>
             <Input
-              onChange={handleChange}
+              // onChange={handleChange}
               onBlur={handleBlur}
+              readOnly
+              onClick={async () => {
+                try {
+                  if (isTauri()) {
+                    const filePath = await dialog.open()
+                    if (!filePath || typeof filePath !== 'string')
+                      throw new Error('invalid filePath received!')
+                    setValues({ sshKeyLocation: filePath.toString() })
+                  } else throw new Error(`Cant execute outside Tauri runtime!`)
+                } catch (error) {
+                  console.error(error)
+                }
+              }}
+              value={values.sshKeyLocation}
               id="sshKeyLocation"
               placeholder="SSH key Location"
             />
             <FormErrorMessage>{errors.sshKeyLocation}</FormErrorMessage>
+            <FormHelperText>
+              Select the ssh key file from your system path.
+            </FormHelperText>
           </FormControl>
           <Spacer />
           <StepperBottomBar
