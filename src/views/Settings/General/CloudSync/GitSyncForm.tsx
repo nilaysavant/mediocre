@@ -5,52 +5,17 @@ import {
   FormHelperText,
   FormLabel,
 } from '@chakra-ui/form-control'
-import { Input, InputGroup, InputRightAddon, InputRightElement } from '@chakra-ui/input'
+import {
+  Input,
+  InputGroup,
+  InputRightAddon,
+} from '@chakra-ui/input'
 import { Spacer, Text } from '@chakra-ui/layout'
 import { dialog } from '@tauri-apps/api'
 import { Formik, Form } from 'formik'
 import { CSSProperties } from 'react'
 import isTauri from 'src/utils/isTauri'
 import StepperBottomBar from './StepperBottomBar'
-
-/**
-  // Ref For file selector:
-  ```jsx
-  <FormControl
-    isInvalid={!!errors.sshKeyLocation && touched.sshKeyLocation}
-  >
-    <FormLabel>
-      <Text>SSH key location</Text>
-    </FormLabel>
-    <FormLabel
-      htmlFor="sshKeyLocation"
-      borderStyle="solid"
-      borderColor="gray.600"
-      borderWidth="thin"
-      borderRadius="md"
-      w="full"
-      py="2"
-      px="4"
-      cursor="pointer"
-    >
-      {values.sshKeyLocation ? (
-        <Text>{values.sshKeyLocation}</Text>
-      ) : (
-        <Text color="gray.500">SSH key location</Text>
-      )}
-    </FormLabel>
-    <Input
-      onChange={handleChange}
-      onBlur={handleBlur}
-      id="sshKeyLocation"
-      type="file"
-      display="none"
-      placeholder="SSH key location"
-    />
-    <FormErrorMessage>{errors.sshKeyLocation}</FormErrorMessage>
-  </FormControl>
-  ```
- */
 
 export type GitSyncFormProps = {
   formStyle?: CSSProperties
