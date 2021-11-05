@@ -1,10 +1,11 @@
+import { Button } from '@chakra-ui/button'
 import {
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
 } from '@chakra-ui/form-control'
-import { Input } from '@chakra-ui/input'
+import { Input, InputGroup, InputRightAddon, InputRightElement } from '@chakra-ui/input'
 import { Spacer, Text } from '@chakra-ui/layout'
 import { dialog } from '@tauri-apps/api'
 import { Formik, Form } from 'formik'
@@ -92,26 +93,40 @@ const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
             <FormLabel htmlFor="sshKeyLocation" w="full">
               <Text>SSH key Location</Text>
             </FormLabel>
-            <Input
-              // onChange={handleChange}
-              onBlur={handleBlur}
-              readOnly
-              onClick={async () => {
-                try {
-                  if (isTauri()) {
-                    const filePath = await dialog.open()
-                    if (!filePath || typeof filePath !== 'string')
-                      throw new Error('invalid filePath received!')
-                    setValues({ sshKeyLocation: filePath.toString() })
-                  } else throw new Error(`Cant execute outside Tauri runtime!`)
-                } catch (error) {
-                  console.error(error)
-                }
-              }}
-              value={values.sshKeyLocation}
-              id="sshKeyLocation"
-              placeholder="SSH key Location"
-            />
+            <InputGroup size="sm">
+              <Input
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.sshKeyLocation}
+                id="sshKeyLocation"
+                placeholder="SSH key Location"
+              />
+              <InputRightAddon p="1">
+                <Button
+                  fontWeight="normal"
+                  fontSize="sm"
+                  p="1"
+                  h="auto"
+                  bg="gray.500"
+                  borderRadius="sm"
+                  onClick={async () => {
+                    try {
+                      if (isTauri()) {
+                        const filePath = await dialog.open()
+                        if (!filePath || typeof filePath !== 'string')
+                          throw new Error('invalid filePath received!')
+                        setValues({ sshKeyLocation: filePath.toString() })
+                      } else
+                        throw new Error(`Cant execute outside Tauri runtime!`)
+                    } catch (error) {
+                      console.error(error)
+                    }
+                  }}
+                >
+                  Select File
+                </Button>
+              </InputRightAddon>
+            </InputGroup>
             <FormErrorMessage>{errors.sshKeyLocation}</FormErrorMessage>
             <FormHelperText>
               Select the ssh key file from your system path.
