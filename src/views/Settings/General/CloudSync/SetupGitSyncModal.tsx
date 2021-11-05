@@ -43,13 +43,13 @@ const SetupGitSyncModal = ({
     >
       <ModalOverlay />
       <ModalContent p="3" borderRadius="sm">
-        <ModalHeader p="0" >
-          Setup Git Sync
-        </ModalHeader>
-        <ModalCloseButton top="2" right="2" borderRadius="sm" />
-        <ModalBody p="0">
-          <GitSyncForm />
-        </ModalBody>
+        <ModalCloseButton
+          top="2"
+          right="2"
+          borderRadius="sm"
+          zIndex="dropdown"
+        />
+        <GitSyncForm />
       </ModalContent>
     </Modal>
   )
