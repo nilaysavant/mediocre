@@ -168,7 +168,6 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       height="full"
       borderRadius={0}
       fontSize="md"
-      overflowX="auto"
       placeholder="Type something..."
       background={colorMode === 'dark' ? '#1f1f1f' : 'white'}
       borderWidth="1px"
@@ -176,7 +175,6 @@ const Editor = ({ editorRef, onScroll }: Props) => {
       borderColor={colorMode === 'dark' ? 'border.dark.500' : '#e0e0e0'}
       borderLeft="none"
       borderY="none"
-      overflow="auto"
       outline="none"
       position="relative"
     >
