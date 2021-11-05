@@ -4,9 +4,7 @@ import {
   FormLabel,
 } from '@chakra-ui/form-control'
 import { Input } from '@chakra-ui/input'
-import { Circle, Flex, Stack } from '@chakra-ui/layout'
 import { Formik, Form } from 'formik'
-import SettingsButton from '../../SettingsButton'
 import StepperBottomBar from './StepperBottomBar'
 
 export type GitSyncFormProps = {
