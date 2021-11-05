@@ -1,5 +1,6 @@
 import { Button } from '@chakra-ui/button'
-import { Stack } from '@chakra-ui/layout'
+import { CloseIcon } from '@chakra-ui/icons'
+import { Box, Flex, Heading, Stack } from '@chakra-ui/layout'
 import {
   Modal,
   ModalBody,
@@ -44,12 +45,21 @@ const SetupGitSyncModal = ({
       <ModalOverlay />
       <ModalContent p="3" borderRadius="sm">
         <ModalCloseButton
-          top="2"
-          right="2"
+          top="2.5"
+          right="2.5"
           borderRadius="sm"
           zIndex="dropdown"
+          w="auto"
+          h="auto"
+          p="1.5"
         />
-        <GitSyncForm />
+        <Heading size="md" fontWeight="normal">
+          Setup Git Sync
+        </Heading>
+        <hr />
+        <Box pt="2">
+          <GitSyncForm />
+        </Box>
       </ModalContent>
     </Modal>
   )
