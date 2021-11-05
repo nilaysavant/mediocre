@@ -56,7 +56,7 @@ export type GitSyncFormProps = {
 const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
   return (
     <Formik
-      initialValues={{ sshKeyLocation: '', name: '' }}
+      initialValues={{ sshKeyLocation: '' }}
       validate={(values) => {
         if (!values.sshKeyLocation)
           return {
@@ -85,16 +85,16 @@ const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
           <FormControl
             isInvalid={!!errors.sshKeyLocation && touched.sshKeyLocation}
           >
-            <FormLabel htmlFor="name" w="full">
-              <Text>Name</Text>
+            <FormLabel htmlFor="sshKeyLocation" w="full">
+              <Text>SSH key Location</Text>
             </FormLabel>
             <Input
               onChange={handleChange}
               onBlur={handleBlur}
-              id="name"
-              placeholder="Name"
+              id="sshKeyLocation"
+              placeholder="SSH key Location"
             />
-            <FormErrorMessage>{errors.name}</FormErrorMessage>
+            <FormErrorMessage>{errors.sshKeyLocation}</FormErrorMessage>
           </FormControl>
           <Spacer />
           <StepperBottomBar
