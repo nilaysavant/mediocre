@@ -7,10 +7,10 @@ export type FieldId = string
 
 export type FileInputProps = {
   fieldId: FieldId
-  values: { [key: FieldId]: string }
+  values: { [key in FieldId]: string }
   handleChange: React.ChangeEventHandler<HTMLInputElement>
   handleBlur: React.FocusEventHandler<HTMLInputElement>
-  setValues: (newValue: { [key: FieldId]: string }) => void
+  setValues: (newValue: { [key in FieldId]: string }) => void
 }
 
 /**
@@ -60,3 +60,5 @@ const FileInput = ({
     </InputGroup>
   )
 }
+
+export default FileInput
