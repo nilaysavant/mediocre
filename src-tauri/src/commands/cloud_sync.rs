@@ -12,7 +12,7 @@ pub struct TestGitCloneSshResponse {
 
 /// Command to Test Git clone via ssh
 #[tauri::command]
-pub fn test_git_clone_ssh(
+pub async fn test_git_clone_ssh(
   state: tauri::State<'_, AppState>,
   db_state: tauri::State<'_, AppDbState>,
 ) -> Result<TestGitCloneSshResponse, String> {

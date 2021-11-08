@@ -50,7 +50,7 @@ const StepperBottomBar = ({
         <SettingsButton
           isLoading={nextButtonIsLoading}
           onClick={onNext}
-          disabled={currentStepIndex === maxSteps - 1}
+          disabled={nextButtonIsLoading || currentStepIndex === maxSteps - 1}
         >
           Next
         </SettingsButton>

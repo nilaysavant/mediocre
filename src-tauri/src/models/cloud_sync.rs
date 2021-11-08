@@ -1,6 +1,7 @@
 use std::{env, path::Path};
 
 use git2::{Cred, RemoteCallbacks};
+use log::debug;
 
 /// For syncing files/configs to cloud
 #[derive(Debug, Clone)]
@@ -11,7 +12,7 @@ impl CloudSync {
     // Prepare callbacks.
     let mut callbacks = RemoteCallbacks::new();
     callbacks.credentials(|_url, username_from_url, _allowed_types| {
-      println!("username_from_url: {:?}", username_from_url);
+      debug!("username_from_url: {:?}", username_from_url);
       Cred::ssh_key_from_agent(username_from_url.unwrap())
     });
 
