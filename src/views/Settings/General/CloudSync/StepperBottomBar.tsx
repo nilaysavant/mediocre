@@ -30,9 +30,9 @@ const StepperBottomBar = ({
         <Stack direction="row" p="2">
           {Array.from(Array(maxSteps).keys()).map((e, idx) =>
             idx === currentStepIndex ? (
-              <Circle bg="icon.dark.400" size="10px" />
+              <Circle ref={`stepper-${idx}`} bg="icon.dark.400" size="10px" />
             ) : (
-              <Circle bg="gray.600" size="10px" />
+              <Circle ref={`stepper-${idx}`} bg="gray.600" size="10px" />
             )
           )}
         </Stack>
