@@ -3,7 +3,7 @@
   windows_subsystem = "windows"
 )]
 
-use std::process::exit;
+use std::{process::exit, sync::{Arc, Mutex}};
 
 use log::{error, info};
 
@@ -49,6 +49,7 @@ fn main() {
   tauri::Builder::default()
     .manage(AppState {
       dir_paths: app_dir_paths.clone(),
+      git_sync_repo_url: Arc::new(Mutex::new("".to_string())),
     })
     .manage(AppDbState::new(&app_dir_paths.db.join(APP_DB_FILE_NAME)))
     // This is where you pass in your commands
@@ -64,6 +65,7 @@ fn main() {
       commands::docs::remove_document,
       commands::docs::rename_document,
       commands::cloud_sync::test_git_clone_ssh,
+      commands::cloud_sync::store_git_repository_url,
     ])
     .run(tauri::generate_context!())
     .expect("failed to run app");

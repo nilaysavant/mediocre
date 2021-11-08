@@ -8,7 +8,7 @@ import { Input, InputGroup } from '@chakra-ui/input'
 import { Spacer, Text } from '@chakra-ui/layout'
 import { Formik, Form } from 'formik'
 import { CSSProperties, useContext } from 'react'
-import { testGitCloneSSH } from 'src/functions/cloudSync'
+import { storeGitRepositoryUrl, testGitCloneSSH } from 'src/functions/cloudSync'
 import StepperBottomBar from './StepperBottomBar'
 import CloudSyncStepperContext from './StepperContext'
 
@@ -30,7 +30,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
       onSubmit={async (values, actions) => {
         try {
           actions.setSubmitting(true)
-          await testGitCloneSSH()
+          await storeGitRepositoryUrl(values.gitRepositoryUrl)
           // await sleep(3000)
           console.log(
             '🚀 ~ file: GitSyncForm.tsx ~ line 40 ~ onSubmit={ ~ values',
