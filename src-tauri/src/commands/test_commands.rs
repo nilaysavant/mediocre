@@ -23,7 +23,7 @@ pub fn my_custom_command(
   }
   debug!("Database: {:?}", db.get::<String>("message").unwrap());
   debug!("Git clone ssh...");
-  CloudSync::test_git_clone_ssh();
+  CloudSync::test_git_clone_ssh().unwrap();
   debug!("Git clone ssh: Done!");
   Response { message }
 }

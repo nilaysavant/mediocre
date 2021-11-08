@@ -7,7 +7,7 @@ use git2::{Cred, RemoteCallbacks};
 pub struct CloudSync {}
 
 impl CloudSync {
-  pub fn test_git_clone_ssh() {
+  pub fn test_git_clone_ssh() -> Result<(), git2::Error> {
     // Prepare callbacks.
     let mut callbacks = RemoteCallbacks::new();
     callbacks.credentials(|_url, username_from_url, _allowed_types| {
@@ -24,11 +24,10 @@ impl CloudSync {
     builder.fetch_options(fo);
 
     // Clone the project.
-    builder
-      .clone(
-        "git@github.com:rust-lang/git2-rs.git",
-        Path::new("/tmp/git2-rs"),
-      )
-      .unwrap();
+    builder.clone(
+      "git@github.com:rust-lang/git2-rs.git",
+      Path::new("/tmp/git2-rs"),
+    )?;
+    Ok(())
   }
 }
