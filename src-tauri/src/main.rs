@@ -58,12 +58,12 @@ fn main() {
       commands::md_parser::parse_md_to_mu,
       commands::env::get_env,
       commands::fs::save_file_to,
-      cmd::fetch_doc_info,
-      cmd::fetch_all_docs_info,
-      cmd::read_document,
-      cmd::write_document,
-      cmd::remove_document,
-      cmd::rename_document,
+      commands::docs::fetch_doc_info,
+      commands::docs::fetch_all_docs_info,
+      commands::docs::read_document,
+      commands::docs::write_document,
+      commands::docs::remove_document,
+      commands::docs::rename_document,
     ])
     .run(tauri::generate_context!())
     .expect("failed to run app");
