@@ -73,7 +73,9 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
             </InputGroup>
             <FormErrorMessage>{errors.gitRepositoryUrl}</FormErrorMessage>
             <FormHelperText>
-              Select the ssh key file from your system path.
+              Enter the Git repository <b>SSH URL</b> for sync setup.
+              <br />
+              example: <b>git@github.com:user/mediocre-library.git</b>
             </FormHelperText>
           </FormControl>
           <Spacer />
