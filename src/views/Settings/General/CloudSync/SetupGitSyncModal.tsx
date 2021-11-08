@@ -1,18 +1,14 @@
-import { Button } from '@chakra-ui/button'
-import { CloseIcon } from '@chakra-ui/icons'
-import { Box, Flex, Heading, Stack } from '@chakra-ui/layout'
+import { Heading } from '@chakra-ui/layout'
 import {
   Modal,
-  ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
   ModalProps,
 } from '@chakra-ui/modal'
-import SettingsButton from '../../SettingsButton'
-import GitSyncForm from './GitSyncForm'
+import React, { useState } from 'react'
+import { stepperScreens } from './config'
+import CloudSyncStepperContext from './StepperContext'
 
 export type SetupGitSyncModalProps = {
   isOpen: boolean
@@ -34,45 +30,54 @@ const SetupGitSyncModal = ({
   finalFocusRef,
   modalProps,
 }: SetupGitSyncModalProps) => {
+  const [currentStepIdx, setCurrentStepIdx] = useState(0)
   return (
-    <Modal
-      {...modalProps}
-      initialFocusRef={initialFocusRef}
-      finalFocusRef={finalFocusRef}
-      isOpen={isOpen}
-      onClose={onClose}
-      isCentered
+    <CloudSyncStepperContext.Provider
+      value={{
+        currentStep: currentStepIdx,
+        maxSteps: stepperScreens.length,
+        onNext: () =>
+          setCurrentStepIdx((old) =>
+            old < stepperScreens.length - 1
+              ? old + 1
+              : stepperScreens.length - 1
+          ),
+        onBack: () => setCurrentStepIdx((old) => (old > 0 ? old - 1 : 0)),
+      }}
     >
-      <ModalOverlay />
-      <ModalContent
-        p="3"
-        borderRadius="sm"
-        minHeight="sm"
-        display="flex"
-        flexDirection="column"
+      <Modal
+        {...modalProps}
+        initialFocusRef={initialFocusRef}
+        finalFocusRef={finalFocusRef}
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered
       >
-        <ModalCloseButton
-          top="2.5"
-          right="2.5"
+        <ModalOverlay />
+        <ModalContent
+          p="3"
           borderRadius="sm"
-          zIndex="dropdown"
-          w="auto"
-          h="auto"
-          p="1.5"
-        />
-        <Heading size="md" fontWeight="normal">
-          Setup Git Sync
-        </Heading>
-        <hr style={{ marginTop: '0.3rem' }} />
-        <GitSyncForm
-          formStyle={{
-            paddingTop: '0.5rem',
-            flex: '1',
-            minHeight: 0,
-          }}
-        />
-      </ModalContent>
-    </Modal>
+          minHeight="sm"
+          display="flex"
+          flexDirection="column"
+        >
+          <ModalCloseButton
+            top="2.5"
+            right="2.5"
+            borderRadius="sm"
+            zIndex="dropdown"
+            w="auto"
+            h="auto"
+            p="1.5"
+          />
+          <Heading size="md" fontWeight="normal">
+            {stepperScreens[currentStepIdx].title}
+          </Heading>
+          <hr style={{ marginTop: '0.3rem' }} />
+          {stepperScreens[currentStepIdx].content}
+        </ModalContent>
+      </Modal>
+    </CloudSyncStepperContext.Provider>
   )
 }
 
