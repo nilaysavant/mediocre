@@ -10,7 +10,9 @@ import { Spacer, Text } from '@chakra-ui/layout'
 import { dialog } from '@tauri-apps/api'
 import { Formik, Form } from 'formik'
 import { CSSProperties, useContext } from 'react'
+import { testGitCloneSSH } from 'src/functions/cloudSync'
 import isTauri from 'src/utils/isTauri'
+import sleep from 'src/utils/sleep'
 import StepperBottomBar from './StepperBottomBar'
 import CloudSyncStepperContext from './StepperContext'
 
@@ -29,11 +31,17 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
             sshKeyLocation: 'Required',
           }
       }}
-      onSubmit={(values, actions) => {
-        setTimeout(() => {
+      onSubmit={async (values, actions) => {
+        try {
+          actions.setSubmitting(true)
+          await testGitCloneSSH()
+          // await sleep(3000)
           alert(JSON.stringify(values, null, 2))
           actions.setSubmitting(false)
-        }, 1000)
+          stepperContext.onNext()
+        } catch (error) {
+          console.error(error)
+        }
       }}
     >
       {({
@@ -96,10 +104,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
           </FormControl>
           <Spacer />
           <StepperBottomBar
-            onNext={() => {
-              // handleSubmit()
-              stepperContext.onNext()
-            }}
+            onNext={handleSubmit}
             onBack={stepperContext.onBack}
             nextButtonIsLoading={isSubmitting}
             currentStepIndex={stepperContext.currentStep}

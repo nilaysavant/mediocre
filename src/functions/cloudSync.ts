@@ -1,0 +1,17 @@
+import { tauri } from '@tauri-apps/api'
+import isTauri from 'src/utils/isTauri'
+
+/**
+ * ### Test Git Clone SSH (Tauri Command)
+ *
+ * Tauri command to Test git clone via ssh.
+ */
+export const testGitCloneSSH = async () => {
+  if (isTauri()) {
+    const invokeRes: {
+      status: boolean
+      message: string
+    } = await tauri.invoke('test_git_clone_ssh', {})
+    return invokeRes
+  }
+}
