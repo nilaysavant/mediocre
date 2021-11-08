@@ -14,6 +14,7 @@ use crate::{
 };
 
 mod cmd;
+mod commands;
 mod constants;
 mod models;
 mod utils;
@@ -53,7 +54,7 @@ fn main() {
     .manage(AppDbState::new(&app_dir_paths.db.join(APP_DB_FILE_NAME)))
     // This is where you pass in your commands
     .invoke_handler(tauri::generate_handler![
-      cmd::my_custom_command,
+      commands::test_commands::my_custom_command,
       cmd::parse_md_to_mu,
       cmd::get_env,
       cmd::save_file_to,
@@ -62,7 +63,7 @@ fn main() {
       cmd::read_document,
       cmd::write_document,
       cmd::remove_document,
-      cmd::rename_document
+      cmd::rename_document,
     ])
     .run(tauri::generate_context!())
     .expect("failed to run app");
