@@ -13,7 +13,6 @@ use crate::{
   utils::fsutils::get_app_root_dir_path,
 };
 
-mod cmd;
 mod commands;
 mod constants;
 mod models;
