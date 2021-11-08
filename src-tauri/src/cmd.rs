@@ -1,61 +1,13 @@
 use std::path::PathBuf;
 
-use crate::{models::{app_db_state::AppDbState, app_state::AppState, cloud_sync::CloudSync}, utils::fsutils};
+use crate::{
+  models::{app_db_state::AppDbState, app_state::AppState, cloud_sync::CloudSync},
+  utils::fsutils,
+};
 use comrak::{markdown_to_html, ComrakOptions};
 use log::{debug, info};
 use relative_path::RelativePath;
 use serde::{Deserialize, Serialize};
-
-// #[derive(Debug, Deserialize, Serialize)]
-// #[serde(rename_all = "camelCase")]
-// pub struct Response {
-//   message: String,
-// }
-
-// #[tauri::command]
-// pub fn my_custom_command(
-//   message: String,
-//   state: tauri::State<'_, AppState>,
-//   db_state: tauri::State<'_, AppDbState>,
-// ) -> Response {
-//   debug!("I was invoked from JS! Message: {}", message);
-//   debug!("State: {:?}", state.dir_paths);
-//   let mut db = db_state.db.lock().unwrap();
-//   if message.len() > 0 {
-//     db.set("message", &message).unwrap();
-//   }
-//   debug!("Database: {:?}", db.get::<String>("message").unwrap());
-//   debug!("Git clone ssh...");
-//   CloudSync::test_git_clone_ssh();
-//   debug!("Git clone ssh: Done!");
-//   Response { message }
-// }
-
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct MdResponse {
-  markup: String,
-}
-
-/// Parse/Convert Markdown string into HTML Markup string
-#[tauri::command]
-pub fn parse_md_to_mu(md_string: String) -> MdResponse {
-  let mut comrak_options = ComrakOptions::default();
-  comrak_options.extension.autolink = true; // Auto detect links
-  comrak_options.extension.table = true; // Detect tables
-  comrak_options.extension.tasklist = true; // Detect Checklist
-  comrak_options.extension.front_matter_delimiter = Some("---".to_owned()); // Ignore front-mater starting with '---'
-  comrak_options.render.unsafe_ = true;
-  comrak_options.render.hardbreaks = true;
-  let unsafe_mu_string = markdown_to_html(&md_string, &comrak_options);
-  let safe_mu_string = ammonia::Builder::new()
-    .add_tag_attributes("code", &["class"]) // Allow class on <code> tag (needed for code syntax highlighting)
-    .clean(&unsafe_mu_string)
-    .to_string();
-  MdResponse {
-    markup: safe_mu_string,
-  }
-}
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]

@@ -55,7 +55,7 @@ fn main() {
     // This is where you pass in your commands
     .invoke_handler(tauri::generate_handler![
       commands::test_commands::my_custom_command,
-      cmd::parse_md_to_mu,
+      commands::md_parser::parse_md_to_mu,
       cmd::get_env,
       cmd::save_file_to,
       cmd::fetch_doc_info,
