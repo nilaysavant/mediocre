@@ -11,46 +11,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct EnvResponse {
-  app_dir_path: Option<PathBuf>,
-}
-
-/// Get Environment Variables
-#[tauri::command]
-pub fn get_env() -> EnvResponse {
-  let app_dir_path = tauri::api::path::app_dir(&tauri::Config::default());
-  EnvResponse { app_dir_path }
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct SaveFileToResponse {
-  status: bool,
-  message: String,
-}
-
-/// Save File to Command
-#[tauri::command]
-pub fn save_file_to(
-  save_path: String,
-  file_data: String,
-  state: tauri::State<'_, AppState>,
-) -> Result<SaveFileToResponse, String> {
-  let documents_dir = &state.dir_paths.documents;
-  // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
-  let save_path = RelativePath::new(save_path.as_str())
-    .normalize()
-    .to_path(documents_dir)
-    .to_owned();
-  fsutils::write_to_path(save_path.as_path(), file_data).map_err(|e| e.to_string())?;
-  Ok(SaveFileToResponse {
-    status: true,
-    message: "Success".to_string(),
-  })
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase")]
 pub struct FetchDocInfoResponse {
   file_meta_info: fsutils::FileMetaInfo,
 }
