@@ -24,11 +24,11 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
   const stepperContext = useContext(CloudSyncStepperContext)
   return (
     <Formik
-      initialValues={{ sshKeyLocation: '' }}
+      initialValues={{ gitRepositoryUrl: '' }}
       validate={(values) => {
-        if (!values.sshKeyLocation)
+        if (!values.gitRepositoryUrl)
           return {
-            sshKeyLocation: 'Required',
+            gitRepositoryUrl: 'Required',
           }
       }}
       onSubmit={async (values, actions) => {
@@ -61,18 +61,18 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
           style={{ display: 'flex', flexDirection: 'column', ...formStyle }}
         >
           <FormControl
-            isInvalid={!!errors.sshKeyLocation && touched.sshKeyLocation}
+            isInvalid={!!errors.gitRepositoryUrl && touched.gitRepositoryUrl}
           >
-            <FormLabel htmlFor="sshKeyLocation" w="full">
-              <Text>SSH key Location</Text>
+            <FormLabel htmlFor="gitRepositoryUrl" w="full">
+              <Text>Git repository URL</Text>
             </FormLabel>
             <InputGroup size="sm">
               <Input
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.sshKeyLocation}
-                id="sshKeyLocation"
-                placeholder="SSH key Location"
+                value={values.gitRepositoryUrl}
+                id="gitRepositoryUrl"
+                placeholder="Git repository URL"
               />
               <InputRightAddon p="1">
                 <Button
@@ -88,7 +88,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
                         const filePath = await dialog.open()
                         if (!filePath || typeof filePath !== 'string')
                           throw new Error('invalid filePath received!')
-                        setValues({ sshKeyLocation: filePath.toString() })
+                        setValues({ gitRepositoryUrl: filePath.toString() })
                       } else
                         throw new Error(`Cant execute outside Tauri runtime!`)
                     } catch (error) {
@@ -100,7 +100,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
                 </Button>
               </InputRightAddon>
             </InputGroup>
-            <FormErrorMessage>{errors.sshKeyLocation}</FormErrorMessage>
+            <FormErrorMessage>{errors.gitRepositoryUrl}</FormErrorMessage>
             <FormHelperText>
               Select the ssh key file from your system path.
             </FormHelperText>
