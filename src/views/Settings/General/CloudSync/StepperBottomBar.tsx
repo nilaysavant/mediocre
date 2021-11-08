@@ -42,12 +42,16 @@ const StepperBottomBar = ({
           <SettingsButton
             colorScheme="gray"
             onClick={onBack}
-            disabled={nextButtonIsLoading}
+            disabled={nextButtonIsLoading || currentStepIndex === 0}
           >
             Back
           </SettingsButton>
         ) : null}
-        <SettingsButton isLoading={nextButtonIsLoading} onClick={onNext}>
+        <SettingsButton
+          isLoading={nextButtonIsLoading}
+          onClick={onNext}
+          disabled={currentStepIndex === maxSteps - 1}
+        >
           Next
         </SettingsButton>
       </Stack>

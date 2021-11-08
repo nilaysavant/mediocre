@@ -50,6 +50,19 @@ export const stepperScreens: {
       />
     ),
   },
+  {
+    id: getUniqueIdV4(),
+    title: 'Setup Git Sync',
+    content: (
+      <GitSyncForm
+        formStyle={{
+          paddingTop: '0.5rem',
+          flex: '1',
+          minHeight: 0,
+        }}
+      />
+    ),
+  },
 ]
 
 export default null

@@ -5,17 +5,14 @@ import {
   FormHelperText,
   FormLabel,
 } from '@chakra-ui/form-control'
-import {
-  Input,
-  InputGroup,
-  InputRightAddon,
-} from '@chakra-ui/input'
+import { Input, InputGroup, InputRightAddon } from '@chakra-ui/input'
 import { Spacer, Text } from '@chakra-ui/layout'
 import { dialog } from '@tauri-apps/api'
 import { Formik, Form } from 'formik'
-import { CSSProperties } from 'react'
+import { CSSProperties, useContext } from 'react'
 import isTauri from 'src/utils/isTauri'
 import StepperBottomBar from './StepperBottomBar'
+import CloudSyncStepperContext from './StepperContext'
 
 export type GitSyncFormProps = {
   formStyle?: CSSProperties
@@ -23,6 +20,7 @@ export type GitSyncFormProps = {
 }
 
 const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
+  const stepperContext = useContext(CloudSyncStepperContext)
   return (
     <Formik
       initialValues={{ sshKeyLocation: '' }}
@@ -99,11 +97,14 @@ const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
           </FormControl>
           <Spacer />
           <StepperBottomBar
-            onNext={handleSubmit}
-            onBack={() => null}
+            onNext={() => {
+              // handleSubmit()
+              stepperContext.onNext()
+            }}
+            onBack={stepperContext.onBack}
             nextButtonIsLoading={isSubmitting}
-            currentStepIndex={1}
-            maxSteps={4}
+            currentStepIndex={stepperContext.currentStep}
+            maxSteps={stepperContext.maxSteps}
             containerProps={{
               mt: '4',
             }}
