@@ -16,10 +16,9 @@ import CloudSyncStepperContext from './StepperContext'
 
 export type GitSyncFormProps = {
   formStyle?: CSSProperties
-  children?: React.ReactNode
 }
 
-const GitSyncForm = ({ formStyle, children }: GitSyncFormProps) => {
+const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
   const stepperContext = useContext(CloudSyncStepperContext)
   return (
     <Formik
