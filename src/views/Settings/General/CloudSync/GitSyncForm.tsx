@@ -36,7 +36,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
           actions.setSubmitting(true)
           await testGitCloneSSH()
           // await sleep(3000)
-          alert(JSON.stringify(values, null, 2))
+          console.log("🚀 ~ file: GitSyncForm.tsx ~ line 40 ~ onSubmit={ ~ values", values)
           actions.setSubmitting(false)
           stepperContext.onNext()
         } catch (error) {
