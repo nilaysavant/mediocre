@@ -12,7 +12,7 @@ pub struct FetchDocInfoResponse {
 
 /// Fetch Document info from document relative path (ie. relative to app root dir)
 #[tauri::command]
-pub fn fetch_doc_info(
+pub async fn fetch_doc_info(
   relative_path: String,
   state: tauri::State<'_, AppState>,
 ) -> Result<FetchDocInfoResponse, String> {
@@ -36,7 +36,7 @@ pub struct FetchAllDocsInfoResponse {
 
 /// Fetch Documents info from app root dir
 #[tauri::command]
-pub fn fetch_all_docs_info(
+pub async fn fetch_all_docs_info(
   state: tauri::State<'_, AppState>,
 ) -> Result<FetchAllDocsInfoResponse, String> {
   let documents_dir = &state.dir_paths.documents;
@@ -53,7 +53,7 @@ pub struct ReadDocumentResponse {
 
 /// Read Document on the specified relative path
 #[tauri::command]
-pub fn read_document(
+pub async fn read_document(
   relative_path: String,
   state: tauri::State<'_, AppState>,
 ) -> Result<ReadDocumentResponse, String> {
@@ -76,7 +76,7 @@ pub struct WriteDocumentResponse {
 
 /// Write Document to the specified relative path
 #[tauri::command]
-pub fn write_document(
+pub async fn write_document(
   relative_path: String,
   content: String,
   state: tauri::State<'_, AppState>,
@@ -100,7 +100,7 @@ pub struct RemoveDocumentResponse {
 
 /// Remove/Delete Document on the specified relative path
 #[tauri::command]
-pub fn remove_document(
+pub async fn remove_document(
   relative_path: String,
   state: tauri::State<'_, AppState>,
 ) -> Result<RemoveDocumentResponse, String> {
@@ -123,7 +123,7 @@ pub struct RenameDocumentResponse {
 
 /// Rename Document on the specified relative path
 #[tauri::command]
-pub fn rename_document(
+pub async fn rename_document(
   relative_path: String,
   new_document_name: String,
   state: tauri::State<'_, AppState>,
