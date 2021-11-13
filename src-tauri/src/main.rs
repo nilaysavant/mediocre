@@ -68,7 +68,7 @@ fn main() {
       commands::docs::remove_document,
       commands::docs::rename_document,
       commands::cloud_sync::test_git_clone_ssh,
-      commands::cloud_sync::setup_git_sync,
+      commands::cloud_sync::setup_git_cloud_sync,
     ])
     .run(tauri::generate_context!())
     .expect("failed to run app");

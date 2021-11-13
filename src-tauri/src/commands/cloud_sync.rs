@@ -3,7 +3,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
   commands::fs,
-  models::{app_db_state::AppDbState, app_state::AppState, cloud_sync::CloudSync},
+  models::{
+    app_db_state::AppDbState,
+    app_state::AppState,
+    cloud_sync::{self, CloudSync},
+  },
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -31,29 +35,30 @@ pub async fn test_git_clone_ssh(
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct StoreGitRepositoryUrlResponse {
+pub struct SetupGitCloudSyncResponse {
   status: bool,
   message: String,
 }
 
-/// # Command to setup Git Sync via Repo (SSH) url
+/// # Command to setup Git Cloud Sync
 ///
 /// - Get the repo url, set it in DB + State.
 /// - Clone/Pull the repo in the `app_dir`.
 /// - Add the required files/dir to sync.
 /// - Push the changes to repo origin.
 #[tauri::command]
-pub async fn setup_git_sync(
+pub async fn setup_git_cloud_sync(
   git_sync_repo_url: String,
   state: tauri::State<'_, AppState>,
   db_state: tauri::State<'_, AppDbState>,
-) -> Result<StoreGitRepositoryUrlResponse, String> {
+) -> Result<SetupGitCloudSyncResponse, String> {
   let mut db = db_state.db.lock().map_err(|e| e.to_string())?;
-  db.set("git_sync_repo_url", &git_sync_repo_url)
+  let cloud_sync =
+    CloudSync::new(state.inner().to_owned(), &mut db, git_sync_repo_url).map_err(|e| e.to_string())?;
+  cloud_sync
+    .setup(state.inner().to_owned(), &mut db)
     .map_err(|e| e.to_string())?;
-  let mut state_git_sync_repo_url = state.git_sync_repo_url.lock().map_err(|e| e.to_string())?;
-  *state_git_sync_repo_url = git_sync_repo_url;
-  Ok(StoreGitRepositoryUrlResponse {
+  Ok(SetupGitCloudSyncResponse {
     status: true,
     message: "Success".to_string(),
   })
