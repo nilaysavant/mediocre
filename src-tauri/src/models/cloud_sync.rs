@@ -43,6 +43,31 @@ impl CloudSync {
     }
   }
 
+  /// Pull the changes from the remote url
+  pub fn pull_changes(self, state: AppState, db: &mut PickleDb) -> Result<()> {
+    // Prepare callbacks.
+    let mut callbacks = RemoteCallbacks::new();
+    callbacks.credentials(|_url, username_from_url, _allowed_types| {
+      debug!("username_from_url: {:?}", username_from_url);
+      Cred::ssh_key_from_agent(username_from_url.unwrap())
+    });
+
+    // Prepare fetch options.
+    let mut fo = git2::FetchOptions::new();
+    fo.remote_callbacks(callbacks);
+
+    // Prepare builder.
+    let mut builder = git2::build::RepoBuilder::new();
+    builder.fetch_options(fo);
+
+    // Clone the project.
+    builder.clone(
+      "git@github.com:rust-lang/git2-rs.git",
+      Path::new("/tmp/git2-rs"),
+    )?;
+    Ok(())
+  }
+
   pub fn test_git_clone_ssh() -> Result<(), git2::Error> {
     // Prepare callbacks.
     let mut callbacks = RemoteCallbacks::new();
@@ -67,15 +92,3 @@ impl CloudSync {
     Ok(())
   }
 }
-
-/*
-let mut db = db_state.db.lock().map_err(|e| e.to_string())?;
-  db.set("git_sync_repo_url", &git_sync_repo_url)
-    .map_err(|e| e.to_string())?;
-  let mut state_git_sync_repo_url = state.git_sync_repo_url.lock().map_err(|e| e.to_string())?;
-  *state_git_sync_repo_url = git_sync_repo_url;
-  Ok(StoreGitRepositoryUrlResponse {
-    status: true,
-    message: "Success".to_string(),
-  })
- */
