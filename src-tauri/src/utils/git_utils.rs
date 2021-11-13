@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
-use git2::{Cred, RemoteCallbacks, Repository};
+use git2::{Cred, IndexAddOption, RemoteCallbacks, Repository};
 use log::debug;
 
 /// # Utilities for interacting with git
@@ -45,6 +45,15 @@ impl GitUtils {
       .repository
       .find_remote("origin")?
       .fetch(&["master"], None, None)?;
+    Ok(())
+  }
+
+  /// # Add files to track
+  /// Add all files to track under the specified `dir_path`.
+  pub fn add(self, dir_path: &Path) -> Result<()> {
+    let mut index = self.repository.index()?;
+    index.add_all([dir_path].iter(), IndexAddOption::DEFAULT, None)?;
+    index.write()?;
     Ok(())
   }
 
