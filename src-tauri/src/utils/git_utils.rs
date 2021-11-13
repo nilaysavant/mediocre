@@ -19,7 +19,8 @@ impl GitUtils {
     Ok(Self { repository })
   }
 
-  /// Clone a repo given the `remote_url` to the specified `path`
+  /// # Clone a repo
+  /// Clones a repository given the `remote_url` to the specified `path`
   pub fn clone(remote_url: String, clone_path: &Path) -> Result<Repository> {
     // Prepare callbacks.
     let mut callbacks = RemoteCallbacks::new();
