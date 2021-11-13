@@ -5,6 +5,8 @@ use git2::{Cred, RemoteCallbacks};
 use log::debug;
 use pickledb::PickleDb;
 
+use super::app_state::AppState;
+
 /// For syncing files/configs to cloud
 #[derive(Debug, Clone)]
 pub struct CloudSync {
@@ -12,20 +14,33 @@ pub struct CloudSync {
 }
 
 impl CloudSync {
-  /// Create a new `CloudSync` instance from the
-  /// given `git_sync_repo_url`.
-  pub fn new(db: &mut PickleDb, git_sync_repo_url: String) -> Result<Self> {
-    db.set("git_sync_repo_url", &git_sync_repo_url)?;
+  /// # Create a new `CloudSync` instance
+  /// - Using the given `git_sync_repo_url`.
+  /// - Also sets the url in the `DB` and `state`.
+  pub fn new(state: AppState, db: &mut PickleDb, git_sync_repo_url: String) -> Result<Self> {
+    db.set("git_sync_repo_url", &git_sync_repo_url)?; // Set the url in the DB
+    let mut state_git_sync_repo_url = state
+      .git_sync_repo_url
+      .lock()
+      .map_err(|e| anyhow::Error::msg(e.to_string()))?;
+    *state_git_sync_repo_url = git_sync_repo_url.clone(); // set the url in state
     Ok(CloudSync { git_sync_repo_url })
   }
 
   /// Create a new `CloudSync` instance
-  /// with required data from DB.
-  pub fn from_db(db: &mut PickleDb) -> Result<Self> {
-    let git_sync_repo_url = db.get("git_sync_repo_url").ok_or(anyhow::Error::msg(
-      "could not get `git_sync_repo_url` from db.",
-    ))?;
-    Ok(CloudSync { git_sync_repo_url })
+  /// using the available data in State/DB.
+  pub fn from_avail(state: AppState, db: &mut PickleDb) -> Result<Self> {
+    match state.git_sync_repo_url.lock() {
+      Ok(git_sync_repo_url) => Ok(CloudSync {
+        git_sync_repo_url: git_sync_repo_url.to_string(),
+      }),
+      Err(e) => {
+        let git_sync_repo_url = db.get("git_sync_repo_url").ok_or(anyhow::Error::msg(
+          "could not get `git_sync_repo_url` from db.",
+        ))?;
+        Ok(CloudSync { git_sync_repo_url })
+      }
+    }
   }
 
   pub fn test_git_clone_ssh() -> Result<(), git2::Error> {
