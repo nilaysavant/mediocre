@@ -5,7 +5,9 @@ use git2::{Cred, RemoteCallbacks};
 use log::debug;
 use pickledb::PickleDb;
 
-use super::app_state::AppState;
+use crate::utils::git_utils::GitUtils;
+
+use super::{app_dir_paths, app_state::AppState};
 
 /// For syncing files/configs to cloud
 #[derive(Debug, Clone)]
@@ -43,28 +45,9 @@ impl CloudSync {
     }
   }
 
-  /// Pull the changes from the remote url
-  pub fn pull_changes(self, state: AppState, db: &mut PickleDb) -> Result<()> {
-    // Prepare callbacks.
-    let mut callbacks = RemoteCallbacks::new();
-    callbacks.credentials(|_url, username_from_url, _allowed_types| {
-      debug!("username_from_url: {:?}", username_from_url);
-      Cred::ssh_key_from_agent(username_from_url.unwrap())
-    });
-
-    // Prepare fetch options.
-    let mut fo = git2::FetchOptions::new();
-    fo.remote_callbacks(callbacks);
-
-    // Prepare builder.
-    let mut builder = git2::build::RepoBuilder::new();
-    builder.fetch_options(fo);
-
-    // Clone the project.
-    builder.clone(
-      "git@github.com:rust-lang/git2-rs.git",
-      Path::new("/tmp/git2-rs"),
-    )?;
+  /// Setup Sync
+  pub fn setup(self, state: AppState, db: &mut PickleDb) -> Result<()> {
+    let git_utils = GitUtils::new(self.git_sync_repo_url, &state.dir_paths.documents)?;
     Ok(())
   }
 
