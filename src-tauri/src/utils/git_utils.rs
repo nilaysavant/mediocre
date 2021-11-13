@@ -19,6 +19,14 @@ impl GitUtils {
     Ok(Self { repository })
   }
 
+  /// # Load GitUtils instance based on existing repo
+  /// - Loads an existing instance of the git repository at
+  /// the `repo_path` and returns a GitUtils instance based on this.
+  pub fn load(repo_path: &Path) -> Result<Self> {
+    let repository = Repository::discover(repo_path)?;
+    Ok(Self { repository })
+  }
+
   /// # Clone a repo
   /// Clones a repository given the `remote_url` to the specified `path`
   pub fn clone(remote_url: String, clone_path: &Path) -> Result<Repository> {
