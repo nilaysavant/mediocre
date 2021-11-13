@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
-use git2::{Cred, IndexAddOption, RemoteCallbacks, Repository};
+use git2::{Cred, IndexAddOption, RemoteCallbacks, Repository, Signature};
 use log::debug;
 
 /// # Utilities for interacting with git
@@ -40,7 +40,7 @@ impl GitUtils {
 
   /// # Fetch a repo
   /// Downloads data from remote repo and updates existing files.
-  pub fn fetch(self) -> Result<()> {
+  pub fn fetch(&self) -> Result<()> {
     self
       .repository
       .find_remote("origin")?
@@ -49,11 +49,35 @@ impl GitUtils {
   }
 
   /// # Add files to track
-  /// Add all files to track under the specified `dir_path`.
-  pub fn add(self, dir_path: &Path) -> Result<()> {
+  /// Add all files to track under the specified `dirs` list.
+  pub fn add(&self, dirs: Vec<&Path>) -> Result<()> {
     let mut index = self.repository.index()?;
-    index.add_all([dir_path].iter(), IndexAddOption::DEFAULT, None)?;
+    index.add_all(dirs.iter(), IndexAddOption::DEFAULT, None)?;
     index.write()?;
+    Ok(())
+  }
+
+  /// # Add + Commit to repo
+  /// Create a commit adding and tracking the files to the repo.
+  /// - `dirs` path to add files to commit
+  pub fn add_commit(&self, dirs: Vec<&Path>) -> Result<()> {
+    self.add(dirs)?; // add files to commit on the specified dir_path
+    let signature = self.repository.signature()?;
+    let message = "my commit";
+    let tree_id = self.repository.index()?.write_tree()?;
+    let mut parents = Vec::new();
+    if let Some(parent) = self.repository.head().ok().map(|h| h.target().unwrap()) {
+      parents.push(self.repository.find_commit(parent)?);
+    }
+    let parents = parents.iter().collect::<Vec<_>>();
+    self.repository.commit(
+      Some("HEAD"),
+      &signature,
+      &signature,
+      message,
+      &self.repository.find_tree(tree_id)?,
+      &parents,
+    )?;
     Ok(())
   }
 
