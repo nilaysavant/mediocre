@@ -24,7 +24,7 @@ impl GitUtils {
   /// - Loads an existing instance of the git repository at
   /// the `repo_path` and returns a GitUtils instance based on this.
   pub fn load(repo_path: &Path) -> Result<Self> {
-    let repository = Repository::discover(repo_path)?;
+    let repository = Repository::open(repo_path)?;
     Ok(Self { repository })
   }
 
