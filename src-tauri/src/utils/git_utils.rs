@@ -58,8 +58,13 @@ impl GitUtils {
   }
 
   /// # Add + Commit to repo
+  ///
   /// Create a commit adding and tracking the files to the repo.
   /// - `dirs` path to add files to commit
+  ///
+  /// ## References
+  ///
+  /// - https://github.com/rust-lang/git2-rs/issues/507
   pub fn add_commit(&self, dirs: Vec<&Path>) -> Result<()> {
     self.add(dirs)?; // add files to commit on the specified dir_path
     let signature = self.repository.signature()?;
