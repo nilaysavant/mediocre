@@ -47,7 +47,7 @@ impl CloudSync {
 
   /// Setup Sync
   pub fn setup(self, state: AppState, db: &mut PickleDb) -> Result<()> {
-    let git_utils = GitUtils::new(self.git_sync_repo_url, &state.dir_paths.documents)?;
+    let git_utils = GitUtils::new(self.git_sync_repo_url, &state.dir_paths.root)?;
     Ok(())
   }
 

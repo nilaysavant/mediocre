@@ -12,10 +12,11 @@ pub struct GitUtils {
 
 impl GitUtils {
   /// # Create a new GitUtils instance
-  /// - Creates an instance of the git repository at
-  /// the `remote_url` and clones to the `clone_path` specified.
-  pub fn new(remote_url: String, clone_path: &Path) -> Result<Self> {
-    let repository = Self::clone(remote_url, clone_path)?;
+  /// - Inits a new git repo.
+  /// - Sets the repository remote.
+  pub fn new(remote_url: String, repo_path: &Path) -> Result<Self> {
+    let repository = Repository::init(repo_path)?;
+    repository.remote("origin", &remote_url)?;
     Ok(Self { repository })
   }
 
