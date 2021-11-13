@@ -36,9 +36,14 @@ pub struct StoreGitRepositoryUrlResponse {
   message: String,
 }
 
-/// Command to store the Git Sync Repo (SSH) url
+/// # Command to setup Git Sync via Repo (SSH) url
+///
+/// - Get the repo url, set it in DB + State.
+/// - Clone/Pull the repo in the `app_dir`.
+/// - Add the required files/dir to sync.
+/// - Push the changes to repo origin.
 #[tauri::command]
-pub async fn store_git_repository_url(
+pub async fn setup_git_sync(
   git_sync_repo_url: String,
   state: tauri::State<'_, AppState>,
   db_state: tauri::State<'_, AppDbState>,

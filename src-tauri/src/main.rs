@@ -3,7 +3,10 @@
   windows_subsystem = "windows"
 )]
 
-use std::{process::exit, sync::{Arc, Mutex}};
+use std::{
+  process::exit,
+  sync::{Arc, Mutex},
+};
 
 use log::{error, info};
 
@@ -65,7 +68,7 @@ fn main() {
       commands::docs::remove_document,
       commands::docs::rename_document,
       commands::cloud_sync::test_git_clone_ssh,
-      commands::cloud_sync::store_git_repository_url,
+      commands::cloud_sync::setup_git_sync,
     ])
     .run(tauri::generate_context!())
     .expect("failed to run app");
