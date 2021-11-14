@@ -74,10 +74,9 @@ impl GitUtils {
   /// ## References
   ///
   /// - https://github.com/rust-lang/git2-rs/issues/507
-  pub fn add_commit(&self, dirs: Vec<&Path>) -> Result<()> {
+  pub fn add_commit(&self, dirs: Vec<&Path>, message: &str) -> Result<()> {
     self.add(dirs)?; // add files to commit on the specified dir_path
     let signature = self.repository.signature()?;
-    let message = "my commit";
     let tree_id = self.repository.index()?.write_tree()?;
     let mut parents = Vec::new();
     if let Some(parent) = self.repository.head().ok().map(|h| h.target().unwrap()) {

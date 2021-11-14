@@ -1,6 +1,7 @@
 use std::path::Path;
 
 use anyhow::Result;
+use chrono::{SecondsFormat, Utc};
 use git2::{Cred, RemoteCallbacks};
 use log::debug;
 use pickledb::PickleDb;
@@ -55,7 +56,14 @@ impl CloudSync {
       .documents
       .strip_prefix(state.dir_paths.root)?;
     dirs.push(document_relative_path); // add documents dir to be tracked
-    git_utils.add_commit(dirs)?;
+    git_utils.add_commit(
+      dirs,
+      format!(
+        "Commit Changes, time: {}",
+        Utc::now().to_rfc3339_opts(SecondsFormat::Millis, true)
+      )
+      .as_str(),
+    )?;
     Ok(())
   }
 
