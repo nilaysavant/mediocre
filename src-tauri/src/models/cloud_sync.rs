@@ -57,6 +57,7 @@ impl CloudSync {
       .strip_prefix(state.dir_paths.root)?;
     dirs.push(document_relative_path); // add documents dir to be tracked
     git_utils.add_commit(
+      // Commit changes
       dirs,
       format!(
         "Commit Changes, time: {}",
@@ -64,6 +65,7 @@ impl CloudSync {
       )
       .as_str(),
     )?;
+    git_utils.push()?; // Push Changes to remote
     Ok(())
   }
 
