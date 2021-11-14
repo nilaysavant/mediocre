@@ -55,7 +55,7 @@ impl CloudSync {
       .documents
       .strip_prefix(state.dir_paths.root)?;
     dirs.push(document_relative_path); // add documents dir to be tracked
-    git_utils.add(dirs)?;
+    git_utils.add_commit(dirs)?;
     Ok(())
   }
 
