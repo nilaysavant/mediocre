@@ -126,10 +126,10 @@ impl GitUtils {
       Ok(())
     });
     remote.connect_auth(Direction::Push, Some(Self::create_callbacks()), None)?;
-    let ref_spec = "refs/heads/master:refs/heads/master";
-    self.repository.remote_add_push("origin", ref_spec)?;
+    let ref_spec = format!("refs/heads/{}:refs/heads/{}", "master", "master");
+    self.repository.remote_add_push("origin", &ref_spec)?;
     push_options.remote_callbacks(callbacks);
-    remote.push(&[ref_spec], Some(&mut push_options))?;
+    remote.push(&[&ref_spec], Some(&mut push_options))?;
     if is_error {
       return Err(anyhow!("push_update_reference() has reported errors!"));
     }
