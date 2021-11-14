@@ -1,8 +1,8 @@
 use std::path::{Path, PathBuf};
 
-use anyhow::Result;
-use git2::{Cred, IndexAddOption, RemoteCallbacks, Repository, Signature};
-use log::debug;
+use anyhow::{anyhow, Result};
+use git2::{Cred, Direction, IndexAddOption, PushOptions, RemoteCallbacks, Repository, Signature};
+use log::{debug, error};
 
 /// # Utilities for interacting with git
 /// Wrapper on top of `git2` library
@@ -91,6 +91,48 @@ impl GitUtils {
       &self.repository.find_tree(tree_id)?,
       &parents,
     )?;
+    Ok(())
+  }
+
+  /// # Create Callbacks for Git SSH Auth
+  pub fn create_callbacks<'a>() -> RemoteCallbacks<'a> {
+    // Prepare callbacks.
+    let mut callbacks = RemoteCallbacks::new();
+    callbacks.credentials(|_url, username_from_url, _allowed_types| {
+      debug!("username_from_url: {:?}", username_from_url);
+      Cred::ssh_key_from_agent(username_from_url.unwrap())
+    });
+    callbacks
+  }
+
+  /// # Push changes to remote
+  ///
+  /// Push committed changes to remote repository.
+  ///
+  /// ## References
+  ///
+  /// - https://stackoverflow.com/questions/58201849/request-failed-with-status-code-401-error-when-trying-to-push-to-remote-using
+  pub fn push(&self) -> Result<()> {
+    let mut remote = self.repository.find_remote("origin")?;
+    let mut callbacks = Self::create_callbacks();
+    let mut is_error = false; // for checking if any error is present
+    let mut push_options = PushOptions::default();
+    callbacks.push_update_reference(move |reference, error| {
+      // check for errors in update refs
+      if error.is_some() {
+        error!("ref = {}, error = {:?}", reference, error);
+        is_error = is_error || error.is_some();
+      }
+      Ok(())
+    });
+    remote.connect_auth(Direction::Push, Some(Self::create_callbacks()), None)?;
+    let ref_spec = "refs/heads/master:refs/heads/master";
+    self.repository.remote_add_push("origin", ref_spec)?;
+    push_options.remote_callbacks(callbacks);
+    remote.push(&[ref_spec], Some(&mut push_options))?;
+    if is_error {
+      return Err(anyhow!("push_update_reference() has reported errors!"));
+    }
     Ok(())
   }
 
