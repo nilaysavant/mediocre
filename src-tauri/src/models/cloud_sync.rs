@@ -48,6 +48,9 @@ impl CloudSync {
   /// Setup Sync
   pub fn setup(self, state: AppState, db: &mut PickleDb) -> Result<()> {
     let git_utils = GitUtils::new(self.git_sync_repo_url, &state.dir_paths.root)?;
+    let mut dirs = vec![];
+    dirs.push(state.dir_paths.documents.as_path()); // add documents dir to be tracked
+    git_utils.add(dirs)?;
     Ok(())
   }
 
