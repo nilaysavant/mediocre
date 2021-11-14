@@ -1,4 +1,4 @@
-use std::{env, error::Error, path::Path};
+use std::path::Path;
 
 use anyhow::Result;
 use git2::{Cred, RemoteCallbacks};
@@ -49,7 +49,12 @@ impl CloudSync {
   pub fn setup(self, state: AppState, db: &mut PickleDb) -> Result<()> {
     let git_utils = GitUtils::new(self.git_sync_repo_url, &state.dir_paths.root)?;
     let mut dirs = vec![];
-    dirs.push(state.dir_paths.documents.as_path()); // add documents dir to be tracked
+    // Get relative path as only relative paths to repo root are supported
+    let document_relative_path = state
+      .dir_paths
+      .documents
+      .strip_prefix(state.dir_paths.root)?;
+    dirs.push(document_relative_path); // add documents dir to be tracked
     git_utils.add(dirs)?;
     Ok(())
   }
