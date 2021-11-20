@@ -86,10 +86,10 @@ impl<'cs> CloudSync<'cs> {
       name: "cloud_sync",
       typ: WindowEventType::INFO,
       data: CloudSyncPayload {
-        message: "Fetching new repository...",
+        message: "Pulling new repository...",
       },
     })?;
-    git_utils.fetch()?; // Fetch the repo
+    git_utils.pull()?; // Pull the repo
     let mut dirs = vec![];
     // Get relative path as only relative paths to repo root are supported
     let document_relative_path = state
