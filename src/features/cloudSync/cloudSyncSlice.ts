@@ -85,6 +85,8 @@ export const globalSetupGitCloudSync = createAsyncThunk<
 export const globalSyncToGitCloud = createAsyncThunk<boolean, void>(
   'markdownParser/globalSyncToGitCloud',
   async (arg, { getState, dispatch }) => {
+    if (!(getState() as RootState).cloudSync.enabled)
+      throw new Error(`Git Sync is not enabled!`)
     dispatch(syncStatusUpdate({ messages: [] })) // reset messages
     const response = await syncToGitCloud()
     if (!response?.status) throw new Error(response?.message)
