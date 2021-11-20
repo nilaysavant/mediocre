@@ -48,13 +48,14 @@ pub struct SetupGitCloudSyncResponse {
 /// - Push the changes to repo origin.
 #[tauri::command]
 pub async fn setup_git_cloud_sync(
-  git_sync_repo_url: String,
   state: tauri::State<'_, AppState>,
   db_state: tauri::State<'_, AppDbState>,
+  window: tauri::Window,
+  git_sync_repo_url: String,
 ) -> Result<SetupGitCloudSyncResponse, String> {
   let mut db = db_state.db.lock().map_err(|e| e.to_string())?;
-  let cloud_sync =
-    CloudSync::new(state.inner().to_owned(), &mut db, git_sync_repo_url).map_err(|e| e.to_string())?;
+  let cloud_sync = CloudSync::new(state.inner().to_owned(), &mut db, git_sync_repo_url)
+    .map_err(|e| e.to_string())?;
   cloud_sync
     .setup(state.inner().to_owned(), &mut db)
     .map_err(|e| e.to_string())?;
