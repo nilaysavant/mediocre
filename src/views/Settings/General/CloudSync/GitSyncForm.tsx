@@ -22,20 +22,30 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
   const [setupStatusMessage, setSetupStatusMessage] = useState('')
 
   useEffect(() => {
+    let unListen: (() => void) | null = null
     const setupEventListener = async () => {
       try {
         const tauriWindow = getCurrent()
-        await tauriWindow.listen('setup_git_cloud_sync', (event) => {
-          console.log(
-            '🚀 ~ file: GitSyncForm.tsx ~ line 27 ~ tauriWindow.listen ~ event',
-            event
-          )
-        })
+        unListen = await tauriWindow.listen(
+          'setup_git_cloud_sync',
+          ({ payload }) => {
+            const { data } = payload as {
+              data: {
+                message: string
+              }
+              typ: 'DEBUG' | 'INFO' | 'ERROR'
+            }
+            setSetupStatusMessage(data.message)
+          }
+        )
       } catch (error) {
         console.error(error)
       }
     }
     setupEventListener()
+    return () => {
+      if (unListen) unListen()
+    }
   }, [])
 
   return (
