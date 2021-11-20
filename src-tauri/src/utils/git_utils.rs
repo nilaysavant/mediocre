@@ -61,11 +61,13 @@ impl GitUtils {
   ///
   /// Downloads data from remote repo and updates existing files.
   pub fn fetch(&self) -> Result<()> {
+    let mut fo = git2::FetchOptions::new();
+    fo.remote_callbacks(Self::create_callbacks());
     let ref_spec = Self::get_ref_specs("master");
     self
       .repository
       .find_remote("origin")?
-      .fetch(&[ref_spec], None, None)?;
+      .fetch(&[ref_spec], Some(&mut fo), None)?;
     Ok(())
   }
 
