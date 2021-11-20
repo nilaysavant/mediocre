@@ -7,7 +7,6 @@ use serde::{Deserialize, Serialize};
 ///
 /// `DEBUG`, `INFO` or `ERROR`
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "event_type")]
 pub enum WindowEventType {
   DEBUG,
   INFO,
@@ -17,33 +16,24 @@ pub enum WindowEventType {
 /// # Window Event
 ///
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct WindowEvent<P>
+#[serde(rename_all = "camelCase")]
+pub struct WindowEvent<D>
 where
-  P: Debug + Clone + Serialize,
+  D: Debug + Clone + Serialize,
 {
-  pub event_name: &'static str,
-  pub payload: P,
-  pub event_type: WindowEventType,
-}
-
-impl<P: Debug + Clone + Serialize> WindowEvent<P> {
-  pub fn new(event_name: &'static str, payload: P, event_type: WindowEventType) -> Self {
-    Self {
-      event_name,
-      payload,
-      event_type,
-    }
-  }
+  pub name: &'static str,
+  pub data: D,
+  pub typ: WindowEventType,
 }
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct WindowEventManagerPayload<P>
+pub struct WindowEventManagerPayload<D>
 where
-  P: Debug + Clone + Serialize,
+  D: Debug + Clone + Serialize,
 {
-  payload: P,
-  event_type: WindowEventType,
+  typ: WindowEventType,
+  data: D,
 }
 
 /// # Window Event Manager
@@ -67,10 +57,10 @@ impl WindowEventManager {
     self
       .window
       .emit(
-        event.event_name,
+        event.name,
         WindowEventManagerPayload {
-          event_type: event.event_type,
-          payload: event.payload,
+          typ: event.typ,
+          data: event.data,
         },
       )
       .map_err(|e| anyhow::anyhow!(e.to_string()))?;

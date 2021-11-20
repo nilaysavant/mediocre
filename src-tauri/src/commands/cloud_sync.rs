@@ -66,9 +66,9 @@ pub async fn setup_git_cloud_sync(
   let mut wem = WindowEventManager::new(window);
   wem
     .send(WindowEvent {
-      event_name: "setup_git_cloud_sync",
-      event_type: WindowEventType::INFO,
-      payload: SetupGitCloudSyncPayload {
+      name: "setup_git_cloud_sync",
+      typ: WindowEventType::INFO,
+      data: SetupGitCloudSyncPayload {
         message: "Starting sync, Please wait...",
       },
     })

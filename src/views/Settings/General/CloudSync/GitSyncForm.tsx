@@ -5,9 +5,10 @@ import {
   FormLabel,
 } from '@chakra-ui/form-control'
 import { Input, InputGroup } from '@chakra-ui/input'
-import { Spacer, Text } from '@chakra-ui/layout'
+import { Box, Spacer, Text } from '@chakra-ui/layout'
+import { getCurrent } from '@tauri-apps/api/window'
 import { Formik, Form } from 'formik'
-import { CSSProperties, useContext } from 'react'
+import { CSSProperties, useContext, useEffect, useState } from 'react'
 import { setupGitCloudSync, testGitCloneSSH } from 'src/functions/cloudSync'
 import StepperBottomBar from './StepperBottomBar'
 import CloudSyncStepperContext from './StepperContext'
@@ -18,6 +19,25 @@ export type GitSyncFormProps = {
 
 const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
   const stepperContext = useContext(CloudSyncStepperContext)
+  const [setupStatusMessage, setSetupStatusMessage] = useState('')
+
+  useEffect(() => {
+    const setupEventListener = async () => {
+      try {
+        const tauriWindow = getCurrent()
+        await tauriWindow.listen('setup_git_cloud_sync', (event) => {
+          console.log(
+            '🚀 ~ file: GitSyncForm.tsx ~ line 27 ~ tauriWindow.listen ~ event',
+            event
+          )
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    setupEventListener()
+  }, [])
+
   return (
     <Formik
       initialValues={{ gitRepositoryUrl: '' }}
@@ -78,6 +98,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
               example: <b>git@github.com:user/mediocre-library.git</b>
             </FormHelperText>
           </FormControl>
+          {setupStatusMessage ? <Box>{setupStatusMessage}</Box> : null}
           <Spacer />
           <StepperBottomBar
             onNext={handleSubmit}
