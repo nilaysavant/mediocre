@@ -17,8 +17,6 @@ import { RootState } from '../../redux/store'
 export type CloudSyncState = {
   /** If cloud sync is enabled */
   enabled: boolean
-  /** last sync time  */
-  lastSync: IsoDatetime
   /** Sync service */
   service?:
     | {
@@ -31,12 +29,23 @@ export type CloudSyncState = {
         provider?: 'dropbox'
         url: string
       }
+  status: {
+    isSyncing: boolean
+    /** last sync time  */
+    lastSync: IsoDatetime
+    /** sync message */
+    message: string
+  }
 }
 
 // Define the initial state using that type
 const initialState: CloudSyncState = {
   enabled: false,
-  lastSync: '',
+  status: {
+    isSyncing: false,
+    lastSync: '',
+    message: '',
+  },
 }
 
 /**
@@ -82,8 +91,16 @@ export const cloudSyncSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Add reducers for additional action types here, and handle loading state as needed
+      .addCase(globalSyncToGitCloud.pending, (state, action) => {
+        state.status.isSyncing = true
+      })
       .addCase(globalSyncToGitCloud.fulfilled, (state, action) => {
-        state.lastSync = dayjs().toISOString()
+        state.status.isSyncing = false
+        state.status.lastSync = dayjs().toISOString()
+        state.status.message = 'Success!'
+      })
+      .addCase(globalSetupGitCloudSync.pending, (state, action) => {
+        state.status.isSyncing = true
       })
       .addCase(globalSetupGitCloudSync.fulfilled, (state, action) => {
         state.service = {
@@ -91,7 +108,9 @@ export const cloudSyncSlice = createSlice({
           repoUrl: action.payload.repoUrl,
         }
         state.enabled = true
-        state.lastSync = dayjs().toISOString()
+        state.status.isSyncing = false
+        state.status.lastSync = dayjs().toISOString()
+        state.status.message = 'Success!'
       })
   },
 })
