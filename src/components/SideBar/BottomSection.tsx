@@ -5,6 +5,10 @@ import { Text } from '@chakra-ui/react'
 import { useReduxDispatch, useReduxSelector } from 'src/redux/hooks'
 import { getCurrent } from '@tauri-apps/api/window'
 import { syncStatusPushMessage } from 'src/features/cloudSync/cloudSyncSlice'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime) // extend dayjs with plugin
 
 export type BottomSectionProps = {
   documentsCount: number
@@ -55,13 +59,13 @@ const BottomSection = ({
           {syncStatus.messages.length || syncStatus.lastSync ? (
             <Flex direction="column" bg="bg.dark.350" p="1">
               {syncStatus.messages.length ? (
-                <Text fontSize="xs" isTruncated color="#ababab">
+                <Text fontSize="x-small" isTruncated color="#ababab">
                   {syncStatus.messages[syncStatus.messages.length - 1]}
                 </Text>
               ) : null}
               {syncStatus.lastSync ? (
-                <Text fontSize="x-small" isTruncated color="#ababab">
-                  {syncStatus.lastSync}
+                <Text fontSize="x-small" isTruncated color="#abababad">
+                  {dayjs(syncStatus.lastSync).fromNow()}
                 </Text>
               ) : null}
             </Flex>
