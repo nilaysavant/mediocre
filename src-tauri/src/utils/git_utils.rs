@@ -61,10 +61,11 @@ impl GitUtils {
   ///
   /// Downloads data from remote repo and updates existing files.
   pub fn fetch(&self) -> Result<()> {
+    let ref_spec = Self::get_ref_specs("master");
     self
       .repository
       .find_remote("origin")?
-      .fetch(&["master"], None, None)?;
+      .fetch(&[ref_spec], None, None)?;
     Ok(())
   }
 

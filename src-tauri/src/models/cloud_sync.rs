@@ -49,6 +49,7 @@ impl CloudSync {
   /// Setup Sync
   pub fn setup(self, state: AppState, db: &mut PickleDb) -> Result<()> {
     let git_utils = GitUtils::new(self.git_sync_repo_url, &state.dir_paths.root)?;
+    git_utils.fetch()?; // Fetch the repo
     let mut dirs = vec![];
     // Get relative path as only relative paths to repo root are supported
     let document_relative_path = state
