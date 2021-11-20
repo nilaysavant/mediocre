@@ -15,7 +15,7 @@ import {
   removeDocumentFromRelativePath,
   renameDocumentAtRelativePath,
   writeDocumentToRelativePath,
-} from '../../functions/fileSystem'
+} from '../../commands/fileSystem'
 import { RootState } from '../../redux/store'
 import { updateRawText } from '../../utils/markdownParser/markdownParserSlice'
 import { prettifyText } from '../../utils/prettierFns'

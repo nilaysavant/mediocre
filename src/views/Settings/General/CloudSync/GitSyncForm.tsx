@@ -9,7 +9,7 @@ import { Box, ListItem, Spacer, Text, UnorderedList } from '@chakra-ui/layout'
 import { getCurrent } from '@tauri-apps/api/window'
 import { Formik, Form } from 'formik'
 import { CSSProperties, useContext, useEffect, useState } from 'react'
-import { setupGitCloudSync, testGitCloneSSH } from 'src/functions/cloudSync'
+import { setupGitCloudSync, testGitCloneSSH } from 'src/commands/cloudSync'
 import StepperBottomBar from './StepperBottomBar'
 import CloudSyncStepperContext from './StepperContext'
 

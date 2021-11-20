@@ -23,8 +23,8 @@ import {
   renameDocumentAtRelativePath,
   saveFileToCustomPath,
   writeDocumentToRelativePath,
-} from '../../functions/fileSystem'
-import { getEnvironment } from '../../functions/environment'
+} from '../../commands/fileSystem'
+import { getEnvironment } from '../../commands/environment'
 
 export type MediocreCommandId =
   | 'get_env'
