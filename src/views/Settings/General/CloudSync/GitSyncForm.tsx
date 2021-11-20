@@ -10,7 +10,10 @@ import { getCurrent } from '@tauri-apps/api/window'
 import { Formik, Form } from 'formik'
 import { CSSProperties, useContext, useEffect, useState } from 'react'
 import { setupGitCloudSync, testGitCloneSSH } from 'src/commands/cloudSync'
-import { globalSetupGitCloudSync } from 'src/features/cloudSync/cloudSyncSlice'
+import {
+  globalSetupGitCloudSync,
+  syncStatusPushMessage,
+} from 'src/features/cloudSync/cloudSyncSlice'
 import { useReduxDispatch, useReduxSelector } from 'src/redux/hooks'
 import StepperBottomBar from './StepperBottomBar'
 import CloudSyncStepperContext from './StepperContext'
@@ -26,8 +29,10 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
       ? state.cloudSync.service.repoUrl
       : ''
   )
+  const syncMessages = useReduxSelector(
+    (state) => state.cloudSync.status.messages
+  )
   const stepperContext = useContext(CloudSyncStepperContext)
-  const [setupStatusMessage, setSetupStatusMessage] = useState<string[]>([])
 
   useEffect(() => {
     let unListen: (() => void) | null = null
@@ -43,7 +48,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
               }
               typ: 'DEBUG' | 'INFO' | 'ERROR'
             }
-            setSetupStatusMessage((old) => [...old, data.message])
+            dispatch(syncStatusPushMessage(data.message))
           }
         )
       } catch (error) {
@@ -54,7 +59,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
     return () => {
       if (unListen) unListen()
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <Formik
@@ -113,9 +118,9 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
               example: <b>git@github.com:user/mediocre-library.git</b>
             </FormHelperText>
           </FormControl>
-          {setupStatusMessage.length ? (
+          {syncMessages.length ? (
             <UnorderedList mt="4" fontSize="sm">
-              {setupStatusMessage.map((msg, idx) => (
+              {syncMessages.map((msg, idx) => (
                 <ListItem key={msg + idx}>{msg}</ListItem>
               ))}
             </UnorderedList>

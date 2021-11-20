@@ -10,6 +10,18 @@ import { RootState } from '../../redux/store'
  */
 
 /**
+ * # Cloud Sync Status
+ *
+ */
+export type CloudSyncStatus = {
+  isSyncing: boolean
+  /** last sync time  */
+  lastSync: IsoDatetime
+  /** sync message */
+  messages: string[]
+}
+
+/**
  * # Cloud Sync State
  *
  * Redux Slice state for Cloud Sync
@@ -29,13 +41,7 @@ export type CloudSyncState = {
         provider?: 'dropbox'
         url: string
       }
-  status: {
-    isSyncing: boolean
-    /** last sync time  */
-    lastSync: IsoDatetime
-    /** sync message */
-    message: string
-  }
+  status: CloudSyncStatus
 }
 
 // Define the initial state using that type
@@ -44,7 +50,7 @@ const initialState: CloudSyncState = {
   status: {
     isSyncing: false,
     lastSync: '',
-    message: '',
+    messages: [],
   },
 }
 
@@ -62,6 +68,7 @@ export const globalSetupGitCloudSync = createAsyncThunk<
   'markdownParser/globalSetupGitCloudSync',
   async (arg, { getState, dispatch }) => {
     const { repoUrl } = arg
+    dispatch(syncStatusUpdate({ messages: [] })) // reset messages
     const response = await setupGitCloudSync(repoUrl)
     if (!response?.status) throw new Error(response?.message)
     return { repoUrl }
@@ -78,6 +85,7 @@ export const globalSetupGitCloudSync = createAsyncThunk<
 export const globalSyncToGitCloud = createAsyncThunk<boolean, null>(
   'markdownParser/globalSyncToGitCloud',
   async (arg, { getState, dispatch }) => {
+    dispatch(syncStatusUpdate({ messages: [] })) // reset messages
     const response = await syncToGitCloud()
     if (!response?.status) throw new Error(response?.message)
     return response.status
@@ -87,7 +95,21 @@ export const globalSyncToGitCloud = createAsyncThunk<boolean, null>(
 export const cloudSyncSlice = createSlice({
   name: 'markdownParser',
   initialState,
-  reducers: {},
+  reducers: {
+    syncStatusUpdate: (
+      state,
+      action: PayloadAction<Partial<CloudSyncStatus>>
+    ) => {
+      const newStatus = action.payload
+      state.status = {
+        ...state.status,
+        ...newStatus,
+      }
+    },
+    syncStatusPushMessage: (state, action: PayloadAction<string>) => {
+      state.status.messages.push(action.payload)
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Add reducers for additional action types here, and handle loading state as needed
@@ -97,7 +119,7 @@ export const cloudSyncSlice = createSlice({
       .addCase(globalSyncToGitCloud.fulfilled, (state, action) => {
         state.status.isSyncing = false
         state.status.lastSync = dayjs().toISOString()
-        state.status.message = 'Success!'
+        state.status.messages.push('Success!')
       })
       .addCase(globalSetupGitCloudSync.pending, (state, action) => {
         state.status.isSyncing = true
@@ -110,12 +132,13 @@ export const cloudSyncSlice = createSlice({
         state.enabled = true
         state.status.isSyncing = false
         state.status.lastSync = dayjs().toISOString()
-        state.status.message = 'Success!'
+        state.status.messages.push('Success!')
       })
   },
 })
 
 // Action creators are generated for each case reducer function
-export const {} = cloudSyncSlice.actions
+export const { syncStatusUpdate, syncStatusPushMessage } =
+  cloudSyncSlice.actions
 
 export default cloudSyncSlice.reducer
