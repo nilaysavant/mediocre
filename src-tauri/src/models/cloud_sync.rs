@@ -5,10 +5,20 @@ use chrono::{SecondsFormat, Utc};
 use git2::{Cred, RemoteCallbacks};
 use log::debug;
 use pickledb::PickleDb;
+use serde::Serialize;
 
-use crate::utils::{git_utils::GitUtils, window_event_manager::WindowEventManager};
+use crate::utils::{
+  git_utils::GitUtils,
+  window_event_manager::{WindowEvent, WindowEventManager, WindowEventType},
+};
 
 use super::{app_dir_paths, app_state::AppState};
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CloudSyncPayload {
+  pub message: &'static str,
+}
 
 /// For syncing files/configs to cloud
 pub struct CloudSync<'weml> {
@@ -64,7 +74,21 @@ impl<'cs> CloudSync<'cs> {
 
   /// Setup Sync
   pub fn setup(self, state: AppState, db: &mut PickleDb) -> Result<()> {
+    self.wem.send(WindowEvent {
+      name: "cloud_sync",
+      typ: WindowEventType::INFO,
+      data: CloudSyncPayload {
+        message: "Creating new repository...",
+      },
+    })?;
     let git_utils = GitUtils::new(self.git_sync_repo_url, &state.dir_paths.root)?;
+    self.wem.send(WindowEvent {
+      name: "cloud_sync",
+      typ: WindowEventType::INFO,
+      data: CloudSyncPayload {
+        message: "Fetching new repository...",
+      },
+    })?;
     git_utils.fetch()?; // Fetch the repo
     let mut dirs = vec![];
     // Get relative path as only relative paths to repo root are supported
@@ -73,6 +97,13 @@ impl<'cs> CloudSync<'cs> {
       .documents
       .strip_prefix(state.dir_paths.root)?;
     dirs.push(document_relative_path); // add documents dir to be tracked
+    self.wem.send(WindowEvent {
+      name: "cloud_sync",
+      typ: WindowEventType::INFO,
+      data: CloudSyncPayload {
+        message: "Adding Commits...",
+      },
+    })?;
     git_utils.add_commit(
       // Commit changes
       dirs,
@@ -82,6 +113,13 @@ impl<'cs> CloudSync<'cs> {
       )
       .as_str(),
     )?;
+    self.wem.send(WindowEvent {
+      name: "cloud_sync",
+      typ: WindowEventType::INFO,
+      data: CloudSyncPayload {
+        message: "Pushing changes to remote...",
+      },
+    })?;
     git_utils.push()?; // Push Changes to remote
     Ok(())
   }

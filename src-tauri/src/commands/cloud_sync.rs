@@ -41,12 +41,6 @@ pub struct SetupGitCloudSyncResponse {
   message: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct SetupGitCloudSyncPayload {
-  message: &'static str,
-}
-
 /// # Command to setup Git Cloud Sync
 ///
 /// - Get the repo url, set it in DB + State.
@@ -63,15 +57,6 @@ pub async fn setup_git_cloud_sync(
   let mut db = db_state.db.lock().map_err(|e| e.to_string())?;
   let wem = WindowEventManager::new(&window);
   let cloud_sync = CloudSync::new(state.inner().to_owned(), &mut db, &wem, git_sync_repo_url)
-    .map_err(|e| e.to_string())?;
-  wem
-    .send(WindowEvent {
-      name: "setup_git_cloud_sync",
-      typ: WindowEventType::INFO,
-      data: SetupGitCloudSyncPayload {
-        message: "Starting sync, Please wait...",
-      },
-    })
     .map_err(|e| e.to_string())?;
   cloud_sync
     .setup(state.inner().to_owned(), &mut db)
