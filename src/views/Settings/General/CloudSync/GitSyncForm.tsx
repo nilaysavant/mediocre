@@ -5,7 +5,7 @@ import {
   FormLabel,
 } from '@chakra-ui/form-control'
 import { Input, InputGroup } from '@chakra-ui/input'
-import { Box, Spacer, Text } from '@chakra-ui/layout'
+import { Box, ListItem, Spacer, Text, UnorderedList } from '@chakra-ui/layout'
 import { getCurrent } from '@tauri-apps/api/window'
 import { Formik, Form } from 'formik'
 import { CSSProperties, useContext, useEffect, useState } from 'react'
@@ -109,11 +109,11 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
             </FormHelperText>
           </FormControl>
           {setupStatusMessage.length ? (
-            <Box>
+            <UnorderedList mt="4" fontSize="sm">
               {setupStatusMessage.map((msg, idx) => (
-                <Text key={msg + idx}>{msg}</Text>
+                <ListItem key={msg + idx}>{msg}</ListItem>
               ))}
-            </Box>
+            </UnorderedList>
           ) : null}
           <Spacer />
           <StepperBottomBar
