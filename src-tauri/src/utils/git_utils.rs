@@ -1,8 +1,8 @@
 use std::path::{Path, PathBuf};
 
-use anyhow::{anyhow, Result};
+use anyhow::{anyhow, Context, Result};
 use git2::{Cred, Direction, IndexAddOption, PushOptions, RemoteCallbacks, Repository, Signature};
-use log::{debug, error};
+use log::{debug, error, info, warn};
 
 /// # Utilities for interacting with git
 /// Wrapper on top of `git2` library
@@ -334,8 +334,20 @@ impl GitUtils {
     fo.remote_callbacks(Self::create_callbacks());
     let ref_spec = Self::get_ref_specs("master");
     let mut remote = self.repository.find_remote("origin")?;
-    let fetch_commit = self.do_fetch(&[ref_spec.as_str()], &mut remote)?;
-    self.do_merge(&ref_spec, fetch_commit)?;
+    // Error is likely to occur in the following because on the first go the user maybe
+    // trying to fetch an empty repository from the remote. Therefore we just log it
+    // with warn! and ignore it.
+    match self
+      .do_fetch(&[ref_spec.as_str()], &mut remote)
+      .context("do_fetch() failed with error, probably an empty repository")
+    {
+      Ok(fetch_commit) => {
+        self.do_merge(&ref_spec, fetch_commit)?;
+      }
+      Err(err) => {
+        warn!("{:?}", err)
+      }
+    };
     Ok(())
   }
 
