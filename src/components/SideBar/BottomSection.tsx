@@ -2,22 +2,22 @@ import React from 'react'
 import { Box, BoxProps, Flex, FlexProps } from '@chakra-ui/layout'
 import { Progress } from '@chakra-ui/progress'
 import { Text } from '@chakra-ui/react'
-import { CloudSyncStatus } from 'src/features/cloudSync/cloudSyncSlice'
+import { useReduxSelector } from 'src/redux/hooks'
 
 export type BottomSectionProps = {
   documentsCount: number
-  syncStatus?: CloudSyncStatus
   containerProps?: FlexProps
 }
 
 const BottomSection = ({
   documentsCount = 0,
-  syncStatus,
   containerProps,
 }: BottomSectionProps) => {
+  const isSyncEnabled = useReduxSelector((state) => state.cloudSync.enabled)
+  const syncStatus = useReduxSelector((state) => state.cloudSync.status)
   return (
     <Flex direction="column" {...containerProps}>
-      {syncStatus ? (
+      {isSyncEnabled && syncStatus ? (
         <>
           {syncStatus.messages.length || syncStatus.lastSync ? (
             <Flex direction="column" bg="bg.dark.350" p="1">
