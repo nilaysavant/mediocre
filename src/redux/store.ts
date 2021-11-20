@@ -7,6 +7,7 @@ import appSlice from '../appSlice'
 import markdownThemeSlice from '../styles/markdown/markdownThemeSlice'
 import documentsSlice from '../features/documents/documentsSlice'
 import reduxLogger from 'redux-logger'
+import cloudSyncSlice from 'src/features/cloudSync/cloudSyncSlice'
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     markdownTheme: markdownThemeSlice,
     counter: counterSlice,
     theme: themeSlice,
+    cloudSync: cloudSyncSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(reduxLogger),

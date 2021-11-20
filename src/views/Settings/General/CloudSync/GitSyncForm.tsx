@@ -10,6 +10,8 @@ import { getCurrent } from '@tauri-apps/api/window'
 import { Formik, Form } from 'formik'
 import { CSSProperties, useContext, useEffect, useState } from 'react'
 import { setupGitCloudSync, testGitCloneSSH } from 'src/commands/cloudSync'
+import { globalSetupGitCloudSync } from 'src/features/cloudSync/cloudSyncSlice'
+import { useReduxDispatch, useReduxSelector } from 'src/redux/hooks'
 import StepperBottomBar from './StepperBottomBar'
 import CloudSyncStepperContext from './StepperContext'
 
@@ -18,6 +20,12 @@ export type GitSyncFormProps = {
 }
 
 const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
+  const dispatch = useReduxDispatch()
+  const initialGitRepositoryUrl = useReduxSelector((state) =>
+    state.cloudSync.enabled && state.cloudSync.service?.provider === 'git'
+      ? state.cloudSync.service.repoUrl
+      : ''
+  )
   const stepperContext = useContext(CloudSyncStepperContext)
   const [setupStatusMessage, setSetupStatusMessage] = useState<string[]>([])
 
@@ -50,7 +58,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
 
   return (
     <Formik
-      initialValues={{ gitRepositoryUrl: '' }}
+      initialValues={{ gitRepositoryUrl: initialGitRepositoryUrl }}
       validate={(values) => {
         if (!values.gitRepositoryUrl)
           return {
@@ -60,12 +68,9 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
       onSubmit={async (values, actions) => {
         try {
           actions.setSubmitting(true)
-          await setupGitCloudSync(values.gitRepositoryUrl)
-          // await sleep(3000)
-          console.log(
-            '🚀 ~ file: GitSyncForm.tsx ~ line 40 ~ onSubmit={ ~ values',
-            values
-          )
+          await dispatch(
+            globalSetupGitCloudSync({ repoUrl: values.gitRepositoryUrl })
+          ).unwrap()
           actions.setSubmitting(false)
           stepperContext.onNext()
         } catch (error) {
