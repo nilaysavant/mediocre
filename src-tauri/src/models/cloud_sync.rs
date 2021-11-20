@@ -6,42 +6,58 @@ use git2::{Cred, RemoteCallbacks};
 use log::debug;
 use pickledb::PickleDb;
 
-use crate::utils::git_utils::GitUtils;
+use crate::utils::{git_utils::GitUtils, window_event_manager::WindowEventManager};
 
 use super::{app_dir_paths, app_state::AppState};
 
 /// For syncing files/configs to cloud
-#[derive(Debug, Clone)]
-pub struct CloudSync {
+pub struct CloudSync<'weml> {
   git_sync_repo_url: String,
+  wem: &'weml WindowEventManager<'weml>,
 }
 
-impl CloudSync {
+impl<'cs> CloudSync<'cs> {
   /// # Create a new `CloudSync` instance
   /// - Using the given `git_sync_repo_url`.
   /// - Also sets the url in the `DB` and `state`.
-  pub fn new(state: AppState, db: &mut PickleDb, git_sync_repo_url: String) -> Result<Self> {
+  pub fn new(
+    state: AppState,
+    db: &mut PickleDb,
+    wem: &'cs WindowEventManager,
+    git_sync_repo_url: String,
+  ) -> Result<Self> {
     db.set("git_sync_repo_url", &git_sync_repo_url)?; // Set the url in the DB
     let mut state_git_sync_repo_url = state
       .git_sync_repo_url
       .lock()
       .map_err(|e| anyhow::Error::msg(e.to_string()))?;
     *state_git_sync_repo_url = git_sync_repo_url.clone(); // set the url in state
-    Ok(CloudSync { git_sync_repo_url })
+    Ok(CloudSync {
+      git_sync_repo_url,
+      wem,
+    })
   }
 
   /// Create a new `CloudSync` instance
   /// using the available data in State/DB.
-  pub fn from_avail(state: AppState, db: &mut PickleDb) -> Result<Self> {
+  pub fn from_avail(
+    state: AppState,
+    db: &mut PickleDb,
+    wem: &'cs WindowEventManager,
+  ) -> Result<Self> {
     match state.git_sync_repo_url.lock() {
       Ok(git_sync_repo_url) => Ok(CloudSync {
         git_sync_repo_url: git_sync_repo_url.to_string(),
+        wem,
       }),
       Err(e) => {
         let git_sync_repo_url = db.get("git_sync_repo_url").ok_or(anyhow::Error::msg(
           "could not get `git_sync_repo_url` from db.",
         ))?;
-        Ok(CloudSync { git_sync_repo_url })
+        Ok(CloudSync {
+          git_sync_repo_url,
+          wem,
+        })
       }
     }
   }

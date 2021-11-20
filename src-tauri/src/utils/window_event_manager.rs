@@ -44,12 +44,12 @@ where
 /// - Sends a `payload` to the front-end.
 ///
 #[derive(Clone)]
-pub struct WindowEventManager {
-  pub window: tauri::Window,
+pub struct WindowEventManager<'w> {
+  pub window: &'w tauri::Window,
 }
 
-impl WindowEventManager {
-  pub fn new(window: tauri::Window) -> Self {
+impl <'w> WindowEventManager<'w> {
+  pub fn new(window: &'w tauri::Window) -> Self {
     Self { window }
   }
 
