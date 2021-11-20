@@ -8,6 +8,17 @@ import markdownThemeSlice from '../styles/markdown/markdownThemeSlice'
 import documentsSlice from '../features/documents/documentsSlice'
 import reduxLogger from 'redux-logger'
 import cloudSyncSlice from 'src/features/cloudSync/cloudSyncSlice'
+import { persistReducer, persistStore } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+
+const persistedCloudSyncSlice = persistReducer(
+  {
+    key: 'cloudSync',
+    storage,
+    whitelist: ['enabled', 'service'],
+  },
+  cloudSyncSlice
+)
 
 export const store = configureStore({
   reducer: {
@@ -18,11 +29,13 @@ export const store = configureStore({
     markdownTheme: markdownThemeSlice,
     counter: counterSlice,
     theme: themeSlice,
-    cloudSync: cloudSyncSlice,
+    cloudSync: persistedCloudSyncSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(reduxLogger),
+    getDefaultMiddleware({ serializableCheck: false }).concat(reduxLogger),
 })
+
+export const persistor = persistStore(store)
 
 // @ts-expect-error Set global window.REDUX_STORE key to access redux store in dev
 if (process.env.NODE_ENV === 'development') window.REDUX_STORE = store

@@ -7,9 +7,10 @@ import { ColorModeScript } from '@chakra-ui/color-mode'
 import theme from './theme'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from 'react-redux'
-import { store } from './redux/store'
+import { persistor, store } from './redux/store'
 import { Router } from 'react-router-dom'
 import history from './browserHistory'
+import { PersistGate } from 'redux-persist/integration/react'
 // import "@fontsource/nunito"
 // import "@fontsource/exo"
 // import "@fontsource/montserrat"
@@ -20,12 +21,14 @@ import '@fontsource/roboto-mono'
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-      <ChakraProvider theme={theme}>
-        <Router history={history}>
-          <App />
-        </Router>
-      </ChakraProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+        <ChakraProvider theme={theme}>
+          <Router history={history}>
+            <App />
+          </Router>
+        </ChakraProvider>
+      </PersistGate>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
