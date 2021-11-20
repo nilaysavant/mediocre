@@ -30,3 +30,18 @@ export const setupGitCloudSync = async (gitSyncRepoUrl: string) => {
     return invokeRes
   }
 }
+
+/**
+ * ### Sync to Git Cloud
+ *
+ * Tauri command to normally sync to git cloud.
+ */
+export const syncToGitCloud = async () => {
+  if (isTauri()) {
+    const invokeRes: {
+      status: boolean
+      message: string
+    } = await tauri.invoke('sync_to_git_cloud', {})
+    return invokeRes
+  }
+}
