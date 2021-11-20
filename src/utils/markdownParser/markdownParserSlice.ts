@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { documentUpdate } from '../../components/SideBar/documentsSlice'
+import { documentUpdate } from '../../features/documents/documentsSlice'
 import { RootState } from '../../redux/store'
 import testMarkdown from '../../test/testMarkdown'
 import { prettifyText } from '../prettierFns'

@@ -21,7 +21,7 @@ import {
   documentAdd,
   globalDocumentAdd,
   globalDocumentRename,
-} from './documentsSlice'
+} from '../../features/documents/documentsSlice'
 import TopSection from './TopSection'
 import { getUniqueIdV4 } from '../../utils/idGenerator'
 import dayjs from 'dayjs'

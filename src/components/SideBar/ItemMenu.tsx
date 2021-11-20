@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react'
 import { CopyIcon, DeleteIcon } from '@chakra-ui/icons'
 import { useReduxDispatch } from '../../redux/hooks'
-import { globalDocumentDelete } from './documentsSlice'
+import { globalDocumentDelete } from '../../features/documents/documentsSlice'
 import { useRef } from 'react'
 import AlertButton from './AlertButton'
 import { useHistory } from 'react-router-dom'

@@ -11,7 +11,7 @@ import {
   updateTheme,
 } from '../styles/markdown/markdownThemeSlice'
 import { Link, useLocation } from 'react-router-dom'
-import { globalDocumentSave } from './SideBar/documentsSlice'
+import { globalDocumentSave } from '../features/documents/documentsSlice'
 import { appWindow } from '@tauri-apps/api/window'
 
 export type TopBarProps = BoxProps

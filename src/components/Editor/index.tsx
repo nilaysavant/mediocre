@@ -6,7 +6,7 @@ import { editor, IScrollEvent } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useReduxDispatch, useReduxSelector } from '../../redux/hooks'
 import { globalRawTextUpdate } from '../../utils/markdownParser/markdownParserSlice'
 import { handleClose, handleOpen } from '../CommandModal/commandModalSlice'
-import { globalDocumentSave } from '../SideBar/documentsSlice'
+import { globalDocumentSave } from '../../features/documents/documentsSlice'
 import Loading from './Loading'
 
 loader.config({

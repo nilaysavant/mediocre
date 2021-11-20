@@ -5,7 +5,7 @@ import counterSlice from '../utils/counterSlice'
 import themeSlice from 'src/themeSlice'
 import appSlice from '../appSlice'
 import markdownThemeSlice from '../styles/markdown/markdownThemeSlice'
-import documentsSlice from '../components/SideBar/documentsSlice'
+import documentsSlice from '../features/documents/documentsSlice'
 import reduxLogger from 'redux-logger'
 
 export const store = configureStore({
