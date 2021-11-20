@@ -8,6 +8,7 @@ use crate::{
     app_state::AppState,
     cloud_sync::{self, CloudSync},
   },
+  utils::window_event_manager::{WindowEvent, WindowEventManager, WindowEventType},
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -40,6 +41,12 @@ pub struct SetupGitCloudSyncResponse {
   message: String,
 }
 
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SetupGitCloudSyncPayload {
+  message: &'static str,
+}
+
 /// # Command to setup Git Cloud Sync
 ///
 /// - Get the repo url, set it in DB + State.
@@ -55,6 +62,16 @@ pub async fn setup_git_cloud_sync(
 ) -> Result<SetupGitCloudSyncResponse, String> {
   let mut db = db_state.db.lock().map_err(|e| e.to_string())?;
   let cloud_sync = CloudSync::new(state.inner().to_owned(), &mut db, git_sync_repo_url)
+    .map_err(|e| e.to_string())?;
+  let mut wem = WindowEventManager::new(window);
+  wem
+    .send(WindowEvent {
+      event_name: "setup_git_cloud_sync",
+      event_type: WindowEventType::INFO,
+      payload: SetupGitCloudSyncPayload {
+        message: "Starting sync, Please wait...",
+      },
+    })
     .map_err(|e| e.to_string())?;
   cloud_sync
     .setup(state.inner().to_owned(), &mut db)
