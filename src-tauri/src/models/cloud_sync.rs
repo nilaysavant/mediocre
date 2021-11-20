@@ -86,7 +86,7 @@ impl<'cs> CloudSync<'cs> {
       name: "cloud_sync",
       typ: WindowEventType::INFO,
       data: CloudSyncPayload {
-        message: "Pulling new repository...",
+        message: "Pulling changes...",
       },
     })?;
     git_utils.pull()?; // Pull the repo
@@ -121,6 +121,13 @@ impl<'cs> CloudSync<'cs> {
       },
     })?;
     git_utils.push()?; // Push Changes to remote
+    self.wem.send(WindowEvent {
+      name: "cloud_sync",
+      typ: WindowEventType::INFO,
+      data: CloudSyncPayload {
+        message: "Success!",
+      },
+    })?;
     Ok(())
   }
 
