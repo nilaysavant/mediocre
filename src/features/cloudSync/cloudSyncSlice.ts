@@ -82,7 +82,7 @@ export const globalSetupGitCloudSync = createAsyncThunk<
  *
  * - returns boolean status: true: no-error
  */
-export const globalSyncToGitCloud = createAsyncThunk<boolean, null>(
+export const globalSyncToGitCloud = createAsyncThunk<boolean, void>(
   'markdownParser/globalSyncToGitCloud',
   async (arg, { getState, dispatch }) => {
     dispatch(syncStatusUpdate({ messages: [] })) // reset messages

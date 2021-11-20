@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, BoxProps, Flex, FlexProps } from '@chakra-ui/layout'
 import { Progress } from '@chakra-ui/progress'
 import { Text } from '@chakra-ui/react'
-import { useReduxSelector } from 'src/redux/hooks'
+import { useReduxDispatch, useReduxSelector } from 'src/redux/hooks'
+import { getCurrent } from '@tauri-apps/api/window'
+import { syncStatusPushMessage } from 'src/features/cloudSync/cloudSyncSlice'
 
 export type BottomSectionProps = {
   documentsCount: number
@@ -13,8 +15,39 @@ const BottomSection = ({
   documentsCount = 0,
   containerProps,
 }: BottomSectionProps) => {
+  const dispatch = useReduxDispatch()
   const isSyncEnabled = useReduxSelector((state) => state.cloudSync.enabled)
   const syncStatus = useReduxSelector((state) => state.cloudSync.status)
+
+  useEffect(() => {
+    /**
+     * Use effect for listening to push msg events on
+     * Sync status
+     */
+    /** un-listen flag/function */
+    let unListen: (() => void) | null = null
+    const setupEventListener = async () => {
+      try {
+        const tauriWindow = getCurrent()
+        unListen = await tauriWindow.listen('cloud_sync', ({ payload }) => {
+          const { data } = payload as {
+            data: {
+              message: string
+            }
+            typ: 'DEBUG' | 'INFO' | 'ERROR'
+          }
+          dispatch(syncStatusPushMessage(data.message))
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    setupEventListener()
+    return () => {
+      if (unListen) unListen()
+    }
+  }, [dispatch])
+
   return (
     <Flex direction="column" {...containerProps}>
       {isSyncEnabled && syncStatus ? (

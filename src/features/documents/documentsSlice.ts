@@ -19,6 +19,7 @@ import {
 import { RootState } from '../../redux/store'
 import { updateRawText } from '../../utils/markdownParser/markdownParserSlice'
 import { prettifyText } from '../../utils/prettierFns'
+import { globalSyncToGitCloud } from '../cloudSync/cloudSyncSlice'
 
 /**
  * Following entity based redux code
@@ -143,6 +144,7 @@ export const globalDocumentSave = createAsyncThunk<string, void>(
     await dispatch(globalDocumentInfoFetch({ relativePath })).unwrap()
     if (!response?.status) throw new Error('Response status is invalid!')
     dispatch(updateRawText(updatedContent)) // Update the md raw text as well
+    dispatch(globalSyncToGitCloud());
     return updatedContent
   }
 )
