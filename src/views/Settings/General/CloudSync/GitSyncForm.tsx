@@ -19,7 +19,7 @@ export type GitSyncFormProps = {
 
 const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
   const stepperContext = useContext(CloudSyncStepperContext)
-  const [setupStatusMessage, setSetupStatusMessage] = useState('')
+  const [setupStatusMessage, setSetupStatusMessage] = useState<string[]>([])
 
   useEffect(() => {
     let unListen: (() => void) | null = null
@@ -35,7 +35,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
               }
               typ: 'DEBUG' | 'INFO' | 'ERROR'
             }
-            setSetupStatusMessage(data.message)
+            setSetupStatusMessage((old) => [...old, data.message])
           }
         )
       } catch (error) {
@@ -108,7 +108,13 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
               example: <b>git@github.com:user/mediocre-library.git</b>
             </FormHelperText>
           </FormControl>
-          {setupStatusMessage ? <Box>{setupStatusMessage}</Box> : null}
+          {setupStatusMessage.length ? (
+            <Box>
+              {setupStatusMessage.map((msg, idx) => (
+                <Text key={msg + idx}>{msg}</Text>
+              ))}
+            </Box>
+          ) : null}
           <Spacer />
           <StepperBottomBar
             onNext={handleSubmit}
