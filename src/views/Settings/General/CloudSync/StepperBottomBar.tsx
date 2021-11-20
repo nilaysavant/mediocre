@@ -10,6 +10,7 @@ export type StepperBottomBarProps = {
   currentStepIndex?: number
   containerProps?: FlexProps
   nextButtonProps?: SettingsButtonProps
+  backButtonProps?: SettingsButtonProps
 }
 
 const StepperBottomBar = ({
@@ -21,6 +22,7 @@ const StepperBottomBar = ({
   maxSteps = 1,
   containerProps,
   nextButtonProps,
+  backButtonProps,
 }: StepperBottomBarProps) => {
   return (
     <Flex
@@ -45,9 +47,9 @@ const StepperBottomBar = ({
             colorScheme="gray"
             onClick={onBack}
             disabled={nextButtonIsLoading || currentStepIndex === 0}
-          >
-            Back
-          </SettingsButton>
+            children="Back"
+            {...backButtonProps}
+          />
         ) : null}
         <SettingsButton
           isLoading={nextButtonIsLoading}

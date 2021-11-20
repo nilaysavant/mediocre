@@ -67,6 +67,9 @@ const GitSyncSetupFinish = ({}: GitSyncSetupFinishProps) => {
         nextButtonProps={{
           children: 'Finish',
         }}
+        backButtonProps={{
+          disabled: true,
+        }}
       />
     </>
   )

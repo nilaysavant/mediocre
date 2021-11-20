@@ -7,6 +7,7 @@ import {
   ModalProps,
 } from '@chakra-ui/modal'
 import React, { useState } from 'react'
+import { useReduxSelector } from 'src/redux/hooks'
 import { stepperScreens } from './config'
 import CloudSyncStepperContext from './StepperContext'
 
@@ -30,7 +31,10 @@ const SetupGitSyncModal = ({
   finalFocusRef,
   modalProps,
 }: SetupGitSyncModalProps) => {
-  const [currentStepIdx, setCurrentStepIdx] = useState(0)
+  const isSyncEnabled = useReduxSelector((state) => state.cloudSync.enabled)
+  const [currentStepIdx, setCurrentStepIdx] = useState(() =>
+    isSyncEnabled ? stepperScreens.length - 1 : 0
+  )
   return (
     <CloudSyncStepperContext.Provider
       value={{
