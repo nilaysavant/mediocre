@@ -96,6 +96,12 @@ export const cloudSyncSlice = createSlice({
   name: 'markdownParser',
   initialState,
   reducers: {
+    syncServiceUpdate: (
+      state,
+      action: PayloadAction<CloudSyncState['service']>
+    ) => {
+      state.service = action.payload
+    },
     syncStatusUpdate: (
       state,
       action: PayloadAction<Partial<CloudSyncStatus>>
@@ -138,7 +144,7 @@ export const cloudSyncSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { syncStatusUpdate, syncStatusPushMessage } =
+export const { syncStatusUpdate, syncStatusPushMessage, syncServiceUpdate } =
   cloudSyncSlice.actions
 
 export default cloudSyncSlice.reducer

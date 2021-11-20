@@ -1,5 +1,5 @@
 import { Circle, Flex, FlexProps, Stack } from '@chakra-ui/layout'
-import SettingsButton from '../../SettingsButton'
+import SettingsButton, { SettingsButtonProps } from '../../SettingsButton'
 
 export type StepperBottomBarProps = {
   onNext: () => void | Promise<void>
@@ -9,6 +9,7 @@ export type StepperBottomBarProps = {
   maxSteps?: number
   currentStepIndex?: number
   containerProps?: FlexProps
+  nextButtonProps?: SettingsButtonProps
 }
 
 const StepperBottomBar = ({
@@ -19,6 +20,7 @@ const StepperBottomBar = ({
   currentStepIndex = 0,
   maxSteps = 1,
   containerProps,
+  nextButtonProps,
 }: StepperBottomBarProps) => {
   return (
     <Flex
@@ -50,10 +52,14 @@ const StepperBottomBar = ({
         <SettingsButton
           isLoading={nextButtonIsLoading}
           onClick={onNext}
-          disabled={nextButtonIsLoading || currentStepIndex === maxSteps - 1}
-        >
-          Next
-        </SettingsButton>
+          // disabled={nextButtonIsLoading || currentStepIndex === maxSteps - 1}
+          children={
+            nextButtonIsLoading || currentStepIndex === maxSteps - 1
+              ? 'Finish'
+              : 'Next'
+          }
+          {...nextButtonProps}
+        />
       </Stack>
     </Flex>
   )

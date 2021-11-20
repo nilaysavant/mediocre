@@ -8,9 +8,9 @@ import { Input, InputGroup } from '@chakra-ui/input'
 import { Box, ListItem, Spacer, Text, UnorderedList } from '@chakra-ui/layout'
 import { getCurrent } from '@tauri-apps/api/window'
 import { Formik, Form } from 'formik'
-import { CSSProperties, useContext, useEffect, useState } from 'react'
+import { CSSProperties, useContext, useEffect } from 'react'
 import {
-  globalSetupGitCloudSync,
+  syncServiceUpdate,
   syncStatusPushMessage,
 } from 'src/features/cloudSync/cloudSyncSlice'
 import { useReduxDispatch, useReduxSelector } from 'src/redux/hooks'
@@ -72,9 +72,12 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
       onSubmit={async (values, actions) => {
         try {
           actions.setSubmitting(true)
-          await dispatch(
-            globalSetupGitCloudSync({ repoUrl: values.gitRepositoryUrl })
-          ).unwrap()
+          dispatch(
+            syncServiceUpdate({
+              provider: 'git',
+              repoUrl: values.gitRepositoryUrl,
+            })
+          )
           actions.setSubmitting(false)
           stepperContext.onNext()
         } catch (error) {

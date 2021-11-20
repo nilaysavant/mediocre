@@ -43,6 +43,7 @@ const SetupGitSyncModal = ({
               : stepperScreens.length - 1
           ),
         onBack: () => setCurrentStepIdx((old) => (old > 0 ? old - 1 : 0)),
+        onClose,
       }}
     >
       <Modal

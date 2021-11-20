@@ -5,6 +5,7 @@ const CloudSyncStepperContext = React.createContext<{
   maxSteps: number
   onNext: () => void
   onBack: () => void
+  onClose: () => void
 }>({
   currentStep: 0,
   maxSteps: 1,
@@ -12,6 +13,9 @@ const CloudSyncStepperContext = React.createContext<{
     return
   },
   onBack: () => {
+    return
+  },
+  onClose: () => {
     return
   },
 })
