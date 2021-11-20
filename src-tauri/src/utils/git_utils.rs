@@ -12,6 +12,7 @@ pub struct GitUtils {
 
 impl GitUtils {
   /// # Create a new GitUtils instance
+  ///
   /// - Inits a new git repo.
   /// - Sets the repository remote.
   pub fn new(remote_url: String, repo_path: &Path) -> Result<Self> {
@@ -20,7 +21,15 @@ impl GitUtils {
     Ok(Self { repository })
   }
 
+  /// # Get Ref Spec String
+  ///
+  /// Get Ref Spec string from `branch` name.
+  pub fn get_ref_specs(branch: &str) -> String {
+    format!("refs/heads/{}:refs/heads/{}", branch, branch)
+  }
+
   /// # Load GitUtils instance based on existing repo
+  ///
   /// - Loads an existing instance of the git repository at
   /// the `repo_path` and returns a GitUtils instance based on this.
   pub fn load(repo_path: &Path) -> Result<Self> {
@@ -29,6 +38,7 @@ impl GitUtils {
   }
 
   /// # Clone a repo
+  ///
   /// Clones a repository given the `remote_url` to the specified `path`
   pub fn clone(remote_url: String, clone_path: &Path) -> Result<Repository> {
     // Prepare callbacks.
@@ -48,6 +58,7 @@ impl GitUtils {
   }
 
   /// # Fetch a repo
+  ///
   /// Downloads data from remote repo and updates existing files.
   pub fn fetch(&self) -> Result<()> {
     self
@@ -58,6 +69,7 @@ impl GitUtils {
   }
 
   /// # Add files to track
+  ///
   /// Add all files to track under the specified `dirs` list.
   pub fn add(&self, dirs: Vec<&Path>) -> Result<()> {
     let mut index = self.repository.index()?;
@@ -126,7 +138,7 @@ impl GitUtils {
       Ok(())
     });
     remote.connect_auth(Direction::Push, Some(Self::create_callbacks()), None)?;
-    let ref_spec = format!("refs/heads/{}:refs/heads/{}", "master", "master");
+    let ref_spec = Self::get_ref_specs("master");
     self.repository.remote_add_push("origin", &ref_spec)?;
     push_options.remote_callbacks(callbacks);
     remote.push(&[&ref_spec], Some(&mut push_options))?;
