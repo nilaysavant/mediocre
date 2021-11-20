@@ -27,7 +27,7 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
       try {
         const tauriWindow = getCurrent()
         unListen = await tauriWindow.listen(
-          'cloud_sync',
+          'setup_cloud_sync',
           ({ payload }) => {
             const { data } = payload as {
               data: {

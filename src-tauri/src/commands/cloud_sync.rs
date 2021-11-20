@@ -66,3 +66,33 @@ pub async fn setup_git_cloud_sync(
     message: "Success".to_string(),
   })
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SyncToGitCloudResponse {
+  status: bool,
+  message: String,
+}
+
+/// # Sync to Git Cloud
+///
+/// Command to Sync documents to Git Cloud
+///
+#[tauri::command]
+pub async fn sync_to_git_cloud(
+  state: tauri::State<'_, AppState>,
+  db_state: tauri::State<'_, AppDbState>,
+  window: tauri::Window,
+) -> Result<SyncToGitCloudResponse, String> {
+  let mut db = db_state.db.lock().map_err(|e| e.to_string())?;
+  let wem = WindowEventManager::new(&window);
+  let cloud_sync =
+    CloudSync::from_avail(state.inner().to_owned(), &mut db, &wem).map_err(|e| e.to_string())?;
+  cloud_sync
+    .sync(state.inner().to_owned(), &mut db)
+    .map_err(|e| e.to_string())?;
+  Ok(SyncToGitCloudResponse {
+    status: true,
+    message: "Success".to_string(),
+  })
+}
