@@ -53,7 +53,7 @@ impl WindowEventManager {
     Self { window }
   }
 
-  pub fn send<P: Debug + Clone + Serialize>(&mut self, event: WindowEvent<P>) -> Result<()> {
+  pub fn send<P: Debug + Clone + Serialize>(&self, event: WindowEvent<P>) -> Result<()> {
     self
       .window
       .emit(

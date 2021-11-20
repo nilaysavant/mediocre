@@ -61,9 +61,9 @@ pub async fn setup_git_cloud_sync(
   git_sync_repo_url: String,
 ) -> Result<SetupGitCloudSyncResponse, String> {
   let mut db = db_state.db.lock().map_err(|e| e.to_string())?;
+  let wem = WindowEventManager::new(window);
   let cloud_sync = CloudSync::new(state.inner().to_owned(), &mut db, git_sync_repo_url)
     .map_err(|e| e.to_string())?;
-  let mut wem = WindowEventManager::new(window);
   wem
     .send(WindowEvent {
       name: "setup_git_cloud_sync",
