@@ -70,7 +70,7 @@ const BottomSection = ({
               ) : null}
             </Flex>
           ) : null}
-          {syncStatus.isSyncing ? <Progress h="0.5" isIndeterminate /> : null}
+          {syncStatus.isSyncing ? <Progress h="0.5" isIndeterminate /> : <hr />}
         </>
       ) : null}
       <Flex bg="bg.dark.350" p="1" alignItems="center">
