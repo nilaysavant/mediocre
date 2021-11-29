@@ -5,16 +5,8 @@ use log::LevelFilter;
 use log4rs::{
   append::{
     console::ConsoleAppender,
-    file::FileAppender,
     rolling_file::{
-      policy::{
-        compound::{
-          roll::{delete::DeleteRoller, Roll},
-          trigger::{size::SizeTrigger, Trigger},
-          CompoundPolicy, CompoundPolicyConfig,
-        },
-        Policy,
-      },
+      policy::compound::{roll::delete::DeleteRoller, trigger::size::SizeTrigger, CompoundPolicy},
       RollingFileAppender,
     },
   },

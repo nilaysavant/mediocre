@@ -12,7 +12,7 @@ use crate::utils::{
   window_event_manager::{WindowEvent, WindowEventManager, WindowEventType},
 };
 
-use super::{app_dir_paths, app_state::AppState};
+use super::app_state::AppState;
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]

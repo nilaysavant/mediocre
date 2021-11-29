@@ -2,16 +2,8 @@ use log::info;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-  commands::fs,
-  models::{
-    app_db_state::AppDbState,
-    app_state::AppState,
-    cloud_sync::{self, CloudSync},
-  },
-  utils::{
-    error::error_to_string,
-    window_event_manager::{WindowEvent, WindowEventManager, WindowEventType},
-  },
+  models::{app_db_state::AppDbState, app_state::AppState, cloud_sync::CloudSync},
+  utils::{error::error_to_string, window_event_manager::WindowEventManager},
 };
 
 #[derive(Debug, Deserialize, Serialize)]

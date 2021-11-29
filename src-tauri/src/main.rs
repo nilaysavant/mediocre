@@ -4,7 +4,6 @@
 )]
 
 use std::{
-  path::Path,
   process::exit,
   sync::{Arc, Mutex},
 };
@@ -14,10 +13,7 @@ use log::{error, info};
 use crate::{
   constants::paths::{APP_DB_DIR_NAME, APP_DB_FILE_NAME, APP_LOGS_DIR_NAME, USER_DOCS_DIR_NAME},
   models::{app_db_state::AppDbState, app_dir_paths::AppDirPaths, app_state::AppState},
-  utils::{
-    fsutils::get_app_root_dir_path,
-    logger::{self, MediocreLogger},
-  },
+  utils::{fsutils::get_app_root_dir_path, logger::MediocreLogger},
 };
 
 mod commands;
