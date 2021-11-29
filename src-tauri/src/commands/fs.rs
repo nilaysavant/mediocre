@@ -1,7 +1,10 @@
 use relative_path::RelativePath;
 use serde::{Deserialize, Serialize};
 
-use crate::{models::app_state::AppState, utils::fsutils};
+use crate::{
+  models::app_state::AppState,
+  utils::{error::error_to_string, fsutils},
+};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -23,7 +26,7 @@ pub fn save_file_to(
     .normalize()
     .to_path(documents_dir)
     .to_owned();
-  fsutils::write_to_path(save_path.as_path(), file_data).map_err(|e| e.to_string())?;
+  fsutils::write_to_path(save_path.as_path(), file_data).map_err(error_to_string)?;
   Ok(SaveFileToResponse {
     status: true,
     message: "Success".to_string(),

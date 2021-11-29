@@ -2,7 +2,10 @@ use log::info;
 use relative_path::RelativePath;
 use serde::{Deserialize, Serialize};
 
-use crate::{models::app_state::AppState, utils::fsutils};
+use crate::{
+  models::app_state::AppState,
+  utils::{error::error_to_string, fsutils},
+};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -24,7 +27,7 @@ pub async fn fetch_doc_info(
     .to_path(documents_dir)
     .to_owned();
   let file_meta_info =
-    fsutils::get_file_meta_from_path(documents_dir, &file_path).map_err(|e| e.to_string())?;
+    fsutils::get_file_meta_from_path(documents_dir, &file_path).map_err(error_to_string)?;
   Ok(FetchDocInfoResponse { file_meta_info })
 }
 
@@ -41,7 +44,7 @@ pub async fn fetch_all_docs_info(
 ) -> Result<FetchAllDocsInfoResponse, String> {
   let documents_dir = &state.dir_paths.documents;
   let files_meta_info =
-    fsutils::get_all_files_meta_from_path(documents_dir.as_path()).map_err(|e| e.to_string())?;
+    fsutils::get_all_files_meta_from_path(documents_dir.as_path()).map_err(error_to_string)?;
   Ok(FetchAllDocsInfoResponse { files_meta_info })
 }
 
@@ -64,7 +67,7 @@ pub async fn read_document(
     .normalize()
     .to_path(documents_dir)
     .to_owned();
-  let content = fsutils::read_from_path(file_path).map_err(|e| e.to_string())?;
+  let content = fsutils::read_from_path(file_path).map_err(error_to_string)?;
   Ok(ReadDocumentResponse { content })
 }
 
@@ -88,7 +91,7 @@ pub async fn write_document(
     .normalize()
     .to_path(documents_dir)
     .to_owned();
-  fsutils::write_to_path(file_path.as_path(), content).map_err(|e| e.to_string())?;
+  fsutils::write_to_path(file_path.as_path(), content).map_err(error_to_string)?;
   Ok(WriteDocumentResponse { status: true })
 }
 
@@ -111,7 +114,7 @@ pub async fn remove_document(
     .normalize()
     .to_path(documents_dir)
     .to_owned();
-  fsutils::remove_from_path(file_path.as_path()).map_err(|e| e.to_string())?;
+  fsutils::remove_from_path(file_path.as_path()).map_err(error_to_string)?;
   Ok(RemoveDocumentResponse { status: true })
 }
 
@@ -138,6 +141,6 @@ pub async fn rename_document(
     .normalize()
     .to_path(documents_dir)
     .to_owned();
-  fsutils::rename_file(file_path.as_path(), new_document_name).map_err(|e| e.to_string())?;
+  fsutils::rename_file(file_path.as_path(), new_document_name).map_err(error_to_string)?;
   Ok(RenameDocumentResponse { status: true })
 }
