@@ -54,7 +54,7 @@ fn main() {
   }
 
   // Init logger
-  MediocreLogger::init(&app_dir_paths.logs.join("mediocre.log")).expect("failed to init logger!");
+  MediocreLogger::init(&app_dir_paths.logs.join("app.log")).expect("failed to init logger!");
 
   // Start Tauri
   info!("Starting Tauri backend...");
