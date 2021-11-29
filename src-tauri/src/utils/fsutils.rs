@@ -50,6 +50,7 @@ pub fn create_app_default_dirs(app_dir_paths: &AppDirPaths) -> Result<(), Server
   fs::create_dir_all(&app_dir_paths.root).map_err(map_to_server_error)?;
   fs::create_dir_all(&app_dir_paths.db).map_err(map_to_server_error)?;
   fs::create_dir_all(&app_dir_paths.documents).map_err(map_to_server_error)?;
+  fs::create_dir_all(&app_dir_paths.logs).map_err(map_to_server_error)?;
   Ok(())
 }
 
