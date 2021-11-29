@@ -4,6 +4,7 @@
 )]
 
 use std::{
+  path::Path,
   process::exit,
   sync::{Arc, Mutex},
 };
@@ -11,9 +12,12 @@ use std::{
 use log::{error, info};
 
 use crate::{
-  constants::paths::{APP_DB_DIR_NAME, APP_DB_FILE_NAME, USER_DOCS_DIR_NAME},
+  constants::paths::{APP_DB_DIR_NAME, APP_DB_FILE_NAME, APP_LOGS_DIR_NAME, USER_DOCS_DIR_NAME},
   models::{app_db_state::AppDbState, app_dir_paths::AppDirPaths, app_state::AppState},
-  utils::fsutils::get_app_root_dir_path,
+  utils::{
+    fsutils::get_app_root_dir_path,
+    logger::{self, MediocreLogger},
+  },
 };
 
 mod commands;
@@ -27,7 +31,7 @@ fn main() {
     "RUST_LOG",
     format!("{}=debug", cargo_pkg_name), // Set the current crate(pkg) to debug mode, others to info
   );
-  env_logger::init(); // init logger
+
   info!("Starting Mediocre...");
 
   // assign app root dir path
@@ -37,6 +41,7 @@ fn main() {
     root: app_root_dir_path.clone(),
     documents: app_root_dir_path.join(USER_DOCS_DIR_NAME),
     db: app_root_dir_path.join(APP_DB_DIR_NAME),
+    logs: app_root_dir_path.join(APP_LOGS_DIR_NAME),
   };
 
   // Setup
@@ -48,7 +53,11 @@ fn main() {
     }
   }
 
+  // Init logger
+  MediocreLogger::init(&app_dir_paths.logs.join("mediocre.log")).expect("failed to init logger!");
+
   // Start Tauri
+  info!("Starting Tauri backend...");
   tauri::Builder::default()
     .manage(AppState {
       dir_paths: app_dir_paths.clone(),

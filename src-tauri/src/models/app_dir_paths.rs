@@ -12,4 +12,7 @@ pub struct AppDirPaths {
   /// Path to the database dir.
   /// - Usually set to: `~/.mediocre/db`
   pub db: PathBuf,
+  /// Path to the logs dir.
+  /// - Usually set to: `~/.mediocre/logs`
+  pub logs: PathBuf,
 }
