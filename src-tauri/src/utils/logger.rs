@@ -42,7 +42,7 @@ impl MediocreLogger {
       .build(
         log_file_location,
         Box::new(CompoundPolicy::new(
-          Box::new(SizeTrigger::new(10000000)),
+          Box::new(SizeTrigger::new(10000000)), // 10 Mb (size in bytes)
           Box::new(DeleteRoller::new()),
         )),
       )?;
