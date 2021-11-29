@@ -30,6 +30,7 @@ pub struct MediocreLogger {}
 
 impl MediocreLogger {
   pub fn init(log_file_location: &Path) -> Result<Handle> {
+    let cargo_pkg_name = env!("CARGO_PKG_NAME").replace("-", "_");
     let stdout = ConsoleAppender::builder()
       .encoder(Box::new(PatternEncoder::new(
         "[{d(%Y-%m-%dT%H:%M:%SZ)(utc)} {h({l})}] {m}{n}",
@@ -49,11 +50,14 @@ impl MediocreLogger {
     let config = log4rs::Config::builder()
       .appender(Appender::builder().build("stdout", Box::new(stdout)))
       .appender(Appender::builder().build("log_file", Box::new(log_file)))
+      // Set max error level for our Application and set other crates(used) to a lower level
+      .logger(Logger::builder().build(cargo_pkg_name, LevelFilter::max()))
       .build(
         Root::builder()
           .appender("stdout")
           .appender("log_file")
-          .build(LevelFilter::Debug),
+          // lower logging for all other crates : ref: https://github.com/estk/log4rs/issues/36#issuecomment-267836976
+          .build(LevelFilter::Warn),
       )?;
     // use handle to change logger configuration at runtime
     let handle = log4rs::init_config(config)?;
