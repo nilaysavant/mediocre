@@ -8,7 +8,10 @@ use crate::{
     app_state::AppState,
     cloud_sync::{self, CloudSync},
   },
-  utils::window_event_manager::{WindowEvent, WindowEventManager, WindowEventType},
+  utils::{
+    error::error_to_string,
+    window_event_manager::{WindowEvent, WindowEventManager, WindowEventType},
+  },
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -26,7 +29,7 @@ pub async fn test_git_clone_ssh(
 ) -> Result<TestGitCloneSshResponse, String> {
   info!("Testing git clone via ssh...");
   std::fs::remove_dir_all("/tmp/git2-rs").ok();
-  CloudSync::test_git_clone_ssh().map_err(|e| e.to_string())?;
+  CloudSync::test_git_clone_ssh().map_err(error_to_string)?;
   info!("Done!");
   Ok(TestGitCloneSshResponse {
     status: true,
@@ -54,13 +57,13 @@ pub async fn setup_git_cloud_sync(
   window: tauri::Window,
   git_sync_repo_url: String,
 ) -> Result<SetupGitCloudSyncResponse, String> {
-  let mut db = db_state.db.lock().map_err(|e| e.to_string())?;
+  let mut db = db_state.db.lock().map_err(error_to_string)?;
   let wem = WindowEventManager::new(&window);
   let cloud_sync = CloudSync::new(state.inner().to_owned(), &mut db, &wem, git_sync_repo_url)
-    .map_err(|e| e.to_string())?;
+    .map_err(error_to_string)?;
   cloud_sync
     .setup(state.inner().to_owned(), &mut db)
-    .map_err(|e| e.to_string())?;
+    .map_err(error_to_string)?;
   Ok(SetupGitCloudSyncResponse {
     status: true,
     message: "Success".to_string(),
@@ -84,13 +87,13 @@ pub async fn sync_to_git_cloud(
   db_state: tauri::State<'_, AppDbState>,
   window: tauri::Window,
 ) -> Result<SyncToGitCloudResponse, String> {
-  let mut db = db_state.db.lock().map_err(|e| e.to_string())?;
+  let mut db = db_state.db.lock().map_err(error_to_string)?;
   let wem = WindowEventManager::new(&window);
   let cloud_sync =
-    CloudSync::from_avail(state.inner().to_owned(), &mut db, &wem).map_err(|e| e.to_string())?;
+    CloudSync::from_avail(state.inner().to_owned(), &mut db, &wem).map_err(error_to_string)?;
   cloud_sync
     .sync(state.inner().to_owned(), &mut db)
-    .map_err(|e| e.to_string())?;
+    .map_err(error_to_string)?;
   Ok(SyncToGitCloudResponse {
     status: true,
     message: "Success".to_string(),
