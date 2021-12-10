@@ -67,7 +67,8 @@
     "devbe": "cross-env RUST_DEBUG=1 tauri dev",
     "gen:theme-typings": "chakra-cli tokens src/theme.ts",
     "postinstall": "npm run gen:theme-typings",
-    "prettify": "prettier --write ."
+    "prettify": "prettier --write .",
+    "prepare": "node ./scripts/prepare.js"
   },
   "eslintConfig": {
     "extends": [
@@ -100,6 +101,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "postcss": "^7",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "husky": "^7.0.0"
   }
 }
