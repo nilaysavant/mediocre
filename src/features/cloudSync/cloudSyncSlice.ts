@@ -35,6 +35,10 @@ export type CloudSyncState = {
         provider?: 'git'
         /** git remote repo url */
         repoUrl: string
+        /** git config `user.name` */
+        configUserName: string
+        /** git config `user.email` */
+        configUserEmail: string
       }
     | {
         // not implemented
@@ -62,16 +66,20 @@ const initialState: CloudSyncState = {
  * - returns boolean status: true: no-error
  */
 export const globalSetupGitCloudSync = createAsyncThunk<
-  { repoUrl: string },
-  { repoUrl: string }
+  { repoUrl: string; configUserName: string; configUserEmail: string },
+  { repoUrl: string; configUserName: string; configUserEmail: string }
 >(
   'markdownParser/globalSetupGitCloudSync',
   async (arg, { getState, dispatch }) => {
-    const { repoUrl } = arg
+    const { repoUrl, configUserName, configUserEmail } = arg
     dispatch(syncStatusUpdate({ messages: [] })) // reset messages
-    const response = await setupGitCloudSync(repoUrl)
+    const response = await setupGitCloudSync(
+      repoUrl,
+      configUserName,
+      configUserEmail
+    )
     if (!response?.status) throw new Error(response?.message)
-    return { repoUrl }
+    return { repoUrl, configUserName, configUserEmail }
   }
 )
 
@@ -136,6 +144,8 @@ export const cloudSyncSlice = createSlice({
         state.service = {
           provider: 'git',
           repoUrl: action.payload.repoUrl,
+          configUserName: action.payload.configUserName,
+          configUserEmail: action.payload.configUserEmail,
         }
         state.enabled = true
         state.status.isSyncing = false

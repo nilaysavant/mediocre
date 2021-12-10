@@ -21,12 +21,20 @@ export const testGitCloneSSH = async () => {
  *
  * Tauri command to store git repo url(ssh), for sync.
  */
-export const setupGitCloudSync = async (gitSyncRepoUrl: string) => {
+export const setupGitCloudSync = async (
+  gitSyncRepoUrl: string,
+  gitSyncUserName: string,
+  gitSyncUserEmail: string
+) => {
   if (isTauri()) {
     const invokeRes: {
       status: boolean
       message: string
-    } = await tauri.invoke('setup_git_cloud_sync', { gitSyncRepoUrl })
+    } = await tauri.invoke('setup_git_cloud_sync', {
+      gitSyncRepoUrl,
+      gitSyncUserName,
+      gitSyncUserEmail,
+    })
     return invokeRes
   }
 }

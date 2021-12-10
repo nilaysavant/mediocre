@@ -5,6 +5,7 @@ import {
   FormLabel,
 } from '@chakra-ui/form-control'
 import { Input, InputGroup } from '@chakra-ui/input'
+import { Code } from '@chakra-ui/react'
 import { Box, ListItem, Spacer, Text, UnorderedList } from '@chakra-ui/layout'
 import { getCurrent } from '@tauri-apps/api/window'
 import { Formik, Form } from 'formik'
@@ -23,10 +24,8 @@ export type GitSyncFormProps = {
 
 const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
   const dispatch = useReduxDispatch()
-  const initialGitRepositoryUrl = useReduxSelector((state) =>
-    state.cloudSync.enabled && state.cloudSync.service?.provider === 'git'
-      ? state.cloudSync.service.repoUrl
-      : ''
+  const cloudSyncService = useReduxSelector((state) =>
+    state.cloudSync.service?.provider === 'git' ? state.cloudSync.service : null
   )
   const syncMessages = useReduxSelector(
     (state) => state.cloudSync.status.messages
@@ -62,11 +61,23 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
 
   return (
     <Formik
-      initialValues={{ gitRepositoryUrl: initialGitRepositoryUrl }}
+      initialValues={{
+        gitRepositoryUrl: cloudSyncService?.repoUrl ?? '',
+        configUserName: cloudSyncService?.configUserName ?? '',
+        configUserEmail: cloudSyncService?.configUserEmail ?? '',
+      }}
       validate={(values) => {
         if (!values.gitRepositoryUrl)
           return {
             gitRepositoryUrl: 'Required',
+          }
+        if (!values.configUserName)
+          return {
+            configUserName: 'Required',
+          }
+        if (!values.configUserEmail)
+          return {
+            configUserEmail: 'Required',
           }
       }}
       onSubmit={async (values, actions) => {
@@ -76,6 +87,8 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
             syncServiceUpdate({
               provider: 'git',
               repoUrl: values.gitRepositoryUrl,
+              configUserName: values.configUserName,
+              configUserEmail: values.configUserEmail,
             })
           )
           actions.setSubmitting(false)
@@ -101,32 +114,63 @@ const GitSyncForm = ({ formStyle }: GitSyncFormProps) => {
           <FormControl
             isInvalid={!!errors.gitRepositoryUrl && touched.gitRepositoryUrl}
           >
-            <FormLabel htmlFor="gitRepositoryUrl" w="full">
-              <Text>Git repository URL</Text>
-            </FormLabel>
             <InputGroup size="sm">
               <Input
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.gitRepositoryUrl}
                 id="gitRepositoryUrl"
-                placeholder="Git repository URL"
+                placeholder="repository URL"
               />
             </InputGroup>
             <FormErrorMessage>{errors.gitRepositoryUrl}</FormErrorMessage>
             <FormHelperText>
               Enter the Git repository <b>SSH URL</b> for sync setup.
               <br />
-              example: <b>git@github.com:user/mediocre-library.git</b>
+              example:{' '}
+              <Code fontSize="small">
+                git@github.com:user/mediocre-library.git
+              </Code>
             </FormHelperText>
           </FormControl>
-          {syncMessages.length ? (
-            <UnorderedList mt="4" fontSize="sm">
-              {syncMessages.map((msg, idx) => (
-                <ListItem key={msg + idx}>{msg}</ListItem>
-              ))}
-            </UnorderedList>
-          ) : null}
+          <FormControl
+            isInvalid={!!errors.configUserName && touched.configUserName}
+            mt="4"
+          >
+            <InputGroup size="sm">
+              <Input
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.configUserName}
+                id="configUserName"
+                placeholder="user.name"
+              />
+            </InputGroup>
+            <FormErrorMessage>{errors.configUserName}</FormErrorMessage>
+            <FormHelperText>
+              Enter values for{' '}
+              <Code fontSize="small">git config user.name</Code>
+            </FormHelperText>
+          </FormControl>
+          <FormControl
+            isInvalid={!!errors.configUserEmail && touched.configUserEmail}
+            mt="4"
+          >
+            <InputGroup size="sm">
+              <Input
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.configUserEmail}
+                id="configUserEmail"
+                placeholder="user.email"
+              />
+            </InputGroup>
+            <FormErrorMessage>{errors.configUserEmail}</FormErrorMessage>
+            <FormHelperText>
+              Enter values for{' '}
+              <Code fontSize="small">git config user.email</Code>
+            </FormHelperText>
+          </FormControl>
           <Spacer />
           <StepperBottomBar
             onNext={handleSubmit}

@@ -14,10 +14,8 @@ export type GitSyncSetupProgressProps = any
 const GitSyncSetupProgress = ({}: GitSyncSetupProgressProps) => {
   const dispatch = useReduxDispatch()
   const isSyncEnabled = useReduxSelector((state) => state.cloudSync.enabled)
-  const gitRepositoryUrl = useReduxSelector((state) =>
-    state.cloudSync.service?.provider === 'git'
-      ? state.cloudSync.service.repoUrl
-      : ''
+  const cloudSyncService = useReduxSelector((state) =>
+    state.cloudSync.service?.provider === 'git' ? state.cloudSync.service : null
   )
   const syncMessages = useReduxSelector(
     (state) => state.cloudSync.status.messages
@@ -54,15 +52,15 @@ const GitSyncSetupProgress = ({}: GitSyncSetupProgressProps) => {
 
   useEffect(() => {
     const setup = async () => {
-      console.log(
-        '🚀 ~ file: GitSyncSetupProgress.tsx ~ line 60 ~ setup ~ !isSyncEnabled && gitRepositoryUrl',
-        !isSyncEnabled && gitRepositoryUrl
-      )
       try {
         setIsLoading(true)
-        if (!isSyncEnabled && gitRepositoryUrl)
+        if (!isSyncEnabled && cloudSyncService?.repoUrl)
           await dispatch(
-            globalSetupGitCloudSync({ repoUrl: gitRepositoryUrl })
+            globalSetupGitCloudSync({
+              repoUrl: cloudSyncService.repoUrl,
+              configUserName: cloudSyncService.configUserName,
+              configUserEmail: cloudSyncService.configUserEmail,
+            })
           ).unwrap()
       } catch (error) {
         console.error(error)
@@ -70,7 +68,13 @@ const GitSyncSetupProgress = ({}: GitSyncSetupProgressProps) => {
       setIsLoading(false)
     }
     setup()
-  }, [dispatch, gitRepositoryUrl, isSyncEnabled])
+  }, [
+    cloudSyncService?.configUserEmail,
+    cloudSyncService?.configUserName,
+    cloudSyncService?.repoUrl,
+    dispatch,
+    isSyncEnabled,
+  ])
 
   return (
     <>
