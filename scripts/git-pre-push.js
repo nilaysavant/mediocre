@@ -14,6 +14,8 @@ const packageJson = require('../package.json')
  */
 const git = simpleGit()
 
+const isCi = process.env.CI !== undefined
+
 const checkOnReleaseBranch = async () => {
   const branches = await git.branch()
   return branches.current === 'release'
@@ -65,6 +67,7 @@ const assertVersions = async () => {
  */
 const main = async () => {
   try {
+    if(isCi) return // skip running this in CI
     if (!(await checkOnReleaseBranch())) return // skip if not pushing on release branch
     await checkPackageVersionUpdated()
     await assertVersions()
