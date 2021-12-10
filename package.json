@@ -68,7 +68,8 @@
     "gen:theme-typings": "chakra-cli tokens src/theme.ts",
     "postinstall": "npm run gen:theme-typings",
     "prettify": "prettier --write .",
-    "prepare": "node ./scripts/prepare.js"
+    "prepare": "node ./scripts/prepare.js",
+    "git-pre-push": "node ./scripts/git-pre-push.js"
   },
   "eslintConfig": {
     "extends": [
@@ -100,8 +101,10 @@
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^7.0.0",
     "postcss": "^7",
     "rimraf": "^3.0.2",
-    "husky": "^7.0.0"
+    "simple-git": "^2.48.0",
+    "toml": "^3.0.0"
   }
 }
