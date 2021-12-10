@@ -7,6 +7,4 @@ use super::app_dir_paths::AppDirPaths;
 pub struct AppState {
   /// File System Paths pointing to app specific dirs
   pub dir_paths: AppDirPaths,
-  /// Git Sync repository url
-  pub git_sync_repo_url: Arc<Mutex<String>>,
 }

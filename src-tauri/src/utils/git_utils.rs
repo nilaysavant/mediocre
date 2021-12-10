@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use anyhow::{anyhow, Context, Result};
-use git2::{Cred, Direction, IndexAddOption, PushOptions, RemoteCallbacks, Repository, Signature};
+use git2::{Cred, Direction, IndexAddOption, PushOptions, RemoteCallbacks, Repository};
 use log::{debug, error, info, warn};
 
 /// # Utilities for interacting with git
@@ -15,9 +15,17 @@ impl GitUtils {
   ///
   /// - Inits a new git repo.
   /// - Sets the repository remote.
-  pub fn new(remote_url: String, repo_path: &Path) -> Result<Self> {
+  pub fn new(
+    remote_url: &str,
+    repo_path: &Path,
+    config_user_name: &str,
+    config_user_email: &str,
+  ) -> Result<Self> {
     let repository = Repository::init(repo_path)?;
-    repository.remote("origin", &remote_url)?;
+    repository.remote("origin", remote_url)?;
+    let mut config = repository.config()?;
+    config.set_str("user.name", config_user_name)?;
+    config.set_str("user.email", config_user_email)?;
     Ok(Self { repository })
   }
 

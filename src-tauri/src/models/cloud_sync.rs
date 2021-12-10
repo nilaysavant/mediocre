@@ -22,7 +22,6 @@ pub struct CloudSyncPayload {
 
 /// For syncing files/configs to cloud
 pub struct CloudSync<'weml> {
-  git_sync_repo_url: String,
   wem: &'weml WindowEventManager<'weml>,
 }
 
@@ -36,50 +35,21 @@ impl<'cs> CloudSync<'cs> {
     state: AppState,
     db: &mut PickleDb,
     wem: &'cs WindowEventManager,
-    git_sync_repo_url: String,
   ) -> Result<Self> {
-    db.set("git_sync_repo_url", &git_sync_repo_url)?; // Set the url in the DB
-    let mut state_git_sync_repo_url = state
-      .git_sync_repo_url
-      .lock()
-      .map_err(|e| anyhow::Error::msg(e.to_string()))?;
-    *state_git_sync_repo_url = git_sync_repo_url.clone(); // set the url in state
-    Ok(CloudSync {
-      git_sync_repo_url,
-      wem,
-    })
-  }
-
-  /// # Create `CloudSync` from available data
-  ///
-  /// Create a new `CloudSync` instance
-  /// using the available data in State/DB.
-  pub fn from_avail(
-    state: AppState,
-    db: &mut PickleDb,
-    wem: &'cs WindowEventManager,
-  ) -> Result<Self> {
-    match state.git_sync_repo_url.lock() {
-      Ok(git_sync_repo_url) => Ok(CloudSync {
-        git_sync_repo_url: git_sync_repo_url.to_string(),
-        wem,
-      }),
-      Err(e) => {
-        let git_sync_repo_url = db.get("git_sync_repo_url").ok_or(anyhow::Error::msg(
-          "could not get `git_sync_repo_url` from db.",
-        ))?;
-        Ok(CloudSync {
-          git_sync_repo_url,
-          wem,
-        })
-      }
-    }
+    Ok(CloudSync { wem })
   }
 
   /// # Setup
   ///
   /// Setup sync with git remote
-  pub fn setup(self, state: AppState, db: &mut PickleDb) -> Result<()> {
+  pub fn setup(
+    self,
+    state: AppState,
+    db: &mut PickleDb,
+    git_sync_repo_url: &str,
+    git_sync_user_name: &str,
+    git_sync_user_email: &str,
+  ) -> Result<()> {
     self.wem.send(WindowEvent {
       name: "setup_cloud_sync",
       typ: WindowEventType::INFO,
@@ -87,7 +57,12 @@ impl<'cs> CloudSync<'cs> {
         message: "Creating new repository...",
       },
     })?;
-    let git_utils = GitUtils::new(self.git_sync_repo_url, &state.dir_paths.root)?;
+    let git_utils = GitUtils::new(
+      &git_sync_repo_url,
+      &state.dir_paths.root,
+      &git_sync_user_name,
+      &git_sync_user_email,
+    )?;
     self.wem.send(WindowEvent {
       name: "setup_cloud_sync",
       typ: WindowEventType::INFO,

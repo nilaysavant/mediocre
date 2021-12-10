@@ -48,13 +48,21 @@ pub async fn setup_git_cloud_sync(
   db_state: tauri::State<'_, AppDbState>,
   window: tauri::Window,
   git_sync_repo_url: String,
+  git_sync_user_name: String,
+  git_sync_user_email: String,
 ) -> Result<SetupGitCloudSyncResponse, String> {
   let mut db = db_state.db.lock().map_err(error_to_string)?;
   let wem = WindowEventManager::new(&window);
-  let cloud_sync = CloudSync::new(state.inner().to_owned(), &mut db, &wem, git_sync_repo_url)
-    .map_err(error_to_string)?;
+  let cloud_sync =
+    CloudSync::new(state.inner().to_owned(), &mut db, &wem).map_err(error_to_string)?;
   cloud_sync
-    .setup(state.inner().to_owned(), &mut db)
+    .setup(
+      state.inner().to_owned(),
+      &mut db,
+      &git_sync_repo_url,
+      &git_sync_user_name,
+      &git_sync_user_email,
+    )
     .map_err(error_to_string)?;
   Ok(SetupGitCloudSyncResponse {
     status: true,
@@ -82,7 +90,7 @@ pub async fn sync_to_git_cloud(
   let mut db = db_state.db.lock().map_err(error_to_string)?;
   let wem = WindowEventManager::new(&window);
   let cloud_sync =
-    CloudSync::from_avail(state.inner().to_owned(), &mut db, &wem).map_err(error_to_string)?;
+    CloudSync::new(state.inner().to_owned(), &mut db, &wem).map_err(error_to_string)?;
   cloud_sync
     .sync(state.inner().to_owned(), &mut db)
     .map_err(error_to_string)?;
