@@ -165,13 +165,13 @@ impl GitUtils {
     cb.transfer_progress(|stats| {
       if stats.received_objects() == stats.total_objects() {
         debug!(
-          "Resolving deltas {}/{}\r",
+          "Resolving deltas {}/{}",
           stats.indexed_deltas(),
           stats.total_deltas()
         );
       } else if stats.total_objects() > 0 {
         debug!(
-          "Received {}/{} objects ({}) in {} bytes\r",
+          "Received {}/{} objects ({}) in {} bytes",
           stats.received_objects(),
           stats.total_objects(),
           stats.indexed_objects(),
@@ -192,7 +192,7 @@ impl GitUtils {
     let stats = remote.stats();
     if stats.local_objects() > 0 {
       debug!(
-        "\rReceived {}/{} objects in {} bytes (used {} local \
+        "Received {}/{} objects in {} bytes (used {} local \
              objects)",
         stats.indexed_objects(),
         stats.total_objects(),
@@ -201,7 +201,7 @@ impl GitUtils {
       );
     } else {
       debug!(
-        "\rReceived {}/{} objects in {} bytes",
+        "Received {}/{} objects in {} bytes",
         stats.indexed_objects(),
         stats.total_objects(),
         stats.received_bytes()
@@ -294,9 +294,10 @@ impl GitUtils {
   ) -> Result<(), git2::Error> {
     // 1. do a merge analysis
     let analysis = self.repository.merge_analysis(&[&fetch_commit])?;
+    debug!("analysis: {:?}", analysis);
     // 2. Do the appropriate merge
     if analysis.0.is_fast_forward() {
-      debug!("Doing a fast forward");
+      debug!("Doing a fast forward merge");
       // do a fast forward
       let refname = format!("refs/heads/{}", remote_branch);
       match self.repository.find_reference(&refname) {
@@ -323,13 +324,13 @@ impl GitUtils {
         }
       };
     } else if analysis.0.is_normal() {
-      // do a normal merge
+      debug!("Doing a normal merge");
       let head_commit = self
         .repository
         .reference_to_annotated_commit(&self.repository.head()?)?;
       self.normal_merge(&head_commit, &fetch_commit)?;
     } else {
-      debug!("Nothing to do...");
+      debug!("No merging to do...");
     }
     Ok(())
   }
