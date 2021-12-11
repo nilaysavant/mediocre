@@ -6,6 +6,7 @@ import {
   Text,
   UnorderedList,
 } from '@chakra-ui/layout'
+import { Code } from '@chakra-ui/react'
 import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table'
 import { Tag } from '@chakra-ui/tag'
 import { CSSProperties, useContext, useEffect, useState } from 'react'
@@ -18,10 +19,8 @@ export type GitSyncSetupFinishProps = any
 const GitSyncSetupFinish = ({}: GitSyncSetupFinishProps) => {
   const dispatch = useReduxDispatch()
   const isSyncEnabled = useReduxSelector((state) => state.cloudSync.enabled)
-  const gitRepositoryUrl = useReduxSelector((state) =>
-    state.cloudSync.enabled && state.cloudSync.service?.provider === 'git'
-      ? state.cloudSync.service.repoUrl
-      : ''
+  const cloudSyncService = useReduxSelector((state) =>
+    state.cloudSync.service?.provider === 'git' ? state.cloudSync.service : null
   )
   const syncMessages = useReduxSelector(
     (state) => state.cloudSync.status.messages
@@ -48,7 +47,27 @@ const GitSyncSetupFinish = ({}: GitSyncSetupFinishProps) => {
             </Td>
             <Td p="1" fontSize="sm">
               <Tag fontSize="xs" colorScheme="orange">
-                {gitRepositoryUrl}
+                {cloudSyncService?.repoUrl}
+              </Tag>
+            </Td>
+          </Tr>
+          <Tr>
+            <Td p="1" fontSize="sm" color="#abcad9">
+              user.name
+            </Td>
+            <Td p="1" fontSize="sm">
+              <Tag fontSize="xs" colorScheme="blue">
+                {cloudSyncService?.configUserName}
+              </Tag>
+            </Td>
+          </Tr>
+          <Tr>
+            <Td p="1" fontSize="sm" color="#abcad9">
+              user.email
+            </Td>
+            <Td p="1" fontSize="sm">
+              <Tag fontSize="xs" colorScheme="red">
+                {cloudSyncService?.configUserEmail}
               </Tag>
             </Td>
           </Tr>
