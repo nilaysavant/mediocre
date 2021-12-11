@@ -157,7 +157,6 @@ impl GitUtils {
   ///
   fn do_fetch<'a>(
     &'a self,
-    refs: &[&str],
     remote: &'a mut git2::Remote,
   ) -> Result<git2::AnnotatedCommit<'a>, git2::Error> {
     let mut cb = Self::create_callbacks();
@@ -186,7 +185,8 @@ impl GitUtils {
     // Perform a download and also update tips
     fo.download_tags(git2::AutotagOption::All);
     debug!("Fetching {} for repo", remote.name().unwrap());
-    remote.fetch(refs, Some(&mut fo), None)?;
+    // Pass empty refspecs to use from base refs: https://libgit2.org/libgit2/#HEAD/group/remote/git_remote_fetch
+    remote.fetch(&[] as &[&str], Some(&mut fo), None)?;
     // If there are local objects (we got a thin pack), then tell the user
     // how many objects we saved from having to cross the network.
     let stats = remote.stats();
@@ -341,17 +341,16 @@ impl GitUtils {
   pub fn pull(&self) -> Result<()> {
     let mut fo = git2::FetchOptions::new();
     fo.remote_callbacks(Self::create_callbacks());
-    let ref_spec = Self::get_ref_specs("master");
     let mut remote = self.repository.find_remote("origin")?;
     // Error is likely to occur in the following because on the first go the user maybe
     // trying to fetch an empty repository from the remote. Therefore we just log it
     // with warn! and ignore it.
     match self
-      .do_fetch(&[ref_spec.as_str()], &mut remote)
+      .do_fetch(&mut remote)
       .context("do_fetch() failed with error, probably an empty repository")
     {
       Ok(fetch_commit) => {
-        self.do_merge(&ref_spec, fetch_commit)?;
+        self.do_merge("master", fetch_commit)?;
       }
       Err(err) => {
         warn!("{:?}", err)

@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import { setupGitCloudSync, syncToGitCloud } from 'src/commands/cloudSync'
 import { IsoDatetime } from 'src/commonTypes'
 import { RootState } from '../../redux/store'
+import { globalAllDocumentsListFetch } from '../documents/documentsSlice'
 
 /**
  * Following entity based redux code
@@ -79,6 +80,7 @@ export const globalSetupGitCloudSync = createAsyncThunk<
       configUserEmail
     )
     if (!response?.status) throw new Error(response?.message)
+    dispatch(globalAllDocumentsListFetch()) // Update documents list
     return { repoUrl, configUserName, configUserEmail }
   }
 )
@@ -98,6 +100,7 @@ export const globalSyncToGitCloud = createAsyncThunk<boolean, void>(
     dispatch(syncStatusUpdate({ messages: [] })) // reset messages
     const response = await syncToGitCloud()
     if (!response?.status) throw new Error(response?.message)
+    dispatch(globalAllDocumentsListFetch()) // Update documents list
     return response.status
   }
 )
