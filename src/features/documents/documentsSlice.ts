@@ -8,6 +8,7 @@ import {
   Update,
 } from '@reduxjs/toolkit'
 import { History } from 'history'
+import debounce from 'lodash/debounce'
 import {
   fetchAllDocumentsMetadata,
   fetchDocumentMetaData,
@@ -16,7 +17,7 @@ import {
   renameDocumentAtRelativePath,
   writeDocumentToRelativePath,
 } from '../../commands/fileSystem'
-import { RootState } from '../../redux/store'
+import { AppDispatch, RootState } from '../../redux/store'
 import { updateRawText } from '../../utils/markdownParser/markdownParserSlice'
 import { prettifyText } from '../../utils/prettierFns'
 import { globalSyncToGitCloud } from '../cloudSync/cloudSyncSlice'
@@ -111,6 +112,19 @@ export const globalDocumentOpen = createAsyncThunk<
 })
 
 /**
+ * Debounced version of cloud sync redux action function
+ */
+const debouncedDispatchSyncToGitCloud = debounce(
+  (dispatch: AppDispatch) => {
+    dispatch(globalSyncToGitCloud())
+  },
+  10000, // 10 secs min delay
+  {
+    maxWait: 20000, // max delay of 20 secs
+  }
+)
+
+/**
  * Async thunk action to save/write document
  * to file system. Uses Tauri command.
  */
@@ -144,7 +158,7 @@ export const globalDocumentSave = createAsyncThunk<string, void>(
     await dispatch(globalDocumentInfoFetch({ relativePath })).unwrap()
     if (!response?.status) throw new Error('Response status is invalid!')
     dispatch(updateRawText(updatedContent)) // Update the md raw text as well
-    dispatch(globalSyncToGitCloud())
+    debouncedDispatchSyncToGitCloud(dispatch)
     return updatedContent
   }
 )
@@ -424,7 +438,7 @@ export const { documentAdd, documentUpdate, documentDelete } =
 // Can create a set of memoized selectors based on the location of this entity state
 // ref: https://github.com/reduxjs/redux-toolkit/issues/497
 export const documentsSelectors = documentsAdapter.getSelectors<RootState>(
-  (state) => state.documents.all
+  (state) => state?.documents?.all ?? { ids: [], entities: {} }
 )
 
 export default documentsSlice.reducer
