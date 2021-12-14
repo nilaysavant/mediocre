@@ -144,7 +144,7 @@ export const globalDocumentSave = createAsyncThunk<string, void>(
     await dispatch(globalDocumentInfoFetch({ relativePath })).unwrap()
     if (!response?.status) throw new Error('Response status is invalid!')
     dispatch(updateRawText(updatedContent)) // Update the md raw text as well
-    dispatch(globalSyncToGitCloud());
+    dispatch(globalSyncToGitCloud())
     return updatedContent
   }
 )
@@ -292,6 +292,10 @@ export const documentsSlice = createSlice({
         /** reset fetching state */
         state.isAllDocumentsFetching = false
       })
+      .addCase(globalAllDocumentsListFetch.rejected, (state, action) => {
+        state.isAllDocumentsFetching = false
+        console.error(action.error)
+      })
       .addCase(globalDocumentInfoFetch.pending, (state, _action) => {
         state.isDocumentFetching = true
       })
@@ -316,6 +320,10 @@ export const documentsSlice = createSlice({
         /** reset fetching state */
         state.isDocumentFetching = false
       })
+      .addCase(globalDocumentInfoFetch.rejected, (state, action) => {
+        state.isDocumentFetching = false
+        console.error(action.error)
+      })
       .addCase(globalDocumentOpen.pending, (state, _action) => {
         state.isDocumentOpening = true
       })
@@ -331,6 +339,10 @@ export const documentsSlice = createSlice({
         })
         state.isDocumentOpening = false
       })
+      .addCase(globalDocumentOpen.rejected, (state, action) => {
+        state.isDocumentOpening = false
+        console.error(action.error)
+      })
       .addCase(globalDocumentSave.pending, (state, _action) => {
         state.isDocumentSaving = true
       })
@@ -345,11 +357,19 @@ export const documentsSlice = createSlice({
         })
         state.isDocumentSaving = false
       })
+      .addCase(globalDocumentSave.rejected, (state, action) => {
+        state.isDocumentSaving = false
+        console.error(action.error)
+      })
       .addCase(globalDocumentAdd.pending, (state, _action) => {
         state.isDocumentAdding = true
       })
-      .addCase(globalDocumentAdd.fulfilled, (state, action) => {
+      .addCase(globalDocumentAdd.fulfilled, (state, _action) => {
         state.isDocumentAdding = false
+      })
+      .addCase(globalDocumentAdd.rejected, (state, action) => {
+        state.isDocumentAdding = false
+        console.error(action.error)
       })
       .addCase(globalDocumentDelete.pending, (state, _action) => {
         state.isDocumentDeleting = true
@@ -359,11 +379,19 @@ export const documentsSlice = createSlice({
         state.selectedDocument = '' // clear selected doc
         state.isDocumentDeleting = false
       })
+      .addCase(globalDocumentDelete.rejected, (state, action) => {
+        state.isDocumentDeleting = false
+        console.error(action.error)
+      })
       .addCase(globalDocumentRename.pending, (state, _action) => {
         state.isDocumentRenaming = true
       })
-      .addCase(globalDocumentRename.fulfilled, (state, action) => {
+      .addCase(globalDocumentRename.fulfilled, (state, _action) => {
         state.isDocumentRenaming = false
+      })
+      .addCase(globalDocumentRename.rejected, (state, action) => {
+        state.isDocumentRenaming = false
+        console.error(action.error)
       })
   },
 })

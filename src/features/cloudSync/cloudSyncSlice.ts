@@ -140,6 +140,11 @@ export const cloudSyncSlice = createSlice({
         state.status.lastSync = dayjs().toISOString()
         state.status.messages.push('Success!')
       })
+      .addCase(globalSyncToGitCloud.rejected, (state, action) => {
+        state.status.isSyncing = false
+        console.error(action.error)
+        state.status.messages.push('Failed to Sync!')
+      })
       .addCase(globalSetupGitCloudSync.pending, (state, action) => {
         state.status.isSyncing = true
       })
@@ -154,6 +159,11 @@ export const cloudSyncSlice = createSlice({
         state.status.isSyncing = false
         state.status.lastSync = dayjs().toISOString()
         state.status.messages.push('Success!')
+      })
+      .addCase(globalSetupGitCloudSync.rejected, (state, action) => {
+        state.status.isSyncing = false
+        console.error(action.error)
+        state.status.messages.push('Failed to Setup Sync!')
       })
   },
 })
