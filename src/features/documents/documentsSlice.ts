@@ -114,7 +114,7 @@ export const globalDocumentOpen = createAsyncThunk<
 /**
  * Debounced version of cloud sync redux action function
  */
-const debouncedDispatchSyncToGitCloud = debounce(
+const debouncedDispatchGlobalSyncToGitCloud = debounce(
   (dispatch: AppDispatch) => {
     dispatch(globalSyncToGitCloud())
   },
@@ -158,7 +158,7 @@ export const globalDocumentSave = createAsyncThunk<string, void>(
     await dispatch(globalDocumentInfoFetch({ relativePath })).unwrap()
     if (!response?.status) throw new Error('Response status is invalid!')
     dispatch(updateRawText(updatedContent)) // Update the md raw text as well
-    debouncedDispatchSyncToGitCloud(dispatch)
+    debouncedDispatchGlobalSyncToGitCloud(dispatch)
     return updatedContent
   }
 )
