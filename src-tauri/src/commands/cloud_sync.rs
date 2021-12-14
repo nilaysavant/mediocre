@@ -32,7 +32,12 @@ pub async fn test_git_clone_ssh(
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SetupGitCloudSyncResponse {
+  /// `true` for success, `false` for failure
   status: bool,
+  /// Available to Retry the API. Use this to
+  /// allow multiple retries from the client.
+  retry: bool,
+  /// Success/Error message
   message: String,
 }
 
@@ -51,6 +56,19 @@ pub async fn setup_git_cloud_sync(
   git_sync_user_name: String,
   git_sync_user_email: String,
 ) -> Result<SetupGitCloudSyncResponse, String> {
+  if state.cloud_sync_is_syncing {
+    return Ok(SetupGitCloudSyncResponse {
+      status: false,
+      retry: true,
+      message: "Sync is already in progress, Please re-try after some time!".to_string(),
+    });
+  } else if state.fs_sync_is_syncing {
+    return Ok(SetupGitCloudSyncResponse {
+      status: false,
+      retry: true,
+      message: "FileSystem sync in progress, Please re-try after some time!".to_string(),
+    });
+  }
   let mut db = db_state.db.lock().map_err(error_to_string)?;
   let wem = WindowEventManager::new(&window);
   let cloud_sync =
@@ -66,6 +84,7 @@ pub async fn setup_git_cloud_sync(
     .map_err(error_to_string)?;
   Ok(SetupGitCloudSyncResponse {
     status: true,
+    retry: false,
     message: "Success".to_string(),
   })
 }
