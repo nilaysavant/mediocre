@@ -64,7 +64,7 @@ export const saveFileToCustomPath = async (
 export const fetchDocumentMetaData = async (relativePath: string) => {
   if (isTauri()) {
     const invokeRes: {
-      fileMetaInfo: {
+      fileMetaInfo?: {
         fileName: string
         filePath: string
         fileRelativePath?: string
@@ -72,7 +72,14 @@ export const fetchDocumentMetaData = async (relativePath: string) => {
         fileType?: 'markdown'
         modified?: IsoDatetime
       }
+      status: boolean
+      retry: boolean
+      message: string
     } = await tauri.invoke('fetch_doc_info', { relativePath })
+    if (!invokeRes.status)
+      throw new Error(
+        `fetchDocumentMetaData failed with error: ${invokeRes.message}`
+      )
     const homeDirPath = await homeDir()
     if (!homeDirPath) throw new Error('Path to home dir invalid!')
     if (!invokeRes.fileMetaInfo)
@@ -90,7 +97,7 @@ export const fetchDocumentMetaData = async (relativePath: string) => {
 export const fetchAllDocumentsMetadata = async () => {
   if (isTauri()) {
     const invokeRes: {
-      filesMetaInfo: {
+      filesMetaInfo?: {
         fileName: string
         filePath: string
         fileRelativePath?: string
@@ -98,9 +105,18 @@ export const fetchAllDocumentsMetadata = async () => {
         fileType?: 'markdown'
         modified?: IsoDatetime
       }[]
+      status: boolean
+      retry: boolean
+      message: string
     } = await tauri.invoke('fetch_all_docs_info', {})
+    if (!invokeRes.status)
+      throw new Error(
+        `fetchAllDocumentsMetadata failed with error: ${invokeRes.message}`
+      )
     const homeDirPath = await homeDir()
     if (!homeDirPath) throw new Error('Path to home dir invalid!')
+    if (!invokeRes.filesMetaInfo)
+      throw new Error(`invokeRes.filesMetaInfo invalid!`)
     const filesMetaInfo = invokeRes.filesMetaInfo.map((docMeta) => ({
       ...docMeta,
     }))

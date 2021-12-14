@@ -10,7 +10,14 @@ use crate::{
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FetchDocInfoResponse {
-  file_meta_info: fsutils::FileMetaInfo,
+  file_meta_info: Option<fsutils::FileMetaInfo>,
+  /// `true` for success, `false` for failure
+  status: bool,
+  /// Available to Retry the API. Use this to
+  /// allow multiple retries from the client.
+  retry: bool,
+  /// Success/Error message
+  message: String,
 }
 
 /// Fetch Document info from document relative path (ie. relative to app root dir)
@@ -20,21 +27,50 @@ pub async fn fetch_doc_info(
   state: tauri::State<'_, AppState>,
 ) -> Result<FetchDocInfoResponse, String> {
   info!("fetch_doc_info() -> relative_path: {}", relative_path);
+  if state.cloud_sync_is_syncing {
+    return Ok(FetchDocInfoResponse {
+      file_meta_info: None,
+      status: false,
+      retry: true,
+      message: "Sync is already in progress, Please re-try after some time!".to_string(),
+    });
+  } else if state.fs_sync_is_syncing {
+    return Ok(FetchDocInfoResponse {
+      file_meta_info: None,
+      status: false,
+      retry: true,
+      message: "FileSystem sync in progress, Please re-try after some time!".to_string(),
+    });
+  }
   let documents_dir = &state.dir_paths.documents;
   // Using Relative path in an effort to achieve cross platform compatible/portable path resolution
   let file_path = RelativePath::new(relative_path.as_str())
     .normalize()
     .to_path(documents_dir)
     .to_owned();
+  state.inner().to_owned().fs_sync_is_syncing = true;
   let file_meta_info =
     fsutils::get_file_meta_from_path(documents_dir, &file_path).map_err(error_to_string)?;
-  Ok(FetchDocInfoResponse { file_meta_info })
+  state.inner().to_owned().fs_sync_is_syncing = false;
+  Ok(FetchDocInfoResponse {
+    file_meta_info: Some(file_meta_info),
+    status: true,
+    retry: false,
+    message: "Success".to_string(),
+  })
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FetchAllDocsInfoResponse {
-  files_meta_info: Vec<fsutils::FileMetaInfo>,
+  files_meta_info: Option<Vec<fsutils::FileMetaInfo>>,
+  /// `true` for success, `false` for failure
+  status: bool,
+  /// Available to Retry the API. Use this to
+  /// allow multiple retries from the client.
+  retry: bool,
+  /// Success/Error message
+  message: String,
 }
 
 /// Fetch Documents info from app root dir
@@ -42,10 +78,32 @@ pub struct FetchAllDocsInfoResponse {
 pub async fn fetch_all_docs_info(
   state: tauri::State<'_, AppState>,
 ) -> Result<FetchAllDocsInfoResponse, String> {
+  if state.cloud_sync_is_syncing {
+    return Ok(FetchAllDocsInfoResponse {
+      files_meta_info: None,
+      status: false,
+      retry: true,
+      message: "Sync is already in progress, Please re-try after some time!".to_string(),
+    });
+  } else if state.fs_sync_is_syncing {
+    return Ok(FetchAllDocsInfoResponse {
+      files_meta_info: None,
+      status: false,
+      retry: true,
+      message: "FileSystem sync in progress, Please re-try after some time!".to_string(),
+    });
+  }
   let documents_dir = &state.dir_paths.documents;
+  state.inner().to_owned().fs_sync_is_syncing = true;
   let files_meta_info =
     fsutils::get_all_files_meta_from_path(documents_dir.as_path()).map_err(error_to_string)?;
-  Ok(FetchAllDocsInfoResponse { files_meta_info })
+  state.inner().to_owned().fs_sync_is_syncing = false;
+  Ok(FetchAllDocsInfoResponse {
+    files_meta_info: Some(files_meta_info),
+    status: true,
+    retry: false,
+    message: "Success".to_string(),
+  })
 }
 
 #[derive(Debug, Deserialize, Serialize)]
