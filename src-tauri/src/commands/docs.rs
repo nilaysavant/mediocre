@@ -34,7 +34,7 @@ pub async fn fetch_doc_info(
       file_meta_info: None,
       status: false,
       retry: true,
-      message: "Sync is already in progress, Please re-try after some time!".to_string(),
+      message: "Cloud Sync in progress, Please re-try after some time!".to_string(),
     });
   } else if fs_sync_is_syncing {
     return Ok(FetchDocInfoResponse {
@@ -97,7 +97,7 @@ pub async fn fetch_all_docs_info(
       files_meta_info: None,
       status: false,
       retry: true,
-      message: "Sync is already in progress, Please re-try after some time!".to_string(),
+      message: "Cloud Sync in progress, Please re-try after some time!".to_string(),
     });
   } else if fs_sync_is_syncing {
     return Ok(FetchAllDocsInfoResponse {
@@ -158,7 +158,7 @@ pub async fn read_document(
       status: false,
       content: "".to_string(),
       retry: true,
-      message: "Sync is already in progress, Please re-try after some time!".to_string(),
+      message: "Cloud Sync in progress, Please re-try after some time!".to_string(),
     });
   } else if fs_sync_is_syncing {
     return Ok(ReadDocumentResponse {
@@ -221,7 +221,7 @@ pub async fn write_document(
     return Ok(WriteDocumentResponse {
       status: false,
       retry: true,
-      message: "Sync is already in progress, Please re-try after some time!".to_string(),
+      message: "Cloud Sync in progress, Please re-try after some time!".to_string(),
     });
   } else if fs_sync_is_syncing {
     return Ok(WriteDocumentResponse {
@@ -281,7 +281,7 @@ pub async fn remove_document(
     return Ok(RemoveDocumentResponse {
       status: false,
       retry: true,
-      message: "Sync is already in progress, Please re-try after some time!".to_string(),
+      message: "Cloud Sync in progress, Please re-try after some time!".to_string(),
     });
   } else if fs_sync_is_syncing {
     return Ok(RemoveDocumentResponse {
@@ -345,7 +345,7 @@ pub async fn rename_document(
     return Ok(RenameDocumentResponse {
       status: false,
       retry: true,
-      message: "Sync is already in progress, Please re-try after some time!".to_string(),
+      message: "Cloud Sync in progress, Please re-try after some time!".to_string(),
     });
   } else if fs_sync_is_syncing {
     return Ok(RenameDocumentResponse {
