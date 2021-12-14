@@ -1,5 +1,6 @@
 import { tauri } from '@tauri-apps/api'
 import isTauri from 'src/utils/isTauri'
+import { RetryError } from 'src/utils/retry'
 
 /**
  * ### Test Git Clone SSH (Tauri Command)
@@ -36,6 +37,9 @@ export const setupGitCloudSync = async (
       gitSyncUserName,
       gitSyncUserEmail,
     })
+    if (invokeRes.retry) throw new RetryError(invokeRes.message)
+    if (!invokeRes.status)
+      throw new Error(`setupGitCloudSync failed: ${invokeRes.message}`)
     return invokeRes
   }
 }
@@ -52,6 +56,9 @@ export const syncToGitCloud = async () => {
       retry: boolean
       message: string
     } = await tauri.invoke('sync_to_git_cloud', {})
+    if (invokeRes.retry) throw new RetryError(invokeRes.message)
+    if (!invokeRes.status)
+      throw new Error(`syncToGitCloud failed: ${invokeRes.message}`)
     return invokeRes
   }
 }

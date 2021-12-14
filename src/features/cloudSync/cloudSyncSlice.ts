@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import dayjs from 'dayjs'
 import { setupGitCloudSync, syncToGitCloud } from 'src/commands/cloudSync'
 import { IsoDatetime } from 'src/commonTypes'
+import retry from 'src/utils/retry'
 import { RootState } from '../../redux/store'
 import { globalAllDocumentsListFetch } from '../documents/documentsSlice'
 
@@ -74,10 +75,10 @@ export const globalSetupGitCloudSync = createAsyncThunk<
   async (arg, { getState, dispatch }) => {
     const { repoUrl, configUserName, configUserEmail } = arg
     dispatch(syncStatusUpdate({ messages: [] })) // reset messages
-    const response = await setupGitCloudSync(
-      repoUrl,
-      configUserName,
-      configUserEmail
+    const response = await retry(
+      5, // retry 5 times
+      async () => setupGitCloudSync(repoUrl, configUserName, configUserEmail),
+      3000 // each with 3 sec timeout
     )
     if (!response?.status) throw new Error(response?.message)
     dispatch(globalAllDocumentsListFetch()) // Update documents list
@@ -98,7 +99,11 @@ export const globalSyncToGitCloud = createAsyncThunk<boolean, void>(
     if (!(getState() as RootState).cloudSync.enabled)
       throw new Error(`Git Sync is not enabled!`)
     dispatch(syncStatusUpdate({ messages: [] })) // reset messages
-    const response = await syncToGitCloud()
+    const response = await retry(
+      5, // retry 5 times
+      async () => syncToGitCloud(),
+      3000 // each with 3 sec timeout
+    )
     if (!response?.status) throw new Error(response?.message)
     dispatch(globalAllDocumentsListFetch()) // Update documents list
     return response.status
