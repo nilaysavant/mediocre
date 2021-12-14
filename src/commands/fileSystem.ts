@@ -77,9 +77,7 @@ export const fetchDocumentMetaData = async (relativePath: string) => {
       message: string
     } = await tauri.invoke('fetch_doc_info', { relativePath })
     if (!invokeRes.status)
-      throw new Error(
-        `fetchDocumentMetaData failed with error: ${invokeRes.message}`
-      )
+      throw new Error(`fetchDocumentMetaData failed: ${invokeRes.message}`)
     const homeDirPath = await homeDir()
     if (!homeDirPath) throw new Error('Path to home dir invalid!')
     if (!invokeRes.fileMetaInfo)
@@ -110,9 +108,7 @@ export const fetchAllDocumentsMetadata = async () => {
       message: string
     } = await tauri.invoke('fetch_all_docs_info', {})
     if (!invokeRes.status)
-      throw new Error(
-        `fetchAllDocumentsMetadata failed with error: ${invokeRes.message}`
-      )
+      throw new Error(`fetchAllDocumentsMetadata failed: ${invokeRes.message}`)
     const homeDirPath = await homeDir()
     if (!homeDirPath) throw new Error('Path to home dir invalid!')
     if (!invokeRes.filesMetaInfo)
@@ -135,6 +131,10 @@ export const readDocumentFromRelativePath = async (relativePath: string) => {
       retry: boolean
       message: string
     } = await tauri.invoke('read_document', { relativePath })
+    if (!invokeRes.status)
+      throw new Error(
+        `readDocumentFromRelativePath failed: ${invokeRes.message}`
+      )
     return invokeRes.content
   }
 }
@@ -152,6 +152,10 @@ export const writeDocumentToRelativePath = async (
       retry: boolean
       message: string
     } = await tauri.invoke('write_document', { relativePath, content })
+    if (!invokeRes.status)
+      throw new Error(
+        `writeDocumentToRelativePath failed: ${invokeRes.message}`
+      )
     return invokeRes
   }
 }
@@ -166,6 +170,10 @@ export const removeDocumentFromRelativePath = async (relativePath: string) => {
       retry: boolean
       message: string
     } = await tauri.invoke('remove_document', { relativePath })
+    if (!invokeRes.status)
+      throw new Error(
+        `removeDocumentFromRelativePath failed: ${invokeRes.message}`
+      )
     return invokeRes
   }
 }
@@ -183,6 +191,10 @@ export const renameDocumentAtRelativePath = async (
       retry: boolean
       message: string
     } = await tauri.invoke('rename_document', { relativePath, newDocumentName })
+    if (!invokeRes.status)
+      throw new Error(
+        `renameDocumentAtRelativePath failed: ${invokeRes.message}`
+      )
     return invokeRes
   }
 }
