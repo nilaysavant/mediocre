@@ -229,6 +229,14 @@ export type DocumentsState = {
   isDocumentAdding: boolean
   isDocumentDeleting: boolean
   isDocumentRenaming: boolean
+  /** error message string */
+  allDocumentsFetchingError?: string
+  documentFetchingError?: string
+  documentOpeningError?: string
+  documentSavingError?: string
+  documentAddingError?: string
+  documentDeletingError?: string
+  documentRenamingError?: string
 }
 
 const initialState: DocumentsState = {
@@ -268,6 +276,7 @@ export const documentsSlice = createSlice({
       // Add reducers for additional action types here, and handle loading state as needed
       .addCase(globalAllDocumentsListFetch.pending, (state, _action) => {
         state.isAllDocumentsFetching = true
+        state.allDocumentsFetchingError = undefined
       })
       .addCase(globalAllDocumentsListFetch.fulfilled, (state, action) => {
         /** get all the validated documents from the async fn */
@@ -295,9 +304,11 @@ export const documentsSlice = createSlice({
       .addCase(globalAllDocumentsListFetch.rejected, (state, action) => {
         state.isAllDocumentsFetching = false
         console.error(action.error)
+        state.allDocumentsFetchingError = action.error.message
       })
       .addCase(globalDocumentInfoFetch.pending, (state, _action) => {
         state.isDocumentFetching = true
+        state.documentFetchingError = undefined
       })
       .addCase(globalDocumentInfoFetch.fulfilled, (state, action) => {
         const docMeta = action.payload
@@ -323,9 +334,11 @@ export const documentsSlice = createSlice({
       .addCase(globalDocumentInfoFetch.rejected, (state, action) => {
         state.isDocumentFetching = false
         console.error(action.error)
+        state.documentFetchingError = action.error.message
       })
       .addCase(globalDocumentOpen.pending, (state, _action) => {
         state.isDocumentOpening = true
+        state.documentOpeningError = undefined
       })
       .addCase(globalDocumentOpen.fulfilled, (state, action) => {
         /** Set the selected document on Open */
@@ -342,9 +355,11 @@ export const documentsSlice = createSlice({
       .addCase(globalDocumentOpen.rejected, (state, action) => {
         state.isDocumentOpening = false
         console.error(action.error)
+        state.documentOpeningError = action.error.message
       })
       .addCase(globalDocumentSave.pending, (state, _action) => {
         state.isDocumentSaving = true
+        state.documentSavingError = undefined
       })
       .addCase(globalDocumentSave.fulfilled, (state, action) => {
         /** update the saved document ie. the current selected document */
@@ -360,9 +375,11 @@ export const documentsSlice = createSlice({
       .addCase(globalDocumentSave.rejected, (state, action) => {
         state.isDocumentSaving = false
         console.error(action.error)
+        state.documentSavingError = action.error.message
       })
       .addCase(globalDocumentAdd.pending, (state, _action) => {
         state.isDocumentAdding = true
+        state.documentAddingError = undefined
       })
       .addCase(globalDocumentAdd.fulfilled, (state, _action) => {
         state.isDocumentAdding = false
@@ -370,9 +387,11 @@ export const documentsSlice = createSlice({
       .addCase(globalDocumentAdd.rejected, (state, action) => {
         state.isDocumentAdding = false
         console.error(action.error)
+        state.documentAddingError = action.error.message
       })
       .addCase(globalDocumentDelete.pending, (state, _action) => {
         state.isDocumentDeleting = true
+        state.documentDeletingError = undefined
       })
       .addCase(globalDocumentDelete.fulfilled, (state, action) => {
         documentsAdapter.removeOne(state.all, action.meta.arg.documentId)
@@ -382,9 +401,11 @@ export const documentsSlice = createSlice({
       .addCase(globalDocumentDelete.rejected, (state, action) => {
         state.isDocumentDeleting = false
         console.error(action.error)
+        state.documentDeletingError = action.error.message
       })
       .addCase(globalDocumentRename.pending, (state, _action) => {
         state.isDocumentRenaming = true
+        state.documentRenamingError = undefined
       })
       .addCase(globalDocumentRename.fulfilled, (state, _action) => {
         state.isDocumentRenaming = false
@@ -392,6 +413,7 @@ export const documentsSlice = createSlice({
       .addCase(globalDocumentRename.rejected, (state, action) => {
         state.isDocumentRenaming = false
         console.error(action.error)
+        state.documentRenamingError = action.error.message
       })
   },
 })

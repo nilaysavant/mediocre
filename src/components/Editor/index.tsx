@@ -8,6 +8,7 @@ import { globalRawTextUpdate } from '../../utils/markdownParser/markdownParserSl
 import { handleClose, handleOpen } from '../CommandModal/commandModalSlice'
 import { globalDocumentSave } from '../../features/documents/documentsSlice'
 import Loading from './Loading'
+import ErrorDisplay from './ErrorDisplay'
 
 loader.config({
   paths: {
@@ -30,6 +31,13 @@ const Editor = ({ editorRef, onScroll }: Props) => {
     isDocumentSaving,
     isDocumentFetching,
     isDocumentDeleting,
+    allDocumentsFetchingError,
+    documentAddingError,
+    documentDeletingError,
+    documentFetchingError,
+    documentOpeningError,
+    documentRenamingError,
+    documentSavingError,
   } = useReduxSelector((state) => state.documents)
   const dispatch = useReduxDispatch()
   const { colorMode } = useColorMode()
@@ -183,6 +191,27 @@ const Editor = ({ editorRef, onScroll }: Props) => {
         {isDocumentOpening ? <Loading message="Opening..." /> : null}
         {isDocumentSaving ? <Loading message="Saving..." /> : null}
         {isDocumentDeleting ? <Loading message="Deleting..." /> : null}
+        {allDocumentsFetchingError ? (
+          <ErrorDisplay message={allDocumentsFetchingError} />
+        ) : null}
+        {documentAddingError ? (
+          <ErrorDisplay message={documentAddingError} />
+        ) : null}
+        {documentDeletingError ? (
+          <ErrorDisplay message={documentDeletingError} />
+        ) : null}
+        {documentFetchingError ? (
+          <ErrorDisplay message={documentFetchingError} />
+        ) : null}
+        {documentOpeningError ? (
+          <ErrorDisplay message={documentOpeningError} />
+        ) : null}
+        {documentRenamingError ? (
+          <ErrorDisplay message={documentRenamingError} />
+        ) : null}
+        {documentSavingError ? (
+          <ErrorDisplay message={documentSavingError} />
+        ) : null}
       </Box>
       <MonacoEditor
         defaultLanguage="markdown"
