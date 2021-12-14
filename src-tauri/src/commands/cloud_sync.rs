@@ -3,7 +3,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
   models::{app_db_state::AppDbState, app_state::AppState, cloud_sync::CloudSync},
-  utils::{error::error_to_string, window_event_manager::WindowEventManager},
+  utils::{
+    error::error_to_string, sync_state_manager::check_fs_or_cloud_is_syncing,
+    window_event_manager::WindowEventManager,
+  },
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -56,13 +59,15 @@ pub async fn setup_git_cloud_sync(
   git_sync_user_name: String,
   git_sync_user_email: String,
 ) -> Result<SetupGitCloudSyncResponse, String> {
-  if state.cloud_sync_is_syncing {
+  let (cloud_sync_is_syncing, fs_sync_is_syncing) =
+    check_fs_or_cloud_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
+  if cloud_sync_is_syncing {
     return Ok(SetupGitCloudSyncResponse {
       status: false,
       retry: true,
       message: "Sync is already in progress, Please re-try after some time!".to_string(),
     });
-  } else if state.fs_sync_is_syncing {
+  } else if fs_sync_is_syncing {
     return Ok(SetupGitCloudSyncResponse {
       status: false,
       retry: true,
@@ -111,13 +116,15 @@ pub async fn sync_to_git_cloud(
   db_state: tauri::State<'_, AppDbState>,
   window: tauri::Window,
 ) -> Result<SyncToGitCloudResponse, String> {
-  if state.cloud_sync_is_syncing {
+  let (cloud_sync_is_syncing, fs_sync_is_syncing) =
+    check_fs_or_cloud_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
+  if cloud_sync_is_syncing {
     return Ok(SyncToGitCloudResponse {
       status: false,
       retry: true,
       message: "Sync is already in progress, Please re-try after some time!".to_string(),
     });
-  } else if state.fs_sync_is_syncing {
+  } else if fs_sync_is_syncing {
     return Ok(SyncToGitCloudResponse {
       status: false,
       retry: true,

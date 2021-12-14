@@ -3,7 +3,7 @@
   windows_subsystem = "windows"
 )]
 
-use std::process::exit;
+use std::{process::exit, sync::{Arc, Mutex}};
 
 use log::{error, info};
 
@@ -54,8 +54,8 @@ fn main() {
   tauri::Builder::default()
     .manage(AppState {
       dir_paths: app_dir_paths.clone(),
-      cloud_sync_is_syncing: false,
-      fs_sync_is_syncing: false,
+      cloud_sync_is_syncing: Arc::new(Mutex::new(false)),
+      fs_sync_is_syncing: Arc::new(Mutex::new(false)),
     })
     .manage(AppDbState::new(&app_dir_paths.db.join(APP_DB_FILE_NAME)))
     // This is where you pass in your commands

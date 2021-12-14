@@ -53,7 +53,10 @@ impl<'cs> CloudSync<'cs> {
         message: "Creating new repository...",
       },
     })?;
-    state.cloud_sync_is_syncing = true;
+    *state
+      .cloud_sync_is_syncing
+      .lock()
+      .map_err(|e| anyhow::anyhow!(e.to_string()))? = true;
     let git_utils = GitUtils::new(
       &git_sync_repo_url,
       &state.dir_paths.root,
@@ -99,7 +102,10 @@ impl<'cs> CloudSync<'cs> {
       },
     })?;
     git_utils.push()?; // Push Changes to remote
-    state.cloud_sync_is_syncing = false;
+    *state
+      .cloud_sync_is_syncing
+      .lock()
+      .map_err(|e| anyhow::anyhow!(e.to_string()))? = false;
     self.wem.send(WindowEvent {
       name: "setup_cloud_sync",
       typ: WindowEventType::INFO,
@@ -121,7 +127,10 @@ impl<'cs> CloudSync<'cs> {
         message: "Creating new repository...",
       },
     })?;
-    state.cloud_sync_is_syncing = true;
+    *state
+      .cloud_sync_is_syncing
+      .lock()
+      .map_err(|e| anyhow::anyhow!(e.to_string()))? = true;
     let git_utils = GitUtils::load(&state.dir_paths.root)?;
     self.wem.send(WindowEvent {
       name: "cloud_sync",
@@ -162,7 +171,10 @@ impl<'cs> CloudSync<'cs> {
       },
     })?;
     git_utils.push()?; // Push Changes to remote
-    state.cloud_sync_is_syncing = false;
+    *state
+      .cloud_sync_is_syncing
+      .lock()
+      .map_err(|e| anyhow::anyhow!(e.to_string()))? = false;
     self.wem.send(WindowEvent {
       name: "cloud_sync",
       typ: WindowEventType::INFO,
