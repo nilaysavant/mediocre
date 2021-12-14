@@ -5,6 +5,7 @@
 import { tauri } from '@tauri-apps/api'
 import { open } from '@tauri-apps/api/dialog'
 import { homeDir } from '@tauri-apps/api/path'
+import { RetryError } from 'src/utils/retry'
 import { IsoDatetime } from '../commonTypes'
 import isTauri from '../utils/isTauri'
 
@@ -131,6 +132,7 @@ export const readDocumentFromRelativePath = async (relativePath: string) => {
       retry: boolean
       message: string
     } = await tauri.invoke('read_document', { relativePath })
+    if (invokeRes.retry) throw new RetryError(invokeRes.message)
     if (!invokeRes.status)
       throw new Error(
         `readDocumentFromRelativePath failed: ${invokeRes.message}`

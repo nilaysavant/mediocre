@@ -9,6 +9,7 @@ import {
 } from '@reduxjs/toolkit'
 import { History } from 'history'
 import debounce from 'lodash/debounce'
+import retry from 'src/utils/retry'
 import {
   fetchAllDocumentsMetadata,
   fetchDocumentMetaData,
@@ -104,7 +105,12 @@ export const globalDocumentOpen = createAsyncThunk<
   /** if already synced return the existing content */
   if (synced) updatedContent = content
   // else update content from fs
-  else updatedContent = await readDocumentFromRelativePath(relativePath)
+  else
+    updatedContent = await retry(
+      5,
+      async () => readDocumentFromRelativePath(relativePath),
+      3000
+    )
   /** Update editor text */
   dispatch(updateRawText(updatedContent || ''))
   history.push('/app/md-editor')
