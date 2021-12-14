@@ -115,6 +115,9 @@ export const readDocumentFromRelativePath = async (relativePath: string) => {
   if (isTauri()) {
     const invokeRes: {
       content: string
+      status: boolean
+      retry: boolean
+      message: string
     } = await tauri.invoke('read_document', { relativePath })
     return invokeRes.content
   }
@@ -130,6 +133,8 @@ export const writeDocumentToRelativePath = async (
   if (isTauri()) {
     const invokeRes: {
       status: boolean
+      retry: boolean
+      message: string
     } = await tauri.invoke('write_document', { relativePath, content })
     return invokeRes
   }
@@ -142,6 +147,8 @@ export const removeDocumentFromRelativePath = async (relativePath: string) => {
   if (isTauri()) {
     const invokeRes: {
       status: boolean
+      retry: boolean
+      message: string
     } = await tauri.invoke('remove_document', { relativePath })
     return invokeRes
   }
@@ -157,6 +164,8 @@ export const renameDocumentAtRelativePath = async (
   if (isTauri()) {
     const invokeRes: {
       status: boolean
+      retry: boolean
+      message: string
     } = await tauri.invoke('rename_document', { relativePath, newDocumentName })
     return invokeRes
   }

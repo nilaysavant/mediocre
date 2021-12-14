@@ -29,6 +29,7 @@ export const setupGitCloudSync = async (
   if (isTauri()) {
     const invokeRes: {
       status: boolean
+      retry: boolean
       message: string
     } = await tauri.invoke('setup_git_cloud_sync', {
       gitSyncRepoUrl,
@@ -48,6 +49,7 @@ export const syncToGitCloud = async () => {
   if (isTauri()) {
     const invokeRes: {
       status: boolean
+      retry: boolean
       message: string
     } = await tauri.invoke('sync_to_git_cloud', {})
     return invokeRes
