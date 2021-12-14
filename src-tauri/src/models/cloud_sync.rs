@@ -31,11 +31,7 @@ impl<'cs> CloudSync<'cs> {
   ///
   /// - Using the given `git_sync_repo_url`.
   /// - Also sets the url in the `DB` and `state`.
-  pub fn new(
-    state: AppState,
-    db: &mut PickleDb,
-    wem: &'cs WindowEventManager,
-  ) -> Result<Self> {
+  pub fn new(state: AppState, db: &mut PickleDb, wem: &'cs WindowEventManager) -> Result<Self> {
     Ok(CloudSync { wem })
   }
 
@@ -44,7 +40,7 @@ impl<'cs> CloudSync<'cs> {
   /// Setup sync with git remote
   pub fn setup(
     self,
-    state: AppState,
+    mut state: AppState,
     db: &mut PickleDb,
     git_sync_repo_url: &str,
     git_sync_user_name: &str,
@@ -57,6 +53,7 @@ impl<'cs> CloudSync<'cs> {
         message: "Creating new repository...",
       },
     })?;
+    state.cloud_sync_is_syncing = true;
     let git_utils = GitUtils::new(
       &git_sync_repo_url,
       &state.dir_paths.root,
@@ -102,6 +99,7 @@ impl<'cs> CloudSync<'cs> {
       },
     })?;
     git_utils.push()?; // Push Changes to remote
+    state.cloud_sync_is_syncing = false;
     self.wem.send(WindowEvent {
       name: "setup_cloud_sync",
       typ: WindowEventType::INFO,
@@ -115,7 +113,7 @@ impl<'cs> CloudSync<'cs> {
   /// # Sync
   ///
   /// Normal Sync to git remote
-  pub fn sync(self, state: AppState, db: &mut PickleDb) -> Result<()> {
+  pub fn sync(self, mut state: AppState, db: &mut PickleDb) -> Result<()> {
     self.wem.send(WindowEvent {
       name: "cloud_sync",
       typ: WindowEventType::INFO,
@@ -123,6 +121,7 @@ impl<'cs> CloudSync<'cs> {
         message: "Creating new repository...",
       },
     })?;
+    state.cloud_sync_is_syncing = true;
     let git_utils = GitUtils::load(&state.dir_paths.root)?;
     self.wem.send(WindowEvent {
       name: "cloud_sync",
@@ -163,6 +162,7 @@ impl<'cs> CloudSync<'cs> {
       },
     })?;
     git_utils.push()?; // Push Changes to remote
+    state.cloud_sync_is_syncing = false;
     self.wem.send(WindowEvent {
       name: "cloud_sync",
       typ: WindowEventType::INFO,

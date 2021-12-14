@@ -54,6 +54,8 @@ fn main() {
   tauri::Builder::default()
     .manage(AppState {
       dir_paths: app_dir_paths.clone(),
+      cloud_sync_is_syncing: false,
+      fs_sync_is_syncing: false,
     })
     .manage(AppDbState::new(&app_dir_paths.db.join(APP_DB_FILE_NAME)))
     // This is where you pass in your commands

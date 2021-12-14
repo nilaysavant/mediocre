@@ -73,7 +73,12 @@ pub async fn setup_git_cloud_sync(
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SyncToGitCloudResponse {
+  /// `true` for success, `false` for failure
   status: bool,
+  /// Available to Retry the API. Use this to
+  /// allow multiple retries from the client.
+  retry: bool,
+  /// Success/Error message
   message: String,
 }
 
@@ -87,6 +92,19 @@ pub async fn sync_to_git_cloud(
   db_state: tauri::State<'_, AppDbState>,
   window: tauri::Window,
 ) -> Result<SyncToGitCloudResponse, String> {
+  if state.cloud_sync_is_syncing {
+    return Ok(SyncToGitCloudResponse {
+      status: false,
+      retry: true,
+      message: "Sync is already in progress, Please re-try after some time!".to_string(),
+    });
+  } else if state.fs_sync_is_syncing {
+    return Ok(SyncToGitCloudResponse {
+      status: false,
+      retry: true,
+      message: "FileSystem sync in progress, Please re-try after some time!".to_string(),
+    });
+  }
   let mut db = db_state.db.lock().map_err(error_to_string)?;
   let wem = WindowEventManager::new(&window);
   let cloud_sync =
@@ -96,6 +114,7 @@ pub async fn sync_to_git_cloud(
     .map_err(error_to_string)?;
   Ok(SyncToGitCloudResponse {
     status: true,
+    retry: false,
     message: "Success".to_string(),
   })
 }
