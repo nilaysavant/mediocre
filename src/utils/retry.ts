@@ -16,7 +16,7 @@ export class RetryError extends Error {
  * @param maxRetries
  * @param fn
  */
-const retry = async <T>(
+const retry = async <T = void>(
   maxRetries: number,
   fn: () => Promise<T>,
   timeout = 0

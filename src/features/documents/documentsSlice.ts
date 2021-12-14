@@ -62,7 +62,11 @@ const documentsAdapter = createEntityAdapter<MediocreDocument>({
 export const globalAllDocumentsListFetch = createAsyncThunk(
   'documents/globalAllDocumentsListFetch',
   async (_arg, thunkAPI) => {
-    const response = await fetchAllDocumentsMetadata()
+    const response = await retry(
+      5, // retry 5 times
+      async () => fetchAllDocumentsMetadata(),
+      3000 // each with 3 sec timeout
+    )
     return response
   }
 )
@@ -83,7 +87,11 @@ export const globalDocumentInfoFetch = createAsyncThunk<
   | undefined,
   { relativePath: string }
 >('documents/globalDocumentInfoFetch', async ({ relativePath }, {}) => {
-  const response = await fetchDocumentMetaData(relativePath)
+  const response = await retry(
+    5, // retry 5 times
+    async () => fetchDocumentMetaData(relativePath),
+    3000 // each with 3 sec timeout
+  )
   return response
 })
 
@@ -107,9 +115,9 @@ export const globalDocumentOpen = createAsyncThunk<
   // else update content from fs
   else
     updatedContent = await retry(
-      5,
+      5, // retry 5 times
       async () => readDocumentFromRelativePath(relativePath),
-      3000
+      3000 // each with 3 sec timeout
     )
   /** Update editor text */
   dispatch(updateRawText(updatedContent || ''))
@@ -151,15 +159,21 @@ export const globalDocumentSave = createAsyncThunk<string, void>(
     const { relativePath, content } = document
     if (!relativePath) throw new Error(`relativePath invalid!`)
     /** Verify if content on fs is changed */
-    const contentOnFs = await readDocumentFromRelativePath(relativePath)
+    const contentOnFs = await retry(
+      5, // retry 5 times
+      async () => readDocumentFromRelativePath(relativePath),
+      3000 // each with 3 sec timeout
+    )
     if (contentOnFs !== content)
       throw new Error(
         'Content on file system is changed! Please reload the app'
       )
-    const response = await writeDocumentToRelativePath(
-      relativePath,
-      updatedContent
+    const response = await retry(
+      5, // retry 5 times
+      async () => writeDocumentToRelativePath(relativePath, updatedContent),
+      3000 // each with 3 sec timeout
     )
+
     /** dispatch for updating doc meta info into the store */
     await dispatch(globalDocumentInfoFetch({ relativePath })).unwrap()
     if (!response?.status) throw new Error('Response status is invalid!')
@@ -180,7 +194,11 @@ export const globalDocumentAdd = createAsyncThunk<
   const { documentFileName, history } = arg // get documentFileName
   /** write to fs, using fileName as relative path(temporary) atm as we're creating docs at the top level */
   const relativePath = documentFileName
-  const response = await writeDocumentToRelativePath(relativePath, '')
+  const response = await retry(
+    5, // retry 5 times
+    async () => writeDocumentToRelativePath(relativePath, ''),
+    3000 // each with 3 sec timeout
+  )
   if (!response?.status) throw new Error(`Response status is invalid!`)
   /** fetch the doc info */
   const documentInfo = await dispatch(
@@ -207,7 +225,11 @@ export const globalDocumentDelete = createAsyncThunk<
     throw new Error(`document invalid! document with documentId not available`)
   const { relativePath } = document
   if (!relativePath) throw new Error(`relativePath invalid!`)
-  const result = await removeDocumentFromRelativePath(relativePath)
+  const result = await retry(
+    5, // retry 5 times
+    async () => removeDocumentFromRelativePath(relativePath),
+    3000 // each with 3 sec timeout
+  )
   if (!result?.status) throw new Error(`delete failed due to some reason`)
   /** Reset editor text */
   dispatch(updateRawText(''))
@@ -229,9 +251,11 @@ export const globalDocumentRename = createAsyncThunk<
     throw new Error(`document invalid! document with documentId not available`)
   const { relativePath } = document
   if (!relativePath) throw new Error(`relativePath invalid!`)
-  const response = await renameDocumentAtRelativePath(
-    relativePath,
-    newDocumentName
+  const response = await retry(
+    5, // retry 5 times
+    async () =>
+      await renameDocumentAtRelativePath(relativePath, newDocumentName),
+    3000 // each with 3 sec timeout
   )
   if (!response?.status) throw new Error(`Response status is invalid!`)
   /** fetch the doc info */
