@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
   models::{app_db_state::AppDbState, app_state::AppState, cloud_sync::CloudSync},
   utils::{
-    error::error_to_string, sync_state_manager::check_fs_or_cloud_is_syncing,
+    error::error_to_string, sync_state_manager::check_cloud_or_fs_is_syncing,
     window_event_manager::WindowEventManager,
   },
 };
@@ -60,7 +60,7 @@ pub async fn setup_git_cloud_sync(
   git_sync_user_email: String,
 ) -> Result<SetupGitCloudSyncResponse, String> {
   let (cloud_sync_is_syncing, fs_sync_is_syncing) =
-    check_fs_or_cloud_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
+    check_cloud_or_fs_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
   if cloud_sync_is_syncing {
     return Ok(SetupGitCloudSyncResponse {
       status: false,
@@ -117,7 +117,7 @@ pub async fn sync_to_git_cloud(
   window: tauri::Window,
 ) -> Result<SyncToGitCloudResponse, String> {
   let (cloud_sync_is_syncing, fs_sync_is_syncing) =
-    check_fs_or_cloud_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
+    check_cloud_or_fs_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
   if cloud_sync_is_syncing {
     return Ok(SyncToGitCloudResponse {
       status: false,

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
   models::app_state::AppState,
-  utils::{error::error_to_string, fsutils, sync_state_manager::check_fs_or_cloud_is_syncing},
+  utils::{error::error_to_string, fsutils, sync_state_manager::check_cloud_or_fs_is_syncing},
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -28,7 +28,7 @@ pub async fn fetch_doc_info(
 ) -> Result<FetchDocInfoResponse, String> {
   info!("fetch_doc_info() -> relative_path: {}", relative_path);
   let (cloud_sync_is_syncing, fs_sync_is_syncing) =
-    check_fs_or_cloud_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
+    check_cloud_or_fs_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
   if cloud_sync_is_syncing {
     return Ok(FetchDocInfoResponse {
       file_meta_info: None,
@@ -91,7 +91,7 @@ pub async fn fetch_all_docs_info(
   state: tauri::State<'_, AppState>,
 ) -> Result<FetchAllDocsInfoResponse, String> {
   let (cloud_sync_is_syncing, fs_sync_is_syncing) =
-    check_fs_or_cloud_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
+    check_cloud_or_fs_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
   if cloud_sync_is_syncing {
     return Ok(FetchAllDocsInfoResponse {
       files_meta_info: None,
@@ -152,7 +152,7 @@ pub async fn read_document(
 ) -> Result<ReadDocumentResponse, String> {
   info!("read_document() -> relative_path: {}", relative_path);
   let (cloud_sync_is_syncing, fs_sync_is_syncing) =
-    check_fs_or_cloud_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
+    check_cloud_or_fs_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
   if cloud_sync_is_syncing {
     return Ok(ReadDocumentResponse {
       status: false,
@@ -216,7 +216,7 @@ pub async fn write_document(
 ) -> Result<WriteDocumentResponse, String> {
   info!("write_document() -> relative_path: {}", relative_path);
   let (cloud_sync_is_syncing, fs_sync_is_syncing) =
-    check_fs_or_cloud_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
+    check_cloud_or_fs_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
   if cloud_sync_is_syncing {
     return Ok(WriteDocumentResponse {
       status: false,
@@ -276,7 +276,7 @@ pub async fn remove_document(
 ) -> Result<RemoveDocumentResponse, String> {
   info!("remove_document() -> relative_path: {}", relative_path);
   let (cloud_sync_is_syncing, fs_sync_is_syncing) =
-    check_fs_or_cloud_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
+    check_cloud_or_fs_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
   if cloud_sync_is_syncing {
     return Ok(RemoveDocumentResponse {
       status: false,
@@ -340,7 +340,7 @@ pub async fn rename_document(
     relative_path, new_document_name
   );
   let (cloud_sync_is_syncing, fs_sync_is_syncing) =
-    check_fs_or_cloud_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
+    check_cloud_or_fs_is_syncing(state.inner().to_owned()).map_err(error_to_string)?;
   if cloud_sync_is_syncing {
     return Ok(RenameDocumentResponse {
       status: false,

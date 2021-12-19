@@ -3,7 +3,7 @@ use anyhow::{Context, Result};
 use crate::models::app_state::AppState;
 
 /// Check if File System or Cloud sync is in progress
-pub fn check_fs_or_cloud_is_syncing(state: AppState) -> anyhow::Result<(bool, bool)> {
+pub fn check_cloud_or_fs_is_syncing(state: AppState) -> anyhow::Result<(bool, bool)> {
   let cloud_sync_is_syncing = state
     .cloud_sync_is_syncing
     .lock()
