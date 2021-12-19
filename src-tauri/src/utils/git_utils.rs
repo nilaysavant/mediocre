@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use anyhow::{anyhow, Context, Result};
-use git2::{Cred, Direction, IndexAddOption, PushOptions, RemoteCallbacks, Repository};
+use git2::{BranchType, Cred, Direction, IndexAddOption, PushOptions, RemoteCallbacks, Repository};
 use log::{debug, error, info, warn};
 
 /// # Utilities for interacting with git
@@ -43,6 +43,23 @@ impl GitUtils {
   pub fn load(repo_path: &Path) -> Result<Self> {
     let repository = Repository::open(repo_path)?;
     Ok(Self { repository })
+  }
+
+  /// # Get the branch name from repo
+  ///
+  /// - Finds the default branch: `main` or `master` in the repository.
+  pub fn get_default_branch_name(&self) -> Result<String> {
+    match self.repository.find_branch("master", BranchType::Local) {
+      Ok(branch) => {
+        let branch_name = branch.name()?.ok_or(anyhow!("branch invalid!"))?;
+        Ok(branch_name.to_string())
+      }
+      Err(e) => {
+        let branch = self.repository.find_branch("main", BranchType::Local)?;
+        let branch_name = branch.name()?.ok_or(anyhow!("branch invalid!"))?;
+        Ok(branch_name.to_string())
+      }
+    }
   }
 
   /// # Clone a repo
@@ -135,7 +152,8 @@ impl GitUtils {
       Ok(())
     });
     remote.connect_auth(Direction::Push, Some(Self::create_callbacks()), None)?;
-    let ref_spec = Self::get_ref_specs("master");
+    let branch_name = self.get_default_branch_name()?;
+    let ref_spec = Self::get_ref_specs(&branch_name);
     self.repository.remote_add_push("origin", &ref_spec)?;
     push_options.remote_callbacks(callbacks);
     remote.push(&[&ref_spec], Some(&mut push_options))?;
@@ -342,6 +360,7 @@ impl GitUtils {
     let mut fo = git2::FetchOptions::new();
     fo.remote_callbacks(Self::create_callbacks());
     let mut remote = self.repository.find_remote("origin")?;
+    let branch_name = self.get_default_branch_name()?;
     // Error is likely to occur in the following because on the first go the user maybe
     // trying to fetch an empty repository from the remote. Therefore we just log it
     // with warn! and ignore it.
@@ -350,7 +369,7 @@ impl GitUtils {
       .context("do_fetch() failed with error, probably an empty repository")
     {
       Ok(fetch_commit) => {
-        self.do_merge("master", fetch_commit)?;
+        self.do_merge(&branch_name, fetch_commit)?;
       }
       Err(err) => {
         warn!("{:?}", err)
