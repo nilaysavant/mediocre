@@ -3,6 +3,7 @@
 Simple markdown note maker (with Git sync) using [Tauri](https://tauri.studio/).
 
 [![Publish Release](https://github.com/nilaysavant/mediocre/actions/workflows/publish.yml/badge.svg?branch=release)](https://github.com/nilaysavant/mediocre/actions/workflows/publish.yml)
+
 ## Screens
 
 !["Startup"](./media/editor-startup.png)
