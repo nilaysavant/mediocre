@@ -41,4 +41,4 @@ There have been a lot of learnings since I started this project. Therefore I'd l
 
 **Please do not take this for any serious use as its unsupported in its current state. Feel free try it out otherwise!**
 
-I would never open this up in its current state, but I've mustered the courage to get some feedback. Thanks!
+Your feedback would be highly appreciated. Thanks!
