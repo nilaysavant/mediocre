@@ -1,6 +1,10 @@
-use std::{path::PathBuf, sync::{Arc, Mutex}};
+use std::{
+  path::{Path, PathBuf},
+  sync::{Arc, Mutex},
+};
 
-use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod, error::ErrorType};
+use log::info;
+use pickledb::{error::ErrorType, PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
 /// Database state of the Application
 /// #[derive(Clone)]
@@ -13,33 +17,32 @@ impl AppDbState {
   /// Init a new db instance (ie. create/load)
   /// and return a new db state struct
   pub fn new(db_path: &PathBuf) -> Self {
-    match PickleDb::load(
-      db_path,
-      PickleDbDumpPolicy::AutoDump,
-      SerializationMethod::Json,
-    ) {
-      Ok(db) => AppDbState {
+    // if the db is not found we create a new db instance
+    if Path::exists(&db_path) == false {
+      info!("db does not exist, creating new db...");
+      let db = PickleDb::new(
+        db_path,
+        PickleDbDumpPolicy::AutoDump,
+        SerializationMethod::Json,
+      );
+      AppDbState {
         db: Arc::new(Mutex::new(db)),
-      },
-      Err(e) => {
-        match e.get_type() {
+      }
+    } else {
+      match PickleDb::load(
+        db_path,
+        PickleDbDumpPolicy::AutoDump,
+        SerializationMethod::Json,
+      ) {
+        Ok(db) => AppDbState {
+          db: Arc::new(Mutex::new(db)),
+        },
+        Err(e) => match e.get_type() {
           ErrorType::Io => {
-            if e.to_string() == "No such file or directory (os error 2)" {
-              // if the db is not found we create a new db instance
-              let db = PickleDb::new(
-                db_path,
-                PickleDbDumpPolicy::AutoDump,
-                SerializationMethod::Json,
-              );
-              AppDbState {
-                db: Arc::new(Mutex::new(db)),
-              }
-            } else {
-              panic!("db io error: {}", e)
-            }
+            panic!("db io error: {}", e)
           }
           ErrorType::Serialization => panic!("db serialization error: {}", e),
-        }
+        },
       }
     }
   }
